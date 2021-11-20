@@ -1,8 +1,7 @@
 import React from 'react';
 import { Image, Pressable, Text } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
-import Colors from '@react-native-minuit/styles';
-import Fonts from '@react-native-minuit/styles';
+import { Colors, Fonts } from '@react-native-minuit/styles';
 
 export default function Button({
   secondary = false,

@@ -1,9 +1,7 @@
 import React from 'react';
 import { Modal, Pressable, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import Colors from '@react-native-minuit/styles';
-import { gutters } from '@react-native-minuit/styles';
-import Fonts from '@react-native-minuit/styles';
+import { Colors, Fonts, gutters } from '@react-native-minuit/styles';
 
 const ModalWebView = ({ visible, onDismiss, uri, onNavigationStateChange }) => {
   return (

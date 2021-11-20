@@ -1,9 +1,7 @@
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Text, View } from 'react-native';
-import { gutters } from '@react-native-minuit/styles';
-import { Palette } from '@react-native-minuit/styles';
+import { Fonts, gutters, Palette } from '@react-native-minuit/styles';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import Fonts from '@react-native-minuit/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from './Button';
 import React from 'react';

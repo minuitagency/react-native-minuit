@@ -3,11 +3,14 @@ import { Image, Pressable, Text, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import auth from '@react-native-firebase/auth';
 import functions from '@react-native-firebase/functions';
-import ModalWebView from '.././ModalWebView';
-import { formatNumber } from '../actions/userActions';
-import styles, { mainBorderRadius } from '@react-native-minuit/styles';
-import Fonts from '@react-native-minuit/styles';
-import { Palette } from '@react-native-minuit/styles';
+import ModalWebView from './ModalWebView';
+import { formatNumber } from '@react-native-minuit/actions';
+import {
+  Fonts,
+  mainBorderRadius,
+  Palette,
+  Style as styles,
+} from '@react-native-minuit/styles';
 
 export default function Wallet() {
   const [walletBalance, setWalletBalance] = useState(null);
@@ -47,7 +50,7 @@ export default function Wallet() {
       >
         <Image
           resizeMode={'cover'}
-          source={require('../assets/backgrounds/wallet.png')}
+          source={require('./assets/backgrounds/wallet.png')}
           style={{
             position: 'absolute',
             width: '100%',

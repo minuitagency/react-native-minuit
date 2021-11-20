@@ -1,23 +1,22 @@
 import React from 'react';
-import ProductCard from './Card';
-import {View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import ItemCard from './ItemCard';
+import { FlatList, View } from 'react-native';
 import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {useNavigation} from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/core';
 
-export default function ItemList({seller = true, flatListProps, itemProps}) {
+export default function ItemList({ seller = true, flatListProps, itemProps }) {
   const navigation = useNavigation();
 
   return (
     <FlatList
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      keyExtractor={item => `${item.id}`}
-      renderItem={({item}) => (
-        <ProductCard
+      keyExtractor={(item) => `${item.id}`}
+      renderItem={({ item }) => (
+        <ItemCard
           data={item}
           name={item.name}
           image={item.picture[0]?.downloadURL}
@@ -25,7 +24,7 @@ export default function ItemList({seller = true, flatListProps, itemProps}) {
           onPress={() =>
             navigation.navigate(
               seller ? 'Seller' : 'Product',
-              seller ? {seller: item} : {product: item},
+              seller ? { seller: item } : { product: item }
             )
           }
           {...itemProps}
@@ -35,8 +34,8 @@ export default function ItemList({seller = true, flatListProps, itemProps}) {
         <View
           style={
             flatListProps.horizontal
-              ? {width: responsiveWidth(3)}
-              : {height: responsiveHeight(2)}
+              ? { width: responsiveWidth(3) }
+              : { height: responsiveHeight(2) }
           }
         />
       )}

@@ -1,6 +1,5 @@
 import React from 'react';
-import Style from '@react-native-minuit/styles';
-import { Palette } from '@react-native-minuit/styles';
+import { Palette, Style } from '@react-native-minuit/styles';
 import { Image, TouchableOpacity } from 'react-native';
 
 export default function IconButton({

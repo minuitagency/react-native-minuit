@@ -73,10 +73,14 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "@react-native-minuit/utils": "*",
     "@react-native-firebase/auth": "^13.0.1",
     "@react-native-firebase/firestore": "^13.0.1",
-    "react-native-haptic-feedback": "^1.13.0"
+    "react-native-haptic-feedback": "^1.13.0",
+    "@react-native-minuit/components": "*",
+    "@react-native-minuit/helpers": "*",
+    "@react-native-minuit/providers": "*",
+    "@react-native-minuit/styles": "*",
+    "@react-native-minuit/utils": "*"
   },
   "dependencies": {
     "numbro": "^2.3.5",

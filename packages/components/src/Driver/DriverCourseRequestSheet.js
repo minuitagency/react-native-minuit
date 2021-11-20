@@ -1,16 +1,14 @@
 import React, { useMemo, useRef } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { gutters } from '@react-native-minuit/styles';
-import { Palette } from '@react-native-minuit/styles';
+import { Fonts, gutters, Palette } from '@react-native-minuit/styles';
 import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import { Text, View } from 'react-native';
-import Fonts from '@react-native-minuit/styles';
 import Button from '../Button';
-import Itinary from './Itinary';
-import { getDistance } from '../../utils/getDistance';
+import DriverItinary from './DriverItinary';
+import { getDistance } from '@react-native-minuit/utils';
 import { useGlobal } from 'reactn';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -40,7 +38,7 @@ function Details({ order }) {
 
   return (
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
-      <Itinary
+      <DriverItinary
         from={{ name: order.seller.name, address: order.seller.address }}
         to={{ name: order.user.firstName, address: order.address.address }}
       />
@@ -73,7 +71,7 @@ function Details({ order }) {
   );
 }
 
-export default function CourseRequestSheet({ order, onChange }) {
+export default function DriverCourseRequestSheet({ order, onChange }) {
   const bottomSheetRef = useRef();
   const snapPoints = useMemo(() => [responsiveHeight(35) + 25], []);
 

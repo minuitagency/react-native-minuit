@@ -3,8 +3,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import Fonts from '@react-native-minuit/styles';
-import { Palette } from '@react-native-minuit/styles';
+import { Fonts, Palette } from '@react-native-minuit/styles';
 import { Image } from 'react-native';
 
 const { View, Text } = require('react-native');
@@ -31,7 +30,7 @@ function Icon({ icon, containerStyle }) {
   );
 }
 
-export default function Itinary({ from, to }) {
+export default function DriverItinary({ from, to }) {
   return (
     <View style={{ marginBottom: responsiveHeight(2) }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>

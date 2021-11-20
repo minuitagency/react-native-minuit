@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, Platform, Text, View } from 'react-native';
-import Fonts, { Palette } from '@react-native-minuit/styles';
+import { Fonts, Palette } from '@react-native-minuit/styles';
 import { calcRating } from '@react-native-minuit/utils';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 

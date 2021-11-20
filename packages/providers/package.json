@@ -74,14 +74,19 @@
     "typescript": "^4.1.3"
   },
   "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
     "@react-native-firebase/app": "*",
     "@react-native-firebase/auth": "*",
     "@react-native-firebase/firestore": "*",
     "@react-native-firebase/messaging": "*",
-    "react": "*",
-    "react-native": "*",
     "react-native-location": "^2.5.0",
-    "react-native-notifications": "^4.1.2"
+    "react-native-notifications": "^4.1.2",
+    "@react-native-minuit/actions": "*",
+    "@react-native-minuit/components": "*",
+    "@react-native-minuit/helpers": "*",
+    "@react-native-minuit/styles": "*",
+    "@react-native-minuit/utils": "*"
   },
   "jest": {
     "preset": "react-native",

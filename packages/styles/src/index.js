@@ -1,5 +1,5 @@
 import Fonts, { scaleFromFigma } from './fonts';
-import Global from './global';
+import Style, { gutters } from './global';
 import Colors, { Palette } from './colors';
 
-export { Fonts, scaleFromFigma, Global, Colors, Palette };
+export { Fonts, scaleFromFigma, Style, Colors, Palette, gutters };

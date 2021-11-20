@@ -3,18 +3,18 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import Fonts, { Palette } from '@react-native-minuit/styles';
+import { Fonts, Palette } from '@react-native-minuit/styles';
 import FastImage from 'react-native-fast-image';
 import React from 'react';
 import TouchableScale from 'react-native-touchable-scale';
-import Tag from './Tag';
+import Tag from '../Tag';
 import {
   calcDeliveryTime,
   deliveryTimeToInterval,
 } from '@react-native-minuit/utils';
 import ReactN from 'reactn';
 import LinearGradiant from 'react-native-linear-gradient';
-import categories from '@react-native-minuit/helpers';
+import { categories } from '@react-native-minuit/helpers';
 
 export default function ProductCard({
   size = 'small',

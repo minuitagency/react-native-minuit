@@ -6,9 +6,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
-import { Palette } from '@react-native-minuit/styles';
-import Fonts from '@react-native-minuit/styles';
-import Style from '@react-native-minuit/styles';
+import { Fonts, Palette, Style } from '@react-native-minuit/styles';
 
 function IconButton({ icon, onPress, style }) {
   const containerSize = 40;

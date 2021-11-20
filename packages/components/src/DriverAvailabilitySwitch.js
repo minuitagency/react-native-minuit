@@ -2,9 +2,7 @@ import React, { useEffect, useGlobal, useState } from 'reactn';
 import { Pressable, Text, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
-import Style from '@react-native-minuit/styles';
-import { Palette } from '@react-native-minuit/styles';
-import Fonts from '@react-native-minuit/styles';
+import { Fonts, Palette, Style } from '@react-native-minuit/styles';
 
 export default function DriverAvailabilitySwitch({ containerStyle }) {
   const [currentUserData] = useGlobal('user');

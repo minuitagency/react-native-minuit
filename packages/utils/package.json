@@ -69,9 +69,14 @@
     "typescript": "^4.1.3"
   },
   "peerDependencies": {
-    "@react-native-firebase/app": "^13.0.1",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "@react-native-firebase/app": "^13.0.1",
+    "@react-native-minuit/actions": "*",
+    "@react-native-minuit/components": "*",
+    "@react-native-minuit/helpers": "*",
+    "@react-native-minuit/providers": "*",
+    "@react-native-minuit/styles": "*"
   },
   "dependencies": {
     "geofirex": "^0.1.0"

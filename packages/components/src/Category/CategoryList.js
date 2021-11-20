@@ -4,9 +4,9 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import { gutters } from '@react-native-minuit/styles';
-import CategoryCard from './Card';
+import CategoryCard from './CategoryCard';
 import React from 'react';
-import categories from '@react-native-minuit/helpers';
+import { categories } from '@react-native-minuit/helpers';
 
 export default function CategoryList({ onPress }) {
   return (

@@ -1,8 +1,7 @@
 import { Image, Pressable, View } from 'react-native';
-import Style from '@react-native-minuit/styles';
+import { Palette, Style } from '@react-native-minuit/styles';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import React from 'react';
-import { Palette } from '@react-native-minuit/styles';
 
 export default function ListIcon({
   icon = undefined,

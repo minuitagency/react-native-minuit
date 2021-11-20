@@ -1,11 +1,10 @@
 import { View } from 'react-native';
-import { Palette } from '@react-native-minuit/styles';
+import { gutters, Palette } from '@react-native-minuit/styles';
 import React from 'react';
 import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import { gutters } from '@react-native-minuit/styles';
 
 export default function Separator({ style, fullWidth = false }) {
   return (

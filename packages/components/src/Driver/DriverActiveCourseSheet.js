@@ -1,7 +1,6 @@
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { gutters } from '@react-native-minuit/styles';
-import Colors, { Palette } from '@react-native-minuit/styles';
+import { Colors, Fonts, gutters, Palette } from '@react-native-minuit/styles';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -17,7 +16,7 @@ import {
   View,
 } from 'react-native';
 import { useGlobal } from 'reactn';
-import Itinary from './Itinary';
+import DriverItinary from './DriverItinary';
 import Separator from '../Separator';
 import Button from '../Button';
 import firestore from '@react-native-firebase/firestore';
@@ -27,7 +26,6 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-import Fonts from '@react-native-minuit/styles';
 
 function IconButton({ icon, onPress, style }) {
   const containerSize = 40;
@@ -59,7 +57,7 @@ function IconButton({ icon, onPress, style }) {
 function ItinaryDetails({ order }) {
   return (
     <View>
-      <Itinary
+      <DriverItinary
         from={{ name: order.seller.name, address: order.seller.address }}
         to={{ name: order.user.firstName, address: order.address.address }}
       />
@@ -179,7 +177,7 @@ const pinStyles = StyleSheet.create({
   },
 });
 
-export default function ActiveCourseSheet({ order, onChange }) {
+export default function DriverActiveCourseSheet({ order, onChange }) {
   const bottomSheetRef = React.useRef();
   const pinBottomSheetRef = React.useRef();
   const [, setShowCrisp] = useGlobal('showCrisp');

@@ -69,7 +69,12 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "@react-native-minuit/actions": "*",
+    "@react-native-minuit/components": "*",
+    "@react-native-minuit/helpers": "*",
+    "@react-native-minuit/providers": "*",
+    "@react-native-minuit/utils": "*"
   },
   "jest": {
     "preset": "react-native",

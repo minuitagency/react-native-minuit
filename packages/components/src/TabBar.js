@@ -1,10 +1,7 @@
 import React from 'react';
-import ReactN from 'reactn';
-import { Image, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Palette } from '@react-native-minuit/styles';
-import Pressable from 'react-native/Libraries/./Pressable/Pressable';
-import styles from '@react-native-minuit/styles';
+import { Palette, Style as styles } from '@react-native-minuit/styles';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradiant from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/core';
@@ -15,7 +12,7 @@ export default function TabBar() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const colors = [Palette.grey, Palette.mainGrey];
-  const [cart] = ReactN.useGlobal('cart');
+  //const [cart] = ReactN.useGlobal('cart');
 
   return (
     <LinearGradiant

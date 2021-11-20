@@ -8,5 +8,8 @@
   },
   "scripts": {
     "postinstall": "yarn workspaces run prepare"
+  },
+  "devDependencies": {
+    "create-index": "^2.6.0"
   }
 }
