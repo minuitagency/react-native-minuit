@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from 'react';
-import { MAX_DISTANCE } from 'mobileDriver/src/config';
 import { useGlobal } from 'reactn';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -9,7 +8,7 @@ import firebase from '@react-native-firebase/app';
 
 const geo = geofirex.init(firebase);
 
-export default function CourseProvider({ children }) {
+export default function CourseProvider({ children, MAX_DISTANCE = 3.5 }) {
   const [currentLocation] = useGlobal('currentLocation');
   const [user] = useGlobal('user');
   const [availableCourse, setAvailableCourse] = useGlobal('availableCourse');

@@ -1,9 +1,9 @@
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Text, View } from 'react-native';
-import { gutters } from './styles/global';
-import { Palette } from './styles/colors';
+import { gutters } from '@react-native-minuit/styles';
+import { Palette } from '@react-native-minuit/styles';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import Fonts from './styles/fonts';
+import Fonts from '@react-native-minuit/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from './Button';
 import React from 'react';
@@ -22,7 +22,7 @@ export default function RatingBottomSheet() {
   React.useEffect(() => {
     if (auth().currentUser) {
       const orderDeliveredAndNotRated = orders.findIndex(
-        order => order.status === 'DELIVERED' && !order.rated,
+        (order) => order.status === 'DELIVERED' && !order.rated
       );
       const isOrderDeliveredAndNotRated = orderDeliveredAndNotRated !== -1;
 
@@ -48,7 +48,8 @@ export default function RatingBottomSheet() {
       ref={bottomSheetRef}
       index={-1}
       snapPoints={snapPoints}
-      style={{paddingHorizontal: gutters}}>
+      style={{ paddingHorizontal: gutters }}
+    >
       <View
         style={{
           paddingTop: responsiveHeight(2),
@@ -58,8 +59,9 @@ export default function RatingBottomSheet() {
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
           alignItems: 'center',
-        }}>
-        <Text style={[Fonts.primary.semibold(20), {textAlign: 'center'}]}>
+        }}
+      >
+        <Text style={[Fonts.primary.semibold(20), { textAlign: 'center' }]}>
           Comment s&apos;est passé votre commande chez{' '}
           {orderSelected?.seller.name} ?
         </Text>
@@ -68,7 +70,8 @@ export default function RatingBottomSheet() {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+        >
           <AirbnbRating
             showRating={false}
             selectedColor={'#FFA900'}
@@ -79,7 +82,8 @@ export default function RatingBottomSheet() {
       </View>
       <SafeAreaView
         edges={['bottom']}
-        style={{paddingBottom: responsiveHeight(2)}}>
+        style={{ paddingBottom: responsiveHeight(2) }}
+      >
         <Button
           text={'Valider'}
           disabled={!rating}
@@ -88,8 +92,8 @@ export default function RatingBottomSheet() {
               .collection('sellers')
               .doc(orderSelected.seller.id);
             firestore()
-              .runTransaction(transaction => {
-                return transaction.get(sellerRef).then(sellerSnapshot => {
+              .runTransaction((transaction) => {
+                return transaction.get(sellerRef).then((sellerSnapshot) => {
                   if (!sellerSnapshot.exists) {
                     throw 'Document does not exist!';
                   }
@@ -97,7 +101,7 @@ export default function RatingBottomSheet() {
                     0, 0, 0, 0, 0, 0,
                   ];
                   newRating[rating] += 1;
-                  transaction.update(sellerRef, {rating: newRating});
+                  transaction.update(sellerRef, { rating: newRating });
                 });
               })
               .then(() => {
@@ -106,9 +110,9 @@ export default function RatingBottomSheet() {
                   .doc(auth().currentUser.uid)
                   .collection('orders')
                   .doc(orderSelected.id)
-                  .update({rated: true});
+                  .update({ rated: true });
               })
-              .catch(error => {
+              .catch((error) => {
                 console.log('Transaction failed: ', error);
               });
           }}

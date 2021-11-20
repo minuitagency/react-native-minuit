@@ -2,16 +2,16 @@ import React, { useEffect, useGlobal, useState } from 'reactn';
 import { Pressable, Text, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
-import Style from './styles/global';
-import { Palette } from './styles/colors';
-import Fonts from './styles/fonts';
+import Style from '@react-native-minuit/styles';
+import { Palette } from '@react-native-minuit/styles';
+import Fonts from '@react-native-minuit/styles';
 
-export default function DriverAvailabilitySwitch({containerStyle}) {
+export default function DriverAvailabilitySwitch({ containerStyle }) {
   const [currentUserData] = useGlobal('user');
 
   const [isDriverAvailable, setIsDriverAvailable] = useState(true);
 
-  const {uid = null} = currentUserData || {};
+  const { uid = null } = currentUserData || {};
 
   useEffect(() => {
     if (currentUserData.isDriverAvailable !== isDriverAvailable) {
@@ -24,7 +24,7 @@ export default function DriverAvailabilitySwitch({containerStyle}) {
       await firestore()
         .collection('users')
         .doc(uid)
-        .update({isDriverAvailable: available});
+        .update({ isDriverAvailable: available });
     } catch (e) {
       console.log(e.message);
     }
@@ -41,13 +41,15 @@ export default function DriverAvailabilitySwitch({containerStyle}) {
           borderRadius: 30,
           ...containerStyle,
         },
-      ]}>
+      ]}
+    >
       <Text
         numberOfLines={2}
         style={[
           Fonts.primary.medium(13),
-          {color: Palette.white, marginHorizontal: 20},
-        ]}>
+          { color: Palette.white, marginHorizontal: 20 },
+        ]}
+      >
         {isDriverAvailable ? 'En service' : 'Hors service'}
       </Text>
 
@@ -63,15 +65,14 @@ export default function DriverAvailabilitySwitch({containerStyle}) {
             borderRadius: 30,
             margin: 5,
           },
-        ]}>
+        ]}
+      >
         <View
           style={[
             Style.containerRound,
             {
               alignSelf: isDriverAvailable ? 'flex-end' : 'flex-start',
-              backgroundColor: isDriverAvailable
-                ? Palette.green
-                : Palette.red,
+              backgroundColor: isDriverAvailable ? Palette.green : Palette.red,
               width: 20,
               height: 20,
               margin: 3,

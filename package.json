@@ -5,5 +5,8 @@
     "packages": [
       "packages/*"
     ]
+  },
+  "scripts": {
+    "postinstall": "yarn workspaces run prepare"
   }
 }

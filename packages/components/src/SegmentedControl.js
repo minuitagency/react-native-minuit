@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Palette } from './styles/colors';
-import Fonts from './styles/fonts';
+import { Palette } from '@react-native-minuit/styles';
+import Fonts from '@react-native-minuit/styles';
 
-export default function SegmentedControl({style, value: selected, onChange: setSelected, items = ['En cours', 'Passées']}) {
+export default function SegmentedControl({
+  style,
+  value: selected,
+  onChange: setSelected,
+  items = ['En cours', 'Passées'],
+}) {
   const [animatedValue] = useState(new Animated.Value(0));
 
   const buttonInterpolation = animatedValue.interpolate({
@@ -36,7 +41,8 @@ export default function SegmentedControl({style, value: selected, onChange: setS
         padding: 1,
         flexDirection: 'row',
         ...style,
-      }}>
+      }}
+    >
       <Animated.View
         style={{
           width: '50%',
@@ -45,20 +51,24 @@ export default function SegmentedControl({style, value: selected, onChange: setS
           marginLeft: buttonInterpolation,
         }}
       />
-      <View style={[StyleSheet.absoluteFillObject, {flexDirection: 'row'}]}>
+      <View style={[StyleSheet.absoluteFillObject, { flexDirection: 'row' }]}>
         <TouchableOpacity
           onPress={() => setSelected(0)}
-          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
           <Animated.Text
-            style={Fonts.primary.semibold(14, textInterpolation(false))}>
+            style={Fonts.primary.semibold(14, textInterpolation(false))}
+          >
             {items[0]}
           </Animated.Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setSelected(1)}
-          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
           <Animated.Text
-            style={Fonts.primary.semibold(14, textInterpolation(true))}>
+            style={Fonts.primary.semibold(14, textInterpolation(true))}
+          >
             {items[1]}
           </Animated.Text>
         </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React from 'react';
-import Style from './styles/global';
-import { Palette } from './styles/colors';
+import Style from '@react-native-minuit/styles';
+import { Palette } from '@react-native-minuit/styles';
 import { Image, TouchableOpacity } from 'react-native';
 
 export default function IconButton({
@@ -13,7 +13,7 @@ export default function IconButton({
 }) {
   return (
     <TouchableOpacity
-      {...{onPress}}
+      {...{ onPress }}
       style={{
         ...Style.shadow,
         width: containerSize,
@@ -23,10 +23,11 @@ export default function IconButton({
         justifyContent: 'center',
         alignItems: 'center',
         ...containerStyle,
-      }}>
+      }}
+    >
       <Image
         source={icon}
-        style={{height: iconSize, width: iconSize, ...iconStyle}}
+        style={{ height: iconSize, width: iconSize, ...iconStyle }}
         resizeMode={'contain'}
       />
     </TouchableOpacity>

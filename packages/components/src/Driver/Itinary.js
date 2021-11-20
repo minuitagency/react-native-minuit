@@ -3,8 +3,8 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import Fonts from './styles/fonts';
-import { Palette } from './styles/colors';
+import Fonts from '@react-native-minuit/styles';
+import { Palette } from '@react-native-minuit/styles';
 import { Image } from 'react-native';
 
 const { View, Text } = require('react-native');
@@ -23,14 +23,17 @@ function Icon({ icon, containerStyle }) {
         ...containerStyle,
       }}
     >
-      <Image source={icon} style={{ width: containerSize / 1.75, height: containerSize / 1.75 }} />
+      <Image
+        source={icon}
+        style={{ width: containerSize / 1.75, height: containerSize / 1.75 }}
+      />
     </View>
   );
 }
 
-export default function Itinary({from, to}) {
+export default function Itinary({ from, to }) {
   return (
-    <View style={{marginBottom: responsiveHeight(2)}}>
+    <View style={{ marginBottom: responsiveHeight(2) }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Icon
           icon={require('assets/icons/fork.png')}
@@ -38,7 +41,9 @@ export default function Itinary({from, to}) {
         />
         <View style={{ flex: 1 }}>
           <Text style={Fonts.primary.bold(18)}>{from.name}</Text>
-          <Text style={Fonts.primary.regular(15, Palette.grey)}>{from.address}</Text>
+          <Text style={Fonts.primary.regular(15, Palette.grey)}>
+            {from.address}
+          </Text>
         </View>
       </View>
       <View
@@ -56,7 +61,9 @@ export default function Itinary({from, to}) {
         />
         <View style={{ flex: 1 }}>
           <Text style={Fonts.primary.bold(18)}>{to.name}</Text>
-          <Text style={Fonts.primary.regular(15, Palette.grey)}>{to.address}</Text>
+          <Text style={Fonts.primary.regular(15, Palette.grey)}>
+            {to.address}
+          </Text>
         </View>
       </View>
     </View>

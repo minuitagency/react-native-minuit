@@ -5,9 +5,9 @@ import auth from '@react-native-firebase/auth';
 import functions from '@react-native-firebase/functions';
 import ModalWebView from '.././ModalWebView';
 import { formatNumber } from '../actions/userActions';
-import styles, { mainBorderRadius } from './styles/global';
-import Fonts from './styles/fonts';
-import { Palette } from './styles/colors';
+import styles, { mainBorderRadius } from '@react-native-minuit/styles';
+import Fonts from '@react-native-minuit/styles';
+import { Palette } from '@react-native-minuit/styles';
 
 export default function Wallet() {
   const [walletBalance, setWalletBalance] = useState(null);
@@ -16,13 +16,13 @@ export default function Wallet() {
   const uid = auth()?.currentUser?.uid || null;
 
   useEffect(() => {
-      //getUserWallet();
+    //getUserWallet();
   }, [uid]);
 
   const getUserWallet = async () => {
     try {
       const {
-        data: {totalBalance, accountLink},
+        data: { totalBalance, accountLink },
       } = await functions().httpsCallable('payment-getAccountBalance')();
 
       setWalletBalance(totalBalance);
@@ -43,7 +43,8 @@ export default function Wallet() {
           borderRadius: mainBorderRadius,
           overflow: 'hidden',
           marginBottom: responsiveHeight(2),
-        }}>
+        }}
+      >
         <Image
           resizeMode={'cover'}
           source={require('../assets/backgrounds/wallet.png')}
@@ -54,15 +55,17 @@ export default function Wallet() {
           }}
         />
 
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <Text
-            style={[Fonts.primary.medium(20, Palette.white), {marginBottom: responsiveHeight(1)}]}>
+            style={[
+              Fonts.primary.medium(20, Palette.white),
+              { marginBottom: responsiveHeight(1) },
+            ]}
+          >
             {walletBalance ? `${formatNumber(walletBalance)}€` : '...'}
           </Text>
 
-          <Text style={Fonts.primary.medium(14, Palette.white)}>
-            Wallet
-          </Text>
+          <Text style={Fonts.primary.medium(14, Palette.white)}>Wallet</Text>
         </View>
       </Pressable>
 

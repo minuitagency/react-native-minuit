@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { gutters } from './styles/global';
-import Colors, { Palette } from './styles/colors';
+import { gutters } from '@react-native-minuit/styles';
+import Colors, { Palette } from '@react-native-minuit/styles';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -27,13 +27,13 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
-import Fonts from './styles/fonts';
+import Fonts from '@react-native-minuit/styles';
 
-function IconButton({icon, onPress, style}) {
+function IconButton({ icon, onPress, style }) {
   const containerSize = 40;
   return (
     <Pressable
-      {...{onPress}}
+      {...{ onPress }}
       style={{
         height: containerSize,
         width: containerSize,
@@ -42,8 +42,16 @@ function IconButton({icon, onPress, style}) {
         alignItems: 'center',
         justifyContent: 'center',
         ...style,
-      }}>
-      <Image source={icon} style={{tintColor: Palette.mainGrey, width: containerSize / 1.5, height: containerSize / 1.5}} />
+      }}
+    >
+      <Image
+        source={icon}
+        style={{
+          tintColor: Palette.mainGrey,
+          width: containerSize / 1.5,
+          height: containerSize / 1.5,
+        }}
+      />
     </Pressable>
   );
 }
@@ -52,8 +60,8 @@ function ItinaryDetails({ order }) {
   return (
     <View>
       <Itinary
-        from={{name: order.seller.name, address: order.seller.address}}
-        to={{name: order.user.firstName, address: order.address.address}}
+        from={{ name: order.seller.name, address: order.seller.address }}
+        to={{ name: order.user.firstName, address: order.address.address }}
       />
     </View>
   );
@@ -63,9 +71,9 @@ const CELL_COUNT = 4;
 
 // eslint-disable-next-line react/display-name
 const PinCodeSheet = forwardRef(({ pin, onSuccess }, ref) => {
-  const snapPoints = React.useMemo(() => ["50%"], []);
+  const snapPoints = React.useMemo(() => ['50%'], []);
   const [value, setValue] = useState('');
-  const codeFieldRef = useBlurOnFulfill({value, cellCount: CELL_COUNT});
+  const codeFieldRef = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
@@ -78,7 +86,7 @@ const PinCodeSheet = forwardRef(({ pin, onSuccess }, ref) => {
         ref.current?.close();
         onSuccess();
       } else {
-        Alert.alert('Code incorrect')
+        Alert.alert('Code incorrect');
         setValue('');
       }
     }
@@ -86,15 +94,29 @@ const PinCodeSheet = forwardRef(({ pin, onSuccess }, ref) => {
 
   return (
     <BottomSheet
-      {...{snapPoints}}
+      {...{ snapPoints }}
       ref={ref}
       index={-1}
       handleComponent={null}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={{flex: 1, paddingHorizontal: gutters, paddingVertical: responsiveHeight(2), justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: gutters,
+            paddingVertical: responsiveHeight(2),
+            justifyContent: 'space-between',
+          }}
+        >
           <View>
-            <Text style={[Fonts.primary.bold(18), {textAlign: 'center', marginBottom: responsiveHeight(2)}]}>Quel est le code du client?</Text>
+            <Text
+              style={[
+                Fonts.primary.bold(18),
+                { textAlign: 'center', marginBottom: responsiveHeight(2) },
+              ]}
+            >
+              Quel est le code du client?
+            </Text>
             <CodeField
               //autoFocus (bug w/ bottomSheet)
               ref={codeFieldRef}
@@ -104,7 +126,7 @@ const PinCodeSheet = forwardRef(({ pin, onSuccess }, ref) => {
               cellCount={CELL_COUNT}
               rootStyle={pinStyles.codeFieldRoot}
               keyboardType="number-pad"
-              renderCell={({index, symbol, isFocused}) => (
+              renderCell={({ index, symbol, isFocused }) => (
                 <Text
                   key={index}
                   style={[
@@ -112,24 +134,29 @@ const PinCodeSheet = forwardRef(({ pin, onSuccess }, ref) => {
                     isFocused && pinStyles.focusCell,
                     symbol && pinStyles.completedCell,
                   ]}
-                  onLayout={getCellOnLayoutHandler(index)}>
+                  onLayout={getCellOnLayoutHandler(index)}
+                >
                   {symbol || (isFocused ? <Cursor /> : null)}
                 </Text>
               )}
             />
           </View>
-          <Button secondary text="Annuler" onPress={() => ref.current?.close()} />
+          <Button
+            secondary
+            text="Annuler"
+            onPress={() => ref.current?.close()}
+          />
         </View>
       </TouchableWithoutFeedback>
     </BottomSheet>
   );
-})
+});
 
 const pinStyles = StyleSheet.create({
   codeFieldRoot: {
     marginBottom: responsiveHeight(2),
     width: 50 * 6,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   cell: {
     width: 50,
@@ -152,22 +179,25 @@ const pinStyles = StyleSheet.create({
   },
 });
 
-
 export default function ActiveCourseSheet({ order, onChange }) {
   const bottomSheetRef = React.useRef();
   const pinBottomSheetRef = React.useRef();
   const [, setShowCrisp] = useGlobal('showCrisp');
-  const snapPoints = React.useMemo(() => [(responsiveHeight(8) + 25), "40%"], []);
+  const snapPoints = React.useMemo(() => [responsiveHeight(8) + 25, '40%'], []);
   const [, setCurrentCourse] = useGlobal('currentCourse');
-  const orderRef = useMemo(() => firestore().collection('users').doc(order.user.id).collection('orders').doc(order.id), [order])
+  const orderRef = useMemo(
+    () =>
+      firestore()
+        .collection('users')
+        .doc(order.user.id)
+        .collection('orders')
+        .doc(order.id),
+    [order]
+  );
 
   return (
     <>
-      <BottomSheet
-        {...{onChange, snapPoints}}
-        ref={bottomSheetRef}
-        index={0}
-      >
+      <BottomSheet {...{ onChange, snapPoints }} ref={bottomSheetRef} index={0}>
         <View
           style={{
             paddingHorizontal: gutters,
@@ -178,67 +208,75 @@ export default function ActiveCourseSheet({ order, onChange }) {
           }}
         >
           <Button
-            style={{paddingHorizontal: gutters}}
-            text={order.status === 'READY_TO_PICKUP' ? 'Commande récupérée' : 'Commande livrée'}
+            style={{ paddingHorizontal: gutters }}
+            text={
+              order.status === 'READY_TO_PICKUP'
+                ? 'Commande récupérée'
+                : 'Commande livrée'
+            }
             onPress={() => {
               if (order.status === 'READY_TO_PICKUP') {
-                Alert.alert('La commande est-elle récupérée ?', '',[
+                Alert.alert('La commande est-elle récupérée ?', '', [
                   {
-                    text: "Non",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
+                    text: 'Non',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
                   },
-                  { text: "Oui", onPress: () => {
-                      orderRef.update({status: 'DELIVERY_IN_PROGRESS'})
+                  {
+                    text: 'Oui',
+                    onPress: () => {
+                      orderRef.update({ status: 'DELIVERY_IN_PROGRESS' });
                       setCurrentCourse(null);
-                    }
-                  }
-                ])
-              } else {
-                Alert.alert('La commande est-elle livrée ?', '',[
-                  {
-                    text: "Non",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
+                    },
                   },
-                  { text: "Oui", onPress: () => {
+                ]);
+              } else {
+                Alert.alert('La commande est-elle livrée ?', '', [
+                  {
+                    text: 'Non',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Oui',
+                    onPress: () => {
                       pinBottomSheetRef.current?.expand();
-                    }
-                  }
-                ])
+                    },
+                  },
+                ]);
               }
             }}
           />
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <IconButton
               icon={require('assets/icons/call.png')}
-              style={{marginRight: responsiveWidth(2) }}
+              style={{ marginRight: responsiveWidth(2) }}
             />
             <IconButton icon={require('assets/icons/map.png')} />
           </View>
         </View>
-        <Separator style={{marginBottom: 0}} />
+        <Separator style={{ marginBottom: 0 }} />
 
         <BottomSheetScrollView
           edges={['bottom']}
           style={{ backgroundColor: Palette.white }}
           contentContainerStyle={{
             paddingHorizontal: gutters,
-            paddingTop: responsiveHeight(2)
+            paddingTop: responsiveHeight(2),
           }}
         >
           <ItinaryDetails {...{ order }} />
           {/* <Button secondary text={'Signaler un problème'} style={{borderColor: 'transparent'}} textColor={Palette.red} /> */}
         </BottomSheetScrollView>
-        </BottomSheet>
-        <PinCodeSheet
-          ref={pinBottomSheetRef}
-          pin={order.pin}
-          onSuccess={() => {
-            orderRef.update({status: 'DELIVERED'})
-            setCurrentCourse(null);
-          }}
-        />
-      </>
+      </BottomSheet>
+      <PinCodeSheet
+        ref={pinBottomSheetRef}
+        pin={order.pin}
+        onSuccess={() => {
+          orderRef.update({ status: 'DELIVERED' });
+          setCurrentCourse(null);
+        }}
+      />
+    </>
   );
 }

@@ -5,19 +5,20 @@ import {
 import { Image, Text, View } from 'react-native';
 import React from 'react';
 import TouchableScale from 'react-native-touchable-scale';
-import fonts from './styles/fonts';
-import { Palette } from './styles/colors';
+import fonts from '@react-native-minuit/styles';
+import { Palette } from '@react-native-minuit/styles';
 
 const itemSize = responsiveWidth(18);
 const imageContainerSize = itemSize / 2;
 
-export default function CategoryCard({color, icon, text, onPress, disabled}) {
+export default function CategoryCard({ color, icon, text, onPress, disabled }) {
   return (
     <TouchableScale
-      {...{onPress, disabled}}
+      {...{ onPress, disabled }}
       friction={7}
       activeScale={0.95}
-      style={{alignItems: 'center', maxWidth: itemSize}}>
+      style={{ alignItems: 'center', maxWidth: itemSize }}
+    >
       <View
         style={{
           borderRadius: itemSize / 2,
@@ -28,7 +29,8 @@ export default function CategoryCard({color, icon, text, onPress, disabled}) {
           alignItems: 'center',
           marginBottom: responsiveHeight(1),
           overflow: 'hidden',
-        }}>
+        }}
+      >
         <Image
           resizeMode={'contain'}
           source={icon}

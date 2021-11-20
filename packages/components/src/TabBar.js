@@ -2,14 +2,14 @@ import React from 'react';
 import ReactN from 'reactn';
 import { Image, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Palette } from './styles/colors';
+import { Palette } from '@react-native-minuit/styles';
 import Pressable from 'react-native/Libraries/./Pressable/Pressable';
-import styles from './styles/global';
+import styles from '@react-native-minuit/styles';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradiant from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/core';
 
-const routes = [{name: 'Search'}, {name: 'Cart'}, {name: 'Orders'}];
+const routes = [{ name: 'Search' }, { name: 'Cart' }, { name: 'Orders' }];
 
 export default function TabBar() {
   const navigation = useNavigation();
@@ -29,7 +29,8 @@ export default function TabBar() {
         right: 0,
         bottom: 0,
         alignItems: 'center',
-      }}>
+      }}
+    >
       <View
         style={{
           ...styles.shadow,
@@ -42,7 +43,8 @@ export default function TabBar() {
           alignItems: 'center',
           borderColor: Palette.extraLightGrey,
           paddingVertical: 10,
-        }}>
+        }}
+      >
         {routes.map((route, index) => {
           const onPress = () => {
             navigation.navigate(route.name);
@@ -53,7 +55,8 @@ export default function TabBar() {
               key={index}
               accessibilityRole="button"
               onPress={onPress}
-              style={{flex: 1, alignItems: 'center'}}>
+              style={{ flex: 1, alignItems: 'center' }}
+            >
               <Image
                 source={
                   route.name === 'Search'

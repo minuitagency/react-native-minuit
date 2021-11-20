@@ -3,16 +3,18 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import { Palette } from './styles/colors';
+import Fonts, { Palette } from '@react-native-minuit/styles';
 import FastImage from 'react-native-fast-image';
-import Fonts from './styles/fonts';
 import React from 'react';
 import TouchableScale from 'react-native-touchable-scale';
 import Tag from './Tag';
-import { calcDeliveryTime, deliveryTimeToInterval } from 'utils/deliveryTime';
+import {
+  calcDeliveryTime,
+  deliveryTimeToInterval,
+} from '@react-native-minuit/utils';
 import ReactN from 'reactn';
 import LinearGradiant from 'react-native-linear-gradient';
-import categories from 'helpers/categories';
+import categories from '@react-native-minuit/helpers';
 
 export default function ProductCard({
   size = 'small',
@@ -32,7 +34,7 @@ export default function ProductCard({
   const [currentLocation] = ReactN.useGlobal('currentLocation');
 
   return (
-    <TouchableScale {...{onPress, disabled}} friction={7} activeScale={0.95}>
+    <TouchableScale {...{ onPress, disabled }} friction={7} activeScale={0.95}>
       <View
         style={{
           borderRadius: 10,
@@ -43,11 +45,12 @@ export default function ProductCard({
           height: responsiveWidth(33),
           backgroundColor: Palette.extraLightGrey,
           overflow: 'hidden',
-        }}>
+        }}
+      >
         <FastImage
-          source={{uri: image || undefined}}
+          source={{ uri: image || undefined }}
           resizeMode={FastImage.resizeMode.cover}
-          style={{flex: 1}}
+          style={{ flex: 1 }}
         />
         <LinearGradiant
           colors={['rgba(0, 0, 0, 0.75)', 'rgba(0, 0, 0, 0)']}
@@ -61,29 +64,34 @@ export default function ProductCard({
               justifyContent: 'space-between',
               paddingBottom: responsiveHeight(3),
             },
-          ]}>
+          ]}
+        >
           <View>
             <Text
               numberOfLines={1}
               style={[
                 Fonts.primary.medium(16, Palette.white),
-                {marginBottom: 2},
-              ]}>
+                { marginBottom: 2 },
+              ]}
+            >
               {name}
             </Text>
             <Text
               numberOfLines={1}
               style={[
                 Fonts.primary.medium(13, Palette.white),
-                {marginBottom: 2},
-              ]}>
+                { marginBottom: 2 },
+              ]}
+            >
               {categories[data.category].text}
             </Text>
           </View>
           <View>
             {currentLocation && (
               <Tag single small>
-                <View style={{justifyContent: 'center', flexDirection: 'row'}}>
+                <View
+                  style={{ justifyContent: 'center', flexDirection: 'row' }}
+                >
                   <Image
                     style={{
                       width: 18,
@@ -103,8 +111,8 @@ export default function ProductCard({
                           : {
                               latitude: data.location.geopoint._latitude,
                               longitude: data.location.geopoint._longitude,
-                            },
-                      ),
+                            }
+                      )
                     )}
                   </Text>
                 </View>

@@ -6,15 +6,15 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
-import { Palette } from './styles/colors';
-import Fonts from './styles/fonts';
-import Style from './styles/global';
+import { Palette } from '@react-native-minuit/styles';
+import Fonts from '@react-native-minuit/styles';
+import Style from '@react-native-minuit/styles';
 
-function IconButton({icon, onPress, style}) {
+function IconButton({ icon, onPress, style }) {
   const containerSize = 40;
   return (
     <Pressable
-      {...{onPress}}
+      {...{ onPress }}
       style={{
         height: containerSize,
         width: containerSize,
@@ -23,22 +23,27 @@ function IconButton({icon, onPress, style}) {
         alignItems: 'center',
         justifyContent: 'center',
         ...style,
-      }}>
-      <Image source={icon} style={{tintColor: Palette.mainGrey, width: containerSize / 1.5, height: containerSize / 1.5}} />
+      }}
+    >
+      <Image
+        source={icon}
+        style={{
+          tintColor: Palette.mainGrey,
+          width: containerSize / 1.5,
+          height: containerSize / 1.5,
+        }}
+      />
     </Pressable>
   );
 }
 
-export default function LocationMarker({
-  coordinate,
-  identifier,
-  user,
-}) {
+export default function LocationMarker({ coordinate, identifier, user }) {
   return (
     <Marker
-      {...{coordinate, identifier}}
-      centerOffset={{x: 0, y: -15}}
-      style={[Style.containerCenter]}>
+      {...{ coordinate, identifier }}
+      centerOffset={{ x: 0, y: -15 }}
+      style={[Style.containerCenter]}
+    >
       {user && (
         <View
           style={[
@@ -53,16 +58,24 @@ export default function LocationMarker({
               padding: 15,
               zIndex: 500,
             },
-          ]}>
-          <Text style={[Fonts.primary.medium(16), {textAlign: 'center', marginBottom: responsiveHeight(2)}]}>
+          ]}
+        >
+          <Text
+            style={[
+              Fonts.primary.medium(16),
+              { textAlign: 'center', marginBottom: responsiveHeight(2) },
+            ]}
+          >
             {user.name || user.firstName}
           </Text>
 
           <View style={{ flexDirection: 'row' }}>
-            {user.phone && <IconButton
-              icon={require('assets/icons/call.png')}
-              style={{ marginRight: responsiveWidth(2) }}
-            />}
+            {user.phone && (
+              <IconButton
+                icon={require('assets/icons/call.png')}
+                style={{ marginRight: responsiveWidth(2) }}
+              />
+            )}
             <IconButton icon={require('assets/icons/map.png')} />
           </View>
 
@@ -73,7 +86,7 @@ export default function LocationMarker({
               right: '55%',
               width: 15,
               height: 15,
-              transform: [{rotate: '45deg'}],
+              transform: [{ rotate: '45deg' }],
               backgroundColor: Palette.white,
               borderRadius: 5,
             }}
@@ -84,7 +97,7 @@ export default function LocationMarker({
       <Image
         resizeMode={'contain'}
         source={require('assets/icons/map/smallPin.png')}
-        style={{height: 50, width: 50}}
+        style={{ height: 50, width: 50 }}
       />
     </Marker>
   );

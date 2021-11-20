@@ -3,22 +3,22 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import { gutters } from './styles/global';
+import { gutters } from '@react-native-minuit/styles';
 import CategoryCard from './Card';
 import React from 'react';
-import categories from 'helpers/categories';
+import categories from '@react-native-minuit/helpers';
 
-export default function CategoryList({onPress}) {
+export default function CategoryList({ onPress }) {
   return (
-    <View style={{marginBottom: responsiveHeight(2)}}>
+    <View style={{ marginBottom: responsiveHeight(2) }}>
       <FlatList
         horizontal
-        style={{marginHorizontal: -gutters}}
-        contentContainerStyle={{paddingHorizontal: gutters}}
+        style={{ marginHorizontal: -gutters }}
+        contentContainerStyle={{ paddingHorizontal: gutters }}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(category, index) => `${category.text}-${index}`}
         data={Object.values(categories)}
-        renderItem={({item: category}) => (
+        renderItem={({ item: category }) => (
           <CategoryCard
             color={category.color}
             icon={category.icon}
@@ -27,7 +27,7 @@ export default function CategoryList({onPress}) {
           />
         )}
         ItemSeparatorComponent={() => (
-          <View style={{width: responsiveWidth(3)}} />
+          <View style={{ width: responsiveWidth(3) }} />
         )}
       />
     </View>

@@ -21,9 +21,10 @@ export default function LocationMarker({
 
   return (
     <Marker
-      {...{coordinate, identifier}}
-      centerOffset={{x: 0, y: -15}}
-      style={[styles.containerCenter]}>
+      {...{ coordinate, identifier }}
+      centerOffset={{ x: 0, y: -15 }}
+      style={[styles.containerCenter]}
+    >
       {markerText && (
         <View
           style={[
@@ -39,8 +40,9 @@ export default function LocationMarker({
               padding: 15,
               zIndex: 500,
             },
-          ]}>
-          <Text style={[styles.textSmallMedium, {textAlign: 'center'}]}>
+          ]}
+        >
+          <Text style={[styles.textSmallMedium, { textAlign: 'center' }]}>
             {markerText}
           </Text>
 
@@ -53,7 +55,7 @@ export default function LocationMarker({
               right: '55%',
               width: 15,
               height: 15,
-              transform: [{rotate: '45deg'}],
+              transform: [{ rotate: '45deg' }],
               backgroundColor: appColors.mainWhite,
               borderRadius: 5,
             }}
@@ -68,7 +70,7 @@ export default function LocationMarker({
             ? require('../assets/UI/locationMarkerDriver.png')
             : require('../assets/UI/locationMarker.png')
         }
-        style={{height: 50, width: 50}}
+        style={{ height: 50, width: 50 }}
       />
     </Marker>
   );

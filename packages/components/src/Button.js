@@ -1,8 +1,8 @@
-import React from 'react'
-import { Image, Pressable, Text } from 'react-native'
-import { responsiveWidth } from 'react-native-responsive-dimensions'
-import Colors from './styles/colors'
-import Fonts from './styles/fonts'
+import React from 'react';
+import { Image, Pressable, Text } from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
+import Colors from '@react-native-minuit/styles';
+import Fonts from '@react-native-minuit/styles';
 
 export default function Button({
   secondary = false,
@@ -17,7 +17,7 @@ export default function Button({
   return (
     <Pressable
       {...props}
-      style={({pressed}) => [
+      style={({ pressed }) => [
         {
           flexDirection: 'row',
           backgroundColor: Colors.button[variant].background,
@@ -31,7 +31,8 @@ export default function Button({
           width: fullWidth ? '100%' : undefined,
           ...style,
         },
-      ]}>
+      ]}
+    >
       {iconLeft && (
         <Image
           source={iconLeft}
@@ -51,7 +52,8 @@ export default function Button({
             textAlign: 'center',
             color: textColor || Colors.button[variant].text,
           },
-        ]}>
+        ]}
+      >
         {text}
       </Text>
     </Pressable>

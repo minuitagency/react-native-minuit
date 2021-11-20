@@ -1,11 +1,11 @@
 import React from 'react';
 import { Image, TextInput as RNTextInput, View } from 'react-native';
-import Fonts from './styles/fonts';
-import Colors from './styles/colors';
+import Fonts from '@react-native-minuit/styles';
+import Colors from '@react-native-minuit/styles';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 export default function TextInput(props) {
-  const {leftIcon, containerStyle, textInputStyle} = props;
+  const { leftIcon, containerStyle, textInputStyle } = props;
 
   return (
     <View
@@ -17,7 +17,8 @@ export default function TextInput(props) {
         borderRadius: 10,
         alignItems: 'center',
         ...containerStyle,
-      }}>
+      }}
+    >
       {leftIcon && (
         <Image
           source={leftIcon}

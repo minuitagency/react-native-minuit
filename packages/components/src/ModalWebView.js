@@ -1,11 +1,11 @@
 import React from 'react';
 import { Modal, Pressable, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import Colors from './styles/colors';
-import { gutters } from './styles/global';
-import Fonts from './styles/fonts';
+import Colors from '@react-native-minuit/styles';
+import { gutters } from '@react-native-minuit/styles';
+import Fonts from '@react-native-minuit/styles';
 
-const ModalWebView = ({visible, onDismiss, uri, onNavigationStateChange}) => {
+const ModalWebView = ({ visible, onDismiss, uri, onNavigationStateChange }) => {
   return (
     <Modal
       presentationStyle={'formSheet'}
@@ -13,17 +13,15 @@ const ModalWebView = ({visible, onDismiss, uri, onNavigationStateChange}) => {
       visible={visible}
       onDismiss={onDismiss}
     >
-      <View style={{flex: 1, backgroundColor: Colors.background}}>
-        <Pressable onPress={onDismiss} style={{padding: gutters}}>
-          <Text style={Fonts.primary.medium(13)}>
-            Fermer
-          </Text>
+      <View style={{ flex: 1, backgroundColor: Colors.background }}>
+        <Pressable onPress={onDismiss} style={{ padding: gutters }}>
+          <Text style={Fonts.primary.medium(13)}>Fermer</Text>
         </Pressable>
 
         <WebView
           source={{ uri }}
           onNavigationStateChange={onNavigationStateChange}
-          style={{flex: 1}}
+          style={{ flex: 1 }}
         />
       </View>
     </Modal>
