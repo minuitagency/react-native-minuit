@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemCard from './ItemCard';
+import SellerCard from './SellerCard';
 import { FlatList, View } from 'react-native';
 import {
   responsiveHeight,
@@ -7,7 +7,11 @@ import {
 } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/core';
 
-export default function ItemList({ seller = true, flatListProps, itemProps }) {
+export default function SellerList({
+  seller = true,
+  flatListProps,
+  itemProps,
+}) {
   const navigation = useNavigation();
 
   return (
@@ -16,7 +20,7 @@ export default function ItemList({ seller = true, flatListProps, itemProps }) {
       showsVerticalScrollIndicator={false}
       keyExtractor={(item) => `${item.id}`}
       renderItem={({ item }) => (
-        <ItemCard
+        <SellerCard
           data={item}
           name={item.name}
           image={item.picture[0]?.downloadURL}

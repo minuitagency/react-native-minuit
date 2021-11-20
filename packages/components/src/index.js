@@ -1,5 +1,4 @@
 // @create-index
-
 export { default as Button } from './Button.js';
 export { CategoryCard, CategoryList } from './Category';
 export { default as CrispModal } from './CrispModal.js';
@@ -10,10 +9,11 @@ export {
 } from './Driver';
 export { default as DriverAvailabilitySwitch } from './DriverAvailabilitySwitch.js';
 export { default as IconButton } from './IconButton.js';
-export { ItemCard, ItemList } from './Item';
+export { SellerCard, SellerList } from './Seller';
 export { default as ListIcon } from './ListIcon.js';
 export { default as Loading } from './Loading.js';
 export { MapMarker } from './Map';
+export { ProductCard } from './Product';
 export { default as ModalWebView } from './ModalWebView.js';
 export { default as Rating } from './Rating.js';
 export { default as RatingBottomSheet } from './RatingBottomSheet.js';

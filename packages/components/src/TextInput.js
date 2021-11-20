@@ -1,7 +1,6 @@
 import React from 'react';
 import { Image, TextInput as RNTextInput, View } from 'react-native';
-import Fonts from '@react-native-minuit/styles';
-import Colors from '@react-native-minuit/styles';
+import { Colors, Fonts } from '@react-native-minuit/styles';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 export default function TextInput(props) {
