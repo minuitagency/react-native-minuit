@@ -2,7 +2,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import React, { createContext, useEffect } from 'react';
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import { Notifications } from 'react-native-notifications';
 import { useGlobal } from 'reactn';
 import * as geofirex from 'geofirex';
@@ -37,7 +37,7 @@ const UserProvider = ({ children }) => {
         }
       };
     }
-  }, [userData]);
+  }, [userData?.uid]);
 
   async function init(currentUser) {
     await setInitializing(true);
@@ -98,7 +98,7 @@ const UserProvider = ({ children }) => {
         rationale: {
           title: 'Permission de géolocalisation',
           message:
-            'AP2M a besoin de votre géolocalisation pour trouver les commerçants proche de vous',
+            'Blackbird a besoin de votre géolocalisation pour trouver les commerçants proche de vous',
           buttonPositive: 'Accepter',
           buttonNegative: 'Refuser',
         },
@@ -107,19 +107,12 @@ const UserProvider = ({ children }) => {
     console.log('[LOCATION] Granted:', granted);
 
     if (granted) {
-      if (Platform.OS === 'android') {
+      return RNLocation.subscribeToLocationUpdates((locations) => {
         setLocation({
-          latitude: 44.8508343874767,
-          longitude: -0.5489010716813859,
+          latitude: locations[0].latitude,
+          longitude: locations[0].longitude,
         });
-      } else {
-        return RNLocation.subscribeToLocationUpdates((locations) => {
-          setLocation({
-            latitude: locations[0].latitude,
-            longitude: locations[0].longitude,
-          });
-        });
-      }
+      });
     } else {
       return null;
     }
@@ -161,7 +154,7 @@ const UserProvider = ({ children }) => {
       }
     } catch (e) {
       Alert.alert(
-        'Activez les notifications pour être informé des dernières informations de Apporter Demain.'
+        'Activez les notifications pour être informé des dernières informations de Blackbird.'
       );
     }
   };
