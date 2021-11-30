@@ -26,6 +26,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import auth from '@react-native-firebase/auth';
 
 function IconButton({ icon, onPress, style }) {
   const containerSize = 40;
@@ -272,6 +273,10 @@ export default function DriverActiveCourseSheet({ order, onChange }) {
         pin={order.pin}
         onSuccess={() => {
           orderRef.update({ status: 'DELIVERED' });
+          firestore()
+            .collection('users')
+            .doc(auth().currentUser.uid)
+            .update({ isDriverInCourse: false });
           setCurrentCourse(null);
         }}
       />

@@ -15,8 +15,6 @@ import auth from '@react-native-firebase/auth';
 
 function Details({ order }) {
   const [refusedCourses, setRefusedCourses] = useGlobal('refusedCourses');
-  //const [availableCourse, setAvailableCourse] = useGlobal('availableCourse')
-  //const [currentCourse, setCurrentCourse] = useGlobal('currentCourse')
   const distance = getDistance(
     order.userLoc.geopoint,
     order.sellerLoc.geopoint
@@ -34,6 +32,10 @@ function Details({ order }) {
       .collection('orders')
       .doc(order.id)
       .update({ attributedTo: auth().currentUser.uid });
+    firestore()
+      .collection('users')
+      .doc(auth().currentUser.uid)
+      .update({ isDriverInCourse: true });
   };
 
   return (

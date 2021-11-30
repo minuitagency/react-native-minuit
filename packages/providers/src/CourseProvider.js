@@ -44,7 +44,7 @@ export default function CourseProvider({ children, MAX_DISTANCE = 3.5 }) {
     const fbquery = firestore()
       .collectionGroup('orders')
       .where('status', '==', 'READY_TO_PICKUP')
-      .where('attributedTo', '==', 'NOT_ATTRIBUTED');
+      .where('attributedTo', '==', `PENDING_${auth().currentUser.uid}`);
     const query = geo
       .query(fbquery)
       .within(
