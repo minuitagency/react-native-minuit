@@ -19,8 +19,7 @@ function Details({ order }) {
     order.userLoc.geopoint,
     order.sellerLoc.geopoint
   );
-  const price =
-    getDistance(order.userLoc.geopoint, order.sellerLoc.geopoint, true) * 2.25;
+  const price = order.deliveryFees.driver;
 
   const onRefuseCourse = async () => {
     await setRefusedCourses([...refusedCourses, order.id]);
@@ -32,7 +31,7 @@ function Details({ order }) {
       .collection('orders')
       .doc(order.id)
       .update({ attributedTo: auth().currentUser.uid });
-    firestore()
+    await firestore()
       .collection('users')
       .doc(auth().currentUser.uid)
       .update({ isDriverInCourse: true });
