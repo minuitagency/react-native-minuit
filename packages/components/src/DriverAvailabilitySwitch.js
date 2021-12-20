@@ -7,7 +7,7 @@ import { Fonts, Palette, Style } from '@react-native-minuit/styles';
 export default function DriverAvailabilitySwitch({ containerStyle }) {
   const [currentUserData] = useGlobal('user');
 
-  const [isDriverAvailable, setIsDriverAvailable] = useState(true);
+  const [isDriverAvailable, setIsDriverAvailable] = useState(false);
 
   const { uid = null } = currentUserData || {};
 
@@ -41,16 +41,6 @@ export default function DriverAvailabilitySwitch({ containerStyle }) {
         },
       ]}
     >
-      <Text
-        numberOfLines={2}
-        style={[
-          Fonts.primary.medium(13),
-          { color: Palette.white, marginHorizontal: 20 },
-        ]}
-      >
-        {isDriverAvailable ? 'En service' : 'Hors service'}
-      </Text>
-
       <Pressable
         onPress={() => {
           setIsDriverAvailable(!isDriverAvailable);

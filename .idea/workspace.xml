@@ -1,7 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="1974051b-4b28-4603-931a-d756854e0334" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/components/src/DriverAvailabilitySwitch.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/components/src/DriverAvailabilitySwitch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/components/src/Product/ProductCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/components/src/Product/ProductCard.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="NamedScopeManager">
+    <scope name="Unnamed" pattern="file[react-native-minuit]:packages/actions/src//*||file[react-native-minuit]:packages/components/src//*||file[react-native-minuit]:packages/helpers/src//*||file[react-native-minuit]:packages/providers/src//*||file[react-native-minuit]:packages/styles/src//*||file[react-native-minuit]:packages/utils/src//*" />
+  </component>
+  <component name="ProjectId" id="22EHTYlftsNH8y8gY2490pls4jR" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1974051b-4b28-4603-931a-d756854e0334" name="Changes" comment="" />
+      <created>1639395834869</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1639395834869</updated>
+      <workItem from="1639395836189" duration="4000" />
+      <workItem from="1639395973942" duration="15000" />
+      <workItem from="1639396007554" duration="467000" />
+      <workItem from="1639402525352" duration="2954000" />
+      <workItem from="1639469994716" duration="951000" />
+      <workItem from="1639472683715" duration="2011000" />
+      <workItem from="1639492022471" duration="1223000" />
+      <workItem from="1639505297122" duration="6000" />
+      <workItem from="1639564479815" duration="945000" />
+      <workItem from="1639571943439" duration="595000" />
+      <workItem from="1639573080094" duration="45000" />
+      <workItem from="1639573461818" duration="2675000" />
+      <workItem from="1639582198606" duration="369000" />
+      <workItem from="1639587049349" duration="1176000" />
+      <workItem from="1639644850010" duration="902000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

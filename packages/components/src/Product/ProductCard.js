@@ -9,12 +9,13 @@ import { Fonts, Palette } from '@react-native-minuit/styles';
 import { calcTVA } from '@react-native-minuit/utils';
 import FastImage from 'react-native-fast-image';
 
-export default ({ product }) => {
+export default ({ product, disabled = false }) => {
   const navigation = useNavigation();
   const route = useRoute();
 
   return (
     <TouchableOpacity
+      {...{ disabled }}
       onPress={() => {
         navigation.navigate('Product', {
           product,
