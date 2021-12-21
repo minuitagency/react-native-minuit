@@ -1,10 +1,11 @@
-import React from 'react';
-import { Image, Pressable, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Palette, Style as styles } from '@react-native-minuit/styles';
+import { Fonts, Palette, Style as styles } from '@react-native-minuit/styles';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import LinearGradiant from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/core';
+import { useGlobal } from 'reactn';
 
 const routes = [{ name: 'Search' }, { name: 'Cart' }, { name: 'Orders' }];
 
@@ -12,7 +13,8 @@ export default function TabBar() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const colors = [Palette.grey, Palette.mainGrey];
-  //const [cart] = ReactN.useGlobal('cart');
+  const [cart] = useGlobal('cart');
+  const itemsInCart = useMemo(() => cart?.products?.length || 0, [cart]);
 
   return (
     <LinearGradiant
@@ -69,6 +71,27 @@ export default function TabBar() {
                 }}
                 resizeMode="contain"
               />
+              {route.name === 'Cart' && itemsInCart > 0 && (
+                <View
+                  style={{
+                    ...StyleSheet.absoluteFill,
+                    bottom: null,
+                    left: null,
+                    top: -5,
+                    right: 5,
+                    width: 17,
+                    height: 17,
+                    backgroundColor: Palette.red,
+                    borderRadius: 999,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text style={Fonts.primary.bold(10, Palette.white)}>
+                    {itemsInCart}
+                  </Text>
+                </View>
+              )}
             </Pressable>
           );
         })}

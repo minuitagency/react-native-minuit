@@ -18,25 +18,20 @@ export default function RatingBottomSheet() {
   const [rating, setRating] = React.useState(null);
 
   React.useEffect(() => {
-    if (auth().currentUser) {
-      const orderDeliveredAndNotRated = orders.findIndex(
-        (order) => order.status === 'DELIVERED' && !order.rated
-      );
-      const isOrderDeliveredAndNotRated = orderDeliveredAndNotRated !== -1;
+    const orderDeliveredAndNotRated = orders.findIndex(
+      (order) => order.status === 'DELIVERED' && !order.rated
+    );
+    const isOrderDeliveredAndNotRated = orderDeliveredAndNotRated !== -1;
 
-      if (isOrderDeliveredAndNotRated) {
-        bottomSheetRef.current?.expand();
-        setOrderSelected(orders[orderDeliveredAndNotRated]);
-      } else {
-        bottomSheetRef.current?.close();
-        setOrderSelected(null);
-        setRating(null);
-      }
+    if (isOrderDeliveredAndNotRated) {
+      bottomSheetRef.current?.expand();
+      setOrderSelected(orders[orderDeliveredAndNotRated]);
     } else {
+      bottomSheetRef.current?.close();
       setOrderSelected(null);
       setRating(null);
     }
-  }, [orders, auth().currentUser]);
+  }, [orders]);
 
   return (
     <BottomSheet
