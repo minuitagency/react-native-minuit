@@ -1,10 +1,10 @@
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { Text, View } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import { Fonts, gutters, Palette } from '@react-native-minuit/styles';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from './Button';
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactN from 'reactn';
 import { AirbnbRating } from 'react-native-ratings';
 import firestore from '@react-native-firebase/firestore';
@@ -17,12 +17,18 @@ export default function RatingBottomSheet() {
   const [orderSelected, setOrderSelected] = React.useState(null);
   const [rating, setRating] = React.useState(null);
 
-  React.useEffect(() => {
-    const orderDeliveredAndNotRated = orders.findIndex(
-      (order) => order.status === 'DELIVERED' && !order.rated
-    );
-    const isOrderDeliveredAndNotRated = orderDeliveredAndNotRated !== -1;
+  const orderDeliveredAndNotRated = useMemo(
+    () =>
+      orders.findIndex((order) => order.status === 'DELIVERED' && !order.rated),
+    [orders]
+  );
 
+  const isOrderDeliveredAndNotRated = useMemo(
+    () => orderDeliveredAndNotRated !== -1,
+    [orderDeliveredAndNotRated]
+  );
+
+  React.useEffect(() => {
     if (isOrderDeliveredAndNotRated) {
       bottomSheetRef.current?.expand();
       setOrderSelected(orders[orderDeliveredAndNotRated]);
@@ -31,7 +37,9 @@ export default function RatingBottomSheet() {
       setOrderSelected(null);
       setRating(null);
     }
-  }, [orders]);
+  }, [isOrderDeliveredAndNotRated]);
+
+  if (Platform.OS === 'android' && !isOrderDeliveredAndNotRated) return null;
 
   return (
     <BottomSheet

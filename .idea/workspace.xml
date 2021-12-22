@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1974051b-4b28-4603-931a-d756854e0334" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/components/src/DriverAvailabilitySwitch.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/components/src/DriverAvailabilitySwitch.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/components/src/Product/ProductCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/components/src/Product/ProductCard.js" afterDir="false" />
-    </list>
+    <list default="true" id="1974051b-4b28-4603-931a-d756854e0334" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,6 +53,7 @@
       <workItem from="1639582198606" duration="369000" />
       <workItem from="1639587049349" duration="1176000" />
       <workItem from="1639644850010" duration="902000" />
+      <workItem from="1640102340362" duration="6000" />
     </task>
     <servers />
   </component>
