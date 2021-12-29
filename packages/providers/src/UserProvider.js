@@ -16,6 +16,7 @@ export const UserContext = createContext({ user: null });
 const UserProvider = ({ children }) => {
   const [, setInitializing] = useGlobal('initializing');
   const [userData, setUserData] = useGlobal('user');
+  const [categories, setCategories] = useGlobal('categories');
   const [, setCurrentLocation] = useGlobal('currentLocation');
 
   // Init Auth
@@ -59,12 +60,17 @@ const UserProvider = ({ children }) => {
   }
 
   async function initUser(uid) {
-    const ref = firestore().collection('users').doc(uid);
-    await ref.set({ uid }, { merge: true });
-    const userSnap = await ref.get();
+    // User data
+    const userRef = firestore().collection('users').doc(uid);
+    await userRef.set({ uid }, { merge: true });
+    const userSnap = await userRef.get();
     await setData(userSnap);
-    const sub = ref.onSnapshot(setData);
-    //setUserSubscriber(sub);
+    userRef.onSnapshot(setData);
+
+    // Categories
+    const categoriesRef = firestore().collection('settings').doc('categories');
+    const categories = (await categoriesRef.get()).data();
+    await setCategories(categories);
   }
 
   async function initLocation(uid) {

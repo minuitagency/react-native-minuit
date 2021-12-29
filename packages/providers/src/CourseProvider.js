@@ -8,10 +8,10 @@ import firebase from '@react-native-firebase/app';
 
 const geo = geofirex.init(firebase);
 
-export default function CourseProvider({ children, MAX_DISTANCE = 3.5 }) {
+export default function CourseProvider({ children, MAX_DISTANCE = 5 }) {
   const [currentLocation] = useGlobal('currentLocation');
   const [user] = useGlobal('user');
-  const [availableCourse, setAvailableCourse] = useGlobal('availableCourse');
+  const [, setAvailableCourse] = useGlobal('availableCourse');
   const [currentCourse, setCurrentCourse] = useGlobal('currentCourse');
   const [refusedCourses] = useGlobal('refusedCourses');
   const preCondition = useMemo(
@@ -57,8 +57,8 @@ export default function CourseProvider({ children, MAX_DISTANCE = 3.5 }) {
       console.log('requests', requests);
       if (requests.length > 0) {
         await setAvailableCourse(requests[0]);
-      } else if (availableCourse) {
-        setAvailableCourse(null);
+      } else {
+        await setAvailableCourse(null);
       }
     });
   }
