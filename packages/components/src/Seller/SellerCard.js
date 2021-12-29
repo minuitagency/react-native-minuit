@@ -12,26 +12,19 @@ import {
   calcDeliveryTime,
   deliveryTimeToInterval,
 } from '@react-native-minuit/utils';
-import ReactN from 'reactn';
+import { useGlobal } from 'reactn';
 import LinearGradiant from 'react-native-linear-gradient';
-import { categories } from '@react-native-minuit/helpers';
 
 export default function ProductCard({
   size = 'small',
   name = '',
   image = undefined,
-  price = undefined,
-  kg = undefined,
-  rating = undefined,
-  showAddToCart = false,
-  showAddToList = false,
-  showDetails = true,
   onPress = () => {},
-  onAddToCart = () => {},
   disabled = false,
   data,
 }) {
-  const [currentLocation] = ReactN.useGlobal('currentLocation');
+  const [currentLocation] = useGlobal('currentLocation');
+  const [categories] = useGlobal('categories');
 
   return (
     <TouchableScale {...{ onPress, disabled }} friction={7} activeScale={0.95}>

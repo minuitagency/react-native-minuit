@@ -10,7 +10,14 @@ import { Fonts as fonts, Palette } from '@react-native-minuit/styles';
 const itemSize = responsiveWidth(18);
 const imageContainerSize = itemSize / 2;
 
-export default function CategoryCard({ color, icon, text, onPress, disabled }) {
+export default function CategoryCard({
+  color,
+  icon = undefined,
+  text,
+  onPress,
+  disabled,
+}) {
+  console.log(icon);
   return (
     <TouchableScale
       {...{ onPress, disabled }}
@@ -21,7 +28,7 @@ export default function CategoryCard({ color, icon, text, onPress, disabled }) {
       <View
         style={{
           borderRadius: itemSize / 2,
-          backgroundColor: Palette.grey,
+          backgroundColor: Palette.lightGrey,
           height: itemSize,
           width: itemSize,
           justifyContent: 'space-around',
@@ -31,10 +38,11 @@ export default function CategoryCard({ color, icon, text, onPress, disabled }) {
         }}
       >
         <Image
-          resizeMode={'contain'}
-          source={icon}
+          resizeMode={'cover'}
+          source={{ uri: icon }}
           style={{
-            flex: 1,
+            width: '100%',
+            height: '100%',
           }}
         />
       </View>

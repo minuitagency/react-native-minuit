@@ -6,9 +6,10 @@ import {
 import { gutters } from '@react-native-minuit/styles';
 import CategoryCard from './CategoryCard';
 import React from 'react';
-import { categories } from '@react-native-minuit/helpers';
+import { useGlobal } from 'reactn';
 
 export default function CategoryList({ onPress }) {
+  const [categories] = useGlobal('categories');
   return (
     <View style={{ marginBottom: responsiveHeight(2) }}>
       <FlatList
@@ -21,7 +22,7 @@ export default function CategoryList({ onPress }) {
         renderItem={({ item: category }) => (
           <CategoryCard
             color={category.color}
-            icon={category.icon}
+            icon={category?.icon || undefined}
             text={category.text}
             onPress={() => onPress(category.key)}
           />
