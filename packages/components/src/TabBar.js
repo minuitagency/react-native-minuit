@@ -14,7 +14,10 @@ export default function TabBar() {
   const insets = useSafeAreaInsets();
   const colors = [Palette.grey, Palette.mainGrey];
   const [cart] = useGlobal('cart');
-  const itemsInCart = useMemo(() => cart?.products?.length || 0, [cart]);
+  const itemsInCart = useMemo(
+    () => cart?.products?.reduce((t, p) => t + p.quantity, 0),
+    [cart]
+  );
 
   return (
     <LinearGradiant

@@ -17,7 +17,6 @@ export default function CategoryCard({
   onPress,
   disabled,
 }) {
-  console.log(icon);
   return (
     <TouchableScale
       {...{ onPress, disabled }}
