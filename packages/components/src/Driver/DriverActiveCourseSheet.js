@@ -167,7 +167,7 @@ const pinStyles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
     overflow: 'hidden',
-    color: Palette.main,
+    color: Palette.mainGrey,
   },
   focusCell: {
     borderColor: Palette.mainGrey,
