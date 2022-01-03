@@ -9,6 +9,8 @@ import {
   Alert,
   Image,
   Keyboard,
+  Linking,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -27,6 +29,7 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import auth from '@react-native-firebase/auth';
+import openMap from 'react-native-open-maps';
 
 function IconButton({ icon, onPress, style }) {
   const containerSize = 40;
@@ -178,6 +181,12 @@ const pinStyles = StyleSheet.create({
   },
 });
 
+function getLocFromGeopoint(loc) {
+  const latitude = loc.geopoint._latitude || loc.geopoint.latitude;
+  const longitude = loc.geopoint._longitude || loc.geopoint.longitude;
+  return { latitude, longitude };
+}
+
 export default function DriverActiveCourseSheet({ order, onChange }) {
   const bottomSheetRef = React.useRef();
   const pinBottomSheetRef = React.useRef();
@@ -193,6 +202,12 @@ export default function DriverActiveCourseSheet({ order, onChange }) {
         .doc(order.id),
     [order]
   );
+
+  const user = order.status === 'READY_TO_PICKUP' ? order.seller : order.user;
+  const coordinates =
+    order.status === 'READY_TO_PICKUP'
+      ? getLocFromGeopoint(order.sellerLoc)
+      : getLocFromGeopoint(order.userLoc);
 
   return (
     <>
@@ -247,11 +262,26 @@ export default function DriverActiveCourseSheet({ order, onChange }) {
             }}
           />
           <View style={{ flexDirection: 'row' }}>
+            {user.phone && (
+              <IconButton
+                icon={require('assets/icons/call.png')}
+                style={{ marginRight: responsiveWidth(2) }}
+                onPress={() => Linking.openURL(`tel:${user.phone}`)}
+              />
+            )}
             <IconButton
-              icon={require('assets/icons/call.png')}
-              style={{ marginRight: responsiveWidth(2) }}
+              icon={require('assets/icons/map.png')}
+              onPress={() => {
+                openMap({
+                  ...coordinates,
+                  provider: Platform.select({
+                    ios: 'apple',
+                    android: 'google',
+                  }),
+                  query: user.name || user.firstName,
+                });
+              }}
             />
-            <IconButton icon={require('assets/icons/map.png')} />
           </View>
         </View>
         <Separator style={{ marginBottom: 0 }} />

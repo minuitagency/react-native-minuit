@@ -1,8 +1,8 @@
 import CrispChat, {
   resetSession,
+  setTokenId,
   setUserNickname,
   setUserPhone,
-  setUserTokenId,
   show,
 } from 'react-native-crisp-chat-sdk';
 import React from 'react';
@@ -17,7 +17,7 @@ export default function CrispModal() {
       resetSession();
     } else {
       if (user.phone) setUserPhone(user.phone);
-      if (user.id) setUserTokenId(user.id);
+      if (user.id) setTokenId(user.id);
       if (user.firstName && user.lastName)
         setUserNickname(`${user.firstName} ${user.lastName}`);
     }

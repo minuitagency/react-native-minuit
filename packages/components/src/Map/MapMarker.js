@@ -41,6 +41,7 @@ export default function LocationMarker({ coordinate, identifier, user }) {
       {...{ coordinate, identifier }}
       centerOffset={{ x: 0, y: -15 }}
       style={[Style.containerCenter]}
+      pointerEvents="auto"
     >
       {user && (
         <View
@@ -50,7 +51,7 @@ export default function LocationMarker({ coordinate, identifier, user }) {
             {
               flexDirection: 'column',
               position: 'absolute',
-              top: responsiveHeight(-14.5),
+              top: responsiveHeight(-8),
               backgroundColor: Palette.white,
               width: responsiveWidth(40),
               padding: 15,
@@ -58,24 +59,9 @@ export default function LocationMarker({ coordinate, identifier, user }) {
             },
           ]}
         >
-          <Text
-            style={[
-              Fonts.primary.medium(16),
-              { textAlign: 'center', marginBottom: responsiveHeight(2) },
-            ]}
-          >
+          <Text style={[Fonts.primary.medium(16), { textAlign: 'center' }]}>
             {user.name || user.firstName}
           </Text>
-
-          <View style={{ flexDirection: 'row' }}>
-            {user.phone && (
-              <IconButton
-                icon={require('assets/icons/call.png')}
-                style={{ marginRight: responsiveWidth(2) }}
-              />
-            )}
-            <IconButton icon={require('assets/icons/map.png')} />
-          </View>
 
           <View
             style={{

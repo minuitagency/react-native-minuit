@@ -11,6 +11,7 @@ import Tag from '../Tag';
 import {
   calcDeliveryTime,
   deliveryTimeToInterval,
+  getThumb,
 } from '@react-native-minuit/utils';
 import { useGlobal } from 'reactn';
 import LinearGradiant from 'react-native-linear-gradient';
@@ -41,7 +42,7 @@ export default function ProductCard({
         }}
       >
         <FastImage
-          source={{ uri: image || undefined }}
+          source={{ uri: getThumb(image) || undefined }}
           resizeMode={FastImage.resizeMode.cover}
           style={{ flex: 1 }}
         />
