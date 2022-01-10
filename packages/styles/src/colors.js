@@ -5,6 +5,7 @@ export const Palette = {
   greyTransparent: 'rgba(54,63,78,0.1)',
   darkBlue: '#03989E',
   red: '#EA190C',
+  redTransparent: 'rgba(234,25,12,0.1)',
   extraLightGrey: '#F7F7F7',
   lightGrey: '#A8A8B5',
   grey: '#707070',
