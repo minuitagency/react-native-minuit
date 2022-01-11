@@ -18,7 +18,9 @@ export default function CategoryList({ onPress }) {
         contentContainerStyle={{ paddingHorizontal: gutters }}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(category, index) => `${category.text}-${index}`}
-        data={Object.values(categories)}
+        data={Object.values(categories).sort((a, b) =>
+          a.rank > b.rank ? 1 : -1
+        )}
         renderItem={({ item: category }) => (
           <CategoryCard
             color={category.color}
