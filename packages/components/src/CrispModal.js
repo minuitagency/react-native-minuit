@@ -1,36 +1,29 @@
-import CrispChat, {
-  resetSession,
-  setTokenId,
-  setUserNickname,
-  setUserPhone,
-  show,
-} from 'react-native-crisp-chat-sdk';
 import React from 'react';
 import ReactN from 'reactn';
+import ModalWebView from './ModalWebView';
 
-export default function CrispModal() {
-  const [showCrisp, setShowCrisp] = ReactN.useGlobal('showCrisp');
-  const [user, setUser] = ReactN.useGlobal('user');
+export default function CrispModal({
+  showCrisp,
+  setShowCrisp,
+  crispId = '1f800d0f-2456-4621-a9ae-43cd13c6a1f3',
+}) {
+  const [showCrispGlobal, setShowCrispGlobal] = ReactN.useGlobal('showCrisp');
+  const [user] = ReactN.useGlobal('user');
 
-  React.useEffect(() => {
-    if (!user) {
-      resetSession();
-    } else {
-      if (user.phone) setUserPhone(user.phone);
-      if (user.id) setTokenId(user.id);
-      if (user.firstName && user.lastName)
-        setUserNickname(`${user.firstName} ${user.lastName}`);
-    }
-  }, [user]);
+  const visible = showCrisp === undefined ? showCrispGlobal : showCrisp;
+  const setVisible =
+    showCrisp === undefined ? setShowCrispGlobal : setShowCrisp;
 
-  React.useEffect(() => {
-    if (showCrisp) {
-      show();
-      setTimeout(() => {
-        setShowCrisp(false);
-      }, 1000);
-    }
-  }, [showCrisp]);
+  if (!user) return null;
 
-  return showCrisp ? <CrispChat /> : null;
+  const crispBaseUrl = 'https://go.crisp.chat/chat/embed/';
+  const crispURL = `${crispBaseUrl}?website_id=${crispId}&user_nickname=${user.firstName}&user_phone=${user.phone}&token_id=${user.id}`;
+
+  return (
+    <ModalWebView
+      uri={crispURL}
+      visible={visible}
+      onDismiss={() => setVisible(false)}
+    />
+  );
 }
