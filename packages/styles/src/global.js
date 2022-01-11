@@ -35,8 +35,6 @@ const containerItem = {
 const containerRound = {
   ...containerCenter,
   backgroundColor: Palette.extraLightGrey,
-  width: 40,
-  height: 40,
   borderRadius: 500,
   overflow: 'hidden',
 };
