@@ -6,7 +6,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import { Fonts, Palette } from '@react-native-minuit/styles';
-import { calcTVA } from '@react-native-minuit/utils';
+import { calcTVA, getThumb } from '@react-native-minuit/utils';
 import FastImage from 'react-native-fast-image';
 
 export default ({ product, disabled = false }) => {
@@ -68,7 +68,10 @@ export default ({ product, disabled = false }) => {
       </View>
       <FastImage
         source={{
-          uri: product.picture ? product.picture[0]?.downloadURL : undefined,
+          uri:
+            product.picture?.length > 0
+              ? getThumb(product.picture[0].downloadURL)
+              : undefined,
         }}
         resizeMode={FastImage.resizeMode.cover}
         style={{

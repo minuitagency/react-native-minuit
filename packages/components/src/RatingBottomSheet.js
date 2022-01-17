@@ -1,14 +1,17 @@
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { Platform, Text, View } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import { Text, View } from 'react-native';
 import { Fonts, gutters, Palette } from '@react-native-minuit/styles';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from './Button';
-import React, { useMemo } from 'react';
 import ReactN from 'reactn';
 import { AirbnbRating } from 'react-native-ratings';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function RatingBottomSheet() {
   const [orders] = ReactN.useGlobal('orders');
@@ -16,6 +19,7 @@ export default function RatingBottomSheet() {
   const snapPoints = React.useMemo(() => ['33%'], []);
   const [orderSelected, setOrderSelected] = React.useState(null);
   const [rating, setRating] = React.useState(null);
+  const insets = useSafeAreaInsets();
 
   const orderDeliveredAndNotRated = useMemo(
     () =>
@@ -39,27 +43,67 @@ export default function RatingBottomSheet() {
     }
   }, [isOrderDeliveredAndNotRated]);
 
-  if (Platform.OS === 'android' && !isOrderDeliveredAndNotRated) return null;
+  //if (Platform.OS === 'android' && !isOrderDeliveredAndNotRated) return null;
+
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    ),
+    []
+  );
+
+  const rateOrder = () => {
+    const sellerRef = firestore()
+      .collection('sellers')
+      .doc(orderSelected.seller.id);
+    firestore()
+      .runTransaction((transaction) => {
+        return transaction.get(sellerRef).then((sellerSnapshot) => {
+          if (!sellerSnapshot.exists) {
+            throw 'Document does not exist!';
+          }
+          const newRating = sellerSnapshot.data().rating || [0, 0, 0, 0, 0, 0];
+          newRating[rating] += 1;
+          transaction.update(sellerRef, { rating: newRating });
+        });
+      })
+      .then(() => {
+        firestore()
+          .collection('users')
+          .doc(auth().currentUser.uid)
+          .collection('orders')
+          .doc(orderSelected.id)
+          .update({ rated: true });
+      })
+      .catch((error) => {
+        console.log('Transaction failed: ', error);
+      });
+  };
 
   return (
     <BottomSheet
+      index={-1}
       enablePanDownToClose
       handleComponent={null}
-      backdropComponent={BottomSheetBackdrop}
+      backdropComponent={renderBackdrop}
       ref={bottomSheetRef}
-      index={-1}
       snapPoints={snapPoints}
-      style={{ paddingHorizontal: gutters }}
     >
-      <View
+      <BottomSheetView
         style={{
           paddingTop: responsiveHeight(2),
+          paddingBottom: insets.bottom + responsiveHeight(2),
           flex: 1,
           paddingHorizontal: gutters,
           backgroundColor: Palette.white,
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
           alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <Text style={[Fonts.primary.semibold(20), { textAlign: 'center' }]}>
@@ -68,7 +112,6 @@ export default function RatingBottomSheet() {
         </Text>
         <View
           style={{
-            flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -80,45 +123,13 @@ export default function RatingBottomSheet() {
             onFinishRating={setRating}
           />
         </View>
-      </View>
-      <SafeAreaView
-        edges={['bottom']}
-        style={{ paddingBottom: responsiveHeight(2) }}
-      >
         <Button
+          fullWidth
           text={'Valider'}
           disabled={!rating}
-          onPress={() => {
-            const sellerRef = firestore()
-              .collection('sellers')
-              .doc(orderSelected.seller.id);
-            firestore()
-              .runTransaction((transaction) => {
-                return transaction.get(sellerRef).then((sellerSnapshot) => {
-                  if (!sellerSnapshot.exists) {
-                    throw 'Document does not exist!';
-                  }
-                  const newRating = sellerSnapshot.data().rating || [
-                    0, 0, 0, 0, 0, 0,
-                  ];
-                  newRating[rating] += 1;
-                  transaction.update(sellerRef, { rating: newRating });
-                });
-              })
-              .then(() => {
-                firestore()
-                  .collection('users')
-                  .doc(auth().currentUser.uid)
-                  .collection('orders')
-                  .doc(orderSelected.id)
-                  .update({ rated: true });
-              })
-              .catch((error) => {
-                console.log('Transaction failed: ', error);
-              });
-          }}
+          onPress={rateOrder}
         />
-      </SafeAreaView>
+      </BottomSheetView>
     </BottomSheet>
   );
 }
