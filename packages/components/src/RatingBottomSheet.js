@@ -34,8 +34,8 @@ export default function RatingBottomSheet() {
 
   React.useEffect(() => {
     if (isOrderDeliveredAndNotRated) {
-      bottomSheetRef.current?.expand();
       setOrderSelected(orders[orderDeliveredAndNotRated]);
+      bottomSheetRef.current?.expand();
     } else {
       bottomSheetRef.current?.close();
       setOrderSelected(null);
@@ -92,6 +92,18 @@ export default function RatingBottomSheet() {
       backdropComponent={renderBackdrop}
       ref={bottomSheetRef}
       snapPoints={snapPoints}
+      onClose={() => {
+        if (orderSelected) {
+          console.log('order selected, skipping...');
+          firestore()
+            .collection('users')
+            .doc(auth().currentUser.uid)
+            .collection('orders')
+            .doc(orderSelected.id)
+            .update({ rated: true });
+        }
+        console.log('closed sheet');
+      }}
     >
       <BottomSheetView
         style={{

@@ -94,8 +94,8 @@ const UserProvider = ({ children }) => {
         ios: 'hundredMeters',
         android: 'balancedPowerAccuracy',
       },
-      interval: 5000,
-      maxWaitTime: 10000,
+      interval: 2000,
+      maxWaitTime: 2000,
     });
     const granted = await RNLocation.requestPermission({
       ios: 'whenInUse',
