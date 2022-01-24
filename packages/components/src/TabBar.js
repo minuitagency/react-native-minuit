@@ -20,9 +20,8 @@ export default function TabBar() {
   );
 
   return (
-    <LinearGradiant
-      pointerEvents="box-none"
-      colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.10)']}
+    <View
+      pointerEvents={'box-none'}
       style={{
         paddingTop: responsiveHeight(10),
         paddingBottom: insets.bottom || responsiveHeight(2),
@@ -99,6 +98,11 @@ export default function TabBar() {
           );
         })}
       </View>
-    </LinearGradiant>
+      <LinearGradiant
+        pointerEvents="none"
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.10)']}
+        style={StyleSheet.absoluteFill}
+      />
+    </View>
   );
 }

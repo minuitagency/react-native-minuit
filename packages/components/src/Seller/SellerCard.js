@@ -42,7 +42,7 @@ export default function ProductCard({
         }}
       >
         <FastImage
-          source={{ uri: getThumb(image) || undefined }}
+          source={{ uri: getThumb(image, 800) || undefined }}
           resizeMode={FastImage.resizeMode.cover}
           style={{ flex: 1 }}
         />
