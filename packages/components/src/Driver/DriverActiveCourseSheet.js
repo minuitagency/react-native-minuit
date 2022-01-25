@@ -240,7 +240,7 @@ export default function DriverActiveCourseSheet({ order, onChange }) {
                     text: 'Oui',
                     onPress: () => {
                       orderRef.update({ status: 'DELIVERY_IN_PROGRESS' });
-                      setCurrentCourse(null);
+                      //setCurrentCourse(null);
                     },
                   },
                 ]);
