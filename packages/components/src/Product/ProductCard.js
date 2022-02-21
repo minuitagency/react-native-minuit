@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/core';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -9,9 +9,8 @@ import { Fonts, Palette } from '@react-native-minuit/styles';
 import { calcTVA, getThumb } from '@react-native-minuit/utils';
 import FastImage from 'react-native-fast-image';
 
-export default ({ product, disabled = false }) => {
+export default ({ seller, product, disabled = false }) => {
   const navigation = useNavigation();
-  const route = useRoute();
 
   return (
     <TouchableOpacity
@@ -19,7 +18,7 @@ export default ({ product, disabled = false }) => {
       onPress={() => {
         navigation.navigate('Product', {
           product,
-          seller: route.params.seller,
+          seller,
         });
       }}
       style={{

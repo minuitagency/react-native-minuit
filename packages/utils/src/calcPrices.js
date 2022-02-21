@@ -14,8 +14,17 @@ function calcPrices({
   type = 0,
 }) {
   const optionsTotal = (product = { options: [] }, withTVA = false) =>
-    product.options.reduce((t, { price = 0, quantity = 1, tva = 0 }) => {
-      return t + (withTVA ? calcTVA({ price, tva }) : price) * quantity;
+    product.options.reduce((t, option) => {
+      console.log(option);
+      const { price = 0, quantity = 1, tva = 0 } = option;
+      const subOptions = optionsTotal(
+        { options: option.options ? Object.values(option.options).flat() : [] },
+        withTVA
+      );
+      return (
+        t +
+        ((withTVA ? calcTVA({ price, tva }) : price) + subOptions) * quantity
+      );
     }, 0);
 
   const productsHT = products.reduce((total, product) => {
