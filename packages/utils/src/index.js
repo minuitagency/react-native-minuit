@@ -6,6 +6,7 @@ import { getDistance } from './getDistance';
 import { calcNbOfRating, calcRating } from './rating';
 import { formatPhoneNumber, removeSpaces } from './phoneAuth';
 import { getThumb } from './thumbs';
+import getLocFromGeopoint from './getLocFromGeopoint';
 
 export {
   calcTotal,
@@ -20,4 +21,5 @@ export {
   formatPhoneNumber,
   removeSpaces,
   getThumb,
+  getLocFromGeopoint,
 };

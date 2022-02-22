@@ -5,12 +5,13 @@ import {
 } from 'react-native-responsive-dimensions';
 import { Fonts, Palette } from '@react-native-minuit/styles';
 import FastImage from 'react-native-fast-image';
-import React from 'react';
+import React, { useMemo } from 'react';
 import TouchableScale from 'react-native-touchable-scale';
 import Tag from '../Tag';
 import {
   calcDeliveryTime,
   deliveryTimeToInterval,
+  getLocFromGeopoint,
   getThumb,
 } from '@react-native-minuit/utils';
 import { useGlobal } from 'reactn';
@@ -24,8 +25,18 @@ export default function ProductCard({
   disabled = false,
   data,
 }) {
-  const [currentLocation] = useGlobal('currentLocation');
+  const [currentLocation] = useGlobal('selectedLocation');
   const [categories] = useGlobal('categories');
+  const deliveryTime = useMemo(
+    () =>
+      deliveryTimeToInterval(
+        calcDeliveryTime(
+          data.preparationTime,
+          getLocFromGeopoint(data.location)
+        )
+      ),
+    [data.preparationTime, data.location]
+  );
 
   return (
     <TouchableScale {...{ onPress, disabled }} friction={7} activeScale={0.95}>
@@ -95,20 +106,7 @@ export default function ProductCard({
                     resizeMode="contain"
                     source={require('assets/icons/bike.png')}
                   />
-                  <Text style={Fonts.primary.regular(12)}>
-                    {deliveryTimeToInterval(
-                      calcDeliveryTime(
-                        data.preparationTime,
-                        data.location.geopoint.latitude &&
-                          data.location.geopoint.longitude
-                          ? data.location.geopoint
-                          : {
-                              latitude: data.location.geopoint._latitude,
-                              longitude: data.location.geopoint._longitude,
-                            }
-                      )
-                    )}
-                  </Text>
+                  <Text style={Fonts.primary.regular(12)}>{deliveryTime}</Text>
                 </View>
               </Tag>
             )}
