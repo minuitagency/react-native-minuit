@@ -47,13 +47,13 @@ export default function ProductCard({
             size === 'fullWidth'
               ? '100%'
               : responsiveWidth(size === 'small' ? 37 : 74),
-          height: responsiveWidth(33),
+          height: responsiveWidth(40),
           backgroundColor: Palette.extraLightGrey,
           overflow: 'hidden',
         }}
       >
         <FastImage
-          source={{ uri: getThumb(image, 800) || undefined }}
+          source={{ uri: getThumb(image, 1600) || undefined }}
           resizeMode={FastImage.resizeMode.cover}
           style={{ flex: 1 }}
         />
