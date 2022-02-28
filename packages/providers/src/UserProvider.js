@@ -16,7 +16,7 @@ export const UserContext = createContext({ user: null });
 const UserProvider = ({ children }) => {
   const [, setInitializing] = useGlobal('initializing');
   const [userData, setUserData] = useGlobal('user');
-  const [categories, setCategories] = useGlobal('categories');
+  const [, setCategories] = useGlobal('categories');
   const [, setCurrentLocation] = useGlobal('currentLocation');
 
   // Init Auth

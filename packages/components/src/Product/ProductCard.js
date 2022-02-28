@@ -14,7 +14,7 @@ export default ({ seller, product, disabled = false }) => {
 
   return (
     <TouchableOpacity
-      {...{ disabled }}
+      {...{ disabled: disabled || !product?.available }}
       onPress={() => {
         navigation.navigate('Product', {
           product,
@@ -24,6 +24,7 @@ export default ({ seller, product, disabled = false }) => {
       style={{
         flexDirection: 'row',
         paddingVertical: responsiveHeight(1.5),
+        opacity: product?.available ? 1 : 0.33,
       }}
     >
       <View
@@ -37,7 +38,7 @@ export default ({ seller, product, disabled = false }) => {
           <Text
             numberOfLines={2}
             style={[
-              Fonts.primary.regular(16),
+              Fonts.primary.semibold(16),
               { marginBottom: responsiveHeight(0.5) },
             ]}
           >

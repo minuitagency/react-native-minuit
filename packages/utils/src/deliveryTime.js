@@ -15,7 +15,7 @@ export function calcDeliveryTime(preparationTime = 0, sellerLoc, userLoc) {
     geo.point(sellerLoc.latitude, sellerLoc.longitude)
   );
 
-  return parseInt((preparationTime + distance * 5).toFixed());
+  return parseInt((preparationTime + distance * 6.5).toFixed());
 }
 
 export function deliveryTimeToInterval(deliveryTime) {
