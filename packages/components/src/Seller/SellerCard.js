@@ -3,7 +3,6 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import moment from 'moment';
 import { Fonts, Palette } from '@react-native-minuit/styles';
 import FastImage from 'react-native-fast-image';
 import React, { useMemo } from 'react';
@@ -25,48 +24,6 @@ export default function SellerCard({
   disabled = false,
   data,
 }) {
-  const availabilities = useMemo(() => {
-    const today = moment().format('dddd').toUpperCase();
-    const rst = data.availabilities?.filter((a) => a.day === today) || [];
-    return rst;
-  }, [data?.availabilities]);
-
-  const interval = useMemo(
-    () =>
-      availabilities?.find(({ interval: [start, end] }) =>
-        moment().isBetween(moment(start, 'HH:mm'), moment(end, 'HH:mm'))
-      ),
-    [availabilities]
-  );
-
-  const nextOpenDate = useMemo(() => {
-    if (!data.availabilities) return null;
-
-    let nearestDate = null;
-
-    data.availabilities.forEach(({ day, interval: [start] }) => {
-      const date = moment(`${day.toLowerCase()} ${start}`, 'dddd HH:mm');
-      const diff = moment().diff(date, 'minutes');
-
-      if (diff < 0) {
-        if (nearestDate) {
-          if (date.diff(nearestDate, 'minutes') < 0) {
-            nearestDate = date;
-          }
-        } else {
-          nearestDate = date;
-        }
-      }
-    });
-
-    return nearestDate;
-  }, [data.availabilities]);
-
-  const sellerIsOpen = useMemo(
-    () => !!interval && data.available,
-    [data.available, interval]
-  );
-
   const [currentLocation] = useGlobal('selectedLocation');
   const [categories] = useGlobal('categories');
   const deliveryTime = useMemo(
@@ -82,7 +39,7 @@ export default function SellerCard({
 
   return (
     <TouchableScale
-      {...{ onPress, disabled: disabled || !sellerIsOpen }}
+      {...{ onPress, disabled: disabled || !data.sellerIsOpen }}
       friction={7}
       activeScale={0.95}
       style={{
@@ -154,7 +111,7 @@ export default function SellerCard({
           )}
         </View>
       </LinearGradiant>
-      {!sellerIsOpen && (
+      {!data.sellerIsOpen && (
         <View
           style={[
             StyleSheet.absoluteFill,
@@ -168,10 +125,10 @@ export default function SellerCard({
           <Text style={Fonts.primary.regular(14, Palette.white)}>
             Ouvre{' '}
             {(data.available &&
-              nextOpenDate?.calendar({
-                sameDay: 'à HH:mm',
-                nextDay: 'demain à HH:mm',
-                nextWeek: 'la semaine prochaine',
+              data.nextOpenDate?.calendar({
+                sameDay: '[à] HH:mm',
+                nextDay: '[demain à] HH:mm',
+                nextWeek: '[la semaine prochaine]',
               })) ||
               'bientôt'}
           </Text>

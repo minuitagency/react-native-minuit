@@ -1,5 +1,5 @@
 import { addToCart } from './cart';
 import { addToFavorites } from './favorites';
-import { formatNumber } from './userActions';
+import { checkIfEmailIsValid, formatNumber } from './userActions';
 
-export { addToCart, addToFavorites, formatNumber };
+export { addToCart, addToFavorites, formatNumber, checkIfEmailIsValid };

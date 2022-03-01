@@ -26,7 +26,6 @@ export default function CourseProvider({ children, MAX_DISTANCE = 5 }) {
       .where('status', 'in', ['READY_TO_PICKUP', 'DELIVERY_IN_PROGRESS'])
       .onSnapshot(
         ({ docs: currentCourseDocs = [] }) => {
-          console.log('current', currentCourseDocs);
           if (currentCourseDocs?.length > 0) {
             setCurrentCourse({
               ...currentCourseDocs[0].data(),
@@ -45,16 +44,10 @@ export default function CourseProvider({ children, MAX_DISTANCE = 5 }) {
       .collectionGroup('orders')
       .where('status', '==', 'READY_TO_PICKUP')
       .where('attributedTo', '==', `PENDING_${auth().currentUser.uid}`);
-    const query = geo
-      .query(fbquery)
-      .within(
-        geo.point(currentLocation.latitude, currentLocation.longitude),
-        MAX_DISTANCE,
-        'sellerLoc'
-      );
-    return query.subscribe(async (requests) => {
-      requests = requests.filter((r) => !refusedCourses.includes(r.id));
-      console.log('requests', requests);
+    return fbquery.onSnapshot(async (requests) => {
+      requests = requests?.docs
+        ?.map((r) => ({ ...r.data(), id: r.id }))
+        .filter((r) => !refusedCourses.includes(r.id));
       if (requests.length > 0) {
         await setAvailableCourse(requests[0]);
       } else {
@@ -75,7 +68,11 @@ export default function CourseProvider({ children, MAX_DISTANCE = 5 }) {
     // Si aucune course en cours on en cherche une
     if (preCondition) {
       const sub = getAvailableCourse();
-      return () => sub.unsubscribe();
+      return () => {
+        if (sub) {
+          sub();
+        }
+      };
     }
   }, [preCondition, refusedCourses, currentCourse]);
 

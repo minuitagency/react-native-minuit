@@ -16,7 +16,6 @@ export { MapMarker } from './Map';
 export { ProductCard } from './Product';
 export { default as ModalWebView } from './ModalWebView.js';
 export { default as Rating } from './Rating.js';
-export { default as RatingBottomSheet } from './RatingBottomSheet.js';
 export { default as SegmentedControl } from './SegmentedControl.js';
 export { default as Separator } from './Separator.js';
 export { default as TabBar } from './TabBar.js';
