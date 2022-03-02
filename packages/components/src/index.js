@@ -7,7 +7,6 @@ export {
   DriverCourseRequestSheet,
   DriverItinary,
 } from './Driver';
-export { default as DriverAvailabilitySwitch } from './DriverAvailabilitySwitch.js';
 export { default as IconButton } from './IconButton.js';
 export { SellerCard, SellerList } from './Seller';
 export { default as ListIcon } from './ListIcon.js';

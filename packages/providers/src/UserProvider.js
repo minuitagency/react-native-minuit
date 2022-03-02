@@ -89,7 +89,7 @@ const UserProvider = ({ children }) => {
   const getLocation = async (setLocation) => {
     console.log('[LOCATION] Initialize');
     await RNLocation.configure({
-      distanceFilter: 500, // Meters
+      distanceFilter: 200, // Meters
       desiredAccuracy: {
         ios: 'hundredMeters',
         android: 'balancedPowerAccuracy',
