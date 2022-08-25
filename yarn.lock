@@ -1092,6 +1092,18 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@legendapp/motion@^2.1.10":
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/@legendapp/motion/-/motion-2.1.10.tgz#4e85ec2e166bd01b2c3962a0c1e6ead4366198ba"
+  integrity sha512-sdfHZtK3cPMjbVDlpQ92C5RbfjeEo+7/CKyNEGlxHPo/8ILXPcGI/PWWKSSezEhYpoPXwaxTHyTDUbfjt14Itg==
+  dependencies:
+    "@legendapp/tools" "^1.0.3"
+
+"@legendapp/tools@^1.0.3":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@legendapp/tools/-/tools-1.0.7.tgz#9ed9aee628769240817e60f080cc6e0be5f9cb4f"
+  integrity sha512-HIiFAriKXb7z1ovf12Dm2pASEFtKgm7l67RjjisvUeiEHb2AZ2OFj+0Wl2e9IyQ/5gABhPvzG6zWJZdfewvvNw==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -5957,6 +5969,13 @@ react@17.0.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
+reactn@^2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/reactn/-/reactn-2.2.7.tgz#4d9a94ab0d8a540062666408e4bf1fae6892cecc"
+  integrity sha512-cqnt23kWN/ABqEZhW3OlpqI1DgTaaNDeHpSHtyd81qk0H1jd32zPTzJ69Hpzti2WakwNYveGFPIgI6i7E7nXOA==
+  dependencies:
+    use-force-update "^1.0.5"
+
 read-pkg-up@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-3.0.0.tgz#3ed496685dba0f8fe118d0691dc51f4a1ff96f07"
@@ -7026,6 +7045,11 @@ urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
   integrity sha512-Am1ousAhSLBeB9cG/7k7r2R0zj50uDRlZHPGbazid5s9rlF1F/QKYObEKSIunSjIOkJZqwRRLpvewjEkM7pSqg==
+
+use-force-update@^1.0.5:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/use-force-update/-/use-force-update-1.0.10.tgz#c59d93e1f600df93a3ffee4fe001373ff3eeef67"
+  integrity sha512-lDCSS6OQKqzAWhbavL1UWw1g5xHWUDaUDpY26zKsfCszi2RNjdzFxUVtA6M/43dgA/e6Si1AX2Qhb+hzdRuCeg==
 
 "use-subscription@>=1.0.0 <1.6.0":
   version "1.5.1"
