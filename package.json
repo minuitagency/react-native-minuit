@@ -28,6 +28,7 @@
   "repository": "https://github.com/minuitagency/react-native-minuit",
   "author": "Théo Hudry",
   "license": "MIT",
+  "homepage": "https://minuit.agency/",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
