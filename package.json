@@ -13,17 +13,13 @@
     "ios",
     "cpp",
     "react-native-shake-viewshot.podspec",
-    "!lib/typescript/example",
     "!android/build",
     "!ios/build",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"
   ],
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint \"**/*.{js,ts,tsx}\""
-  },
+  "scripts": {},
   "keywords": [
     "react-native",
     "ios",
