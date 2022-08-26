@@ -41,7 +41,6 @@
     "prettier": "^2.0.5",
     "react": "17.0.2",
     "react-native": "0.68.2",
-    "firebase": "^8.2.1"
   },
   "peerDependencies": {
     "react": "*",
@@ -75,6 +74,7 @@
     "@legendapp/motion": "^2.1.10",
     "moment": "^2.29.4",
     "react-native-responsive-dimensions": "^3.1.1",
-    "reactn": "^2.2.7"
+    "reactn": "^2.2.7",
+    "firebase": "^8.2.1"
   }
 }
