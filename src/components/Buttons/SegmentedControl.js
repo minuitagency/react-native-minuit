@@ -1,17 +1,19 @@
-import React from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function SegmentedControl({
   options = [],
   selected = options[0],
   setSelected,
-  style,
+
+  style = {},
+  itemStyle = {},
 }) {
   const [animatedValue] = React.useState(new Animated.Value(0));
 
   const buttonInterpolation = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0%', '50%'],
+    outputRange: ["0%", "50%"],
   });
 
   React.useEffect(() => {
@@ -25,23 +27,23 @@ export default function SegmentedControl({
   return (
     <View
       style={{
-        backgroundColor: '#EEEEEF',
+        backgroundColor: "#EEEEEF",
         padding: 3,
         height: 35,
         borderRadius: 20,
-        flexDirection: 'row',
+        flexDirection: "row",
         ...style,
       }}
     >
       <Animated.View
         style={{
-          width: '50%',
-          backgroundColor: 'white',
+          width: "50%",
+          backgroundColor: "white",
           borderRadius: 15,
           marginLeft: buttonInterpolation,
         }}
       />
-      <View style={[StyleSheet.absoluteFillObject, { flexDirection: 'row' }]}>
+      <View style={[StyleSheet.absoluteFillObject, { flexDirection: "row" }]}>
         {options.map((text, i) => {
           const isSelected = (i === 0 && !selected) || (i === 1 && selected);
           return (
@@ -51,11 +53,12 @@ export default function SegmentedControl({
               disabled={isSelected}
               style={{
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
+                justifyContent: "center",
+                alignItems: "center",
+                ...itemStyle,
               }}
             >
-              <Text style={{ color: isSelected ? 'black' : 'gray' }}>
+              <Text style={{ color: isSelected ? "black" : "gray" }}>
                 {text}
               </Text>
             </Pressable>
