@@ -1,40 +1,40 @@
-import React, { useState, useCallback, useEffect, useGlobal } from 'reactn';
-import { Text, Modal, View, Image, Pressable } from 'react-native';
-import moment from 'moment';
+import React, { useState, useCallback, useEffect, useGlobal } from "reactn";
+import { Text, Modal, View, Image, Pressable } from "react-native";
+import moment from "moment";
 
-import RNShake from '../../lib';
+import RNShake from "../../lib";
 
-import { uploadToCloud } from '../actions/userActions';
+import { uploadToCloud } from "../actions/userActions";
 
-import cloudInstance from '../config/cloud';
+import cloudInstance from "../config/cloud";
 
-import { SharedStyles, Fonts, Palette } from '../styles';
+import { SharedStyles, Fonts, Palette } from "../styles";
 
-import { LoadingProvider, TooltipProvider } from '../providers';
+import { LoadingProvider, TooltipProvider } from "../providers";
 
-import { icons } from '../assets/';
-import Button from '../components/Buttons/Button';
-import Input from '../components/Inputs/Input';
-import DismissKeyboard from '../components/Inputs/DismissKeyboard';
+import { icons } from "../assets/";
+import Button from "../components/Buttons/Button";
+import Input from "../components/Inputs/Input";
+import DismissKeyboard from "../components/Inputs/DismissKeyboard";
 
 const stepList = [
-  { title: 'Envoyer un nouveau rapport' },
-  { title: 'Description du problème' },
+  { title: "Envoyer un nouveau rapport" },
+  { title: "Description du problème" },
 ];
 
 export default ({ projectID = null, children }) => {
-  const [, setTooltip] = useGlobal('_tooltip');
-  const [, setIsLoading] = useGlobal('_isLoading');
+  const [, setTooltip] = useGlobal("_tooltip");
+  const [, setIsLoading] = useGlobal("_isLoading");
 
   const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState(0);
 
   const [screenshotURI, setScreenshotURI] = useState(null);
-  const [description, setDescription] = useState(__DEV__ ? 'teeeeeeeest' : '');
+  const [description, setDescription] = useState(__DEV__ ? "teeeeeeeest" : "");
 
   React.useEffect(() => {
     const subscription = RNShake.addListener((data) => {
-      console.log('hello', data);
+      console.log("hello", data);
       setScreenshotURI(data);
       setShowModal(true);
     });
@@ -47,7 +47,7 @@ export default ({ projectID = null, children }) => {
   useEffect(() => {
     if (showModal === false) {
       setScreenshotURI(null);
-      setDescription('');
+      setDescription("");
       setStep(0);
     }
   }, [showModal]);
@@ -55,11 +55,11 @@ export default ({ projectID = null, children }) => {
   const submitShake = async () => {
     try {
       if (description.length < 5) {
-        throw new Error('Description trop courte');
+        throw new Error("Description trop courte");
       }
 
-      if (description.length > 250) {
-        throw new Error('Description trop longue');
+      if (description.length > 500) {
+        throw new Error("Description trop longue");
       }
 
       if (!screenshotURI) {
@@ -67,20 +67,20 @@ export default ({ projectID = null, children }) => {
       }
 
       setIsLoading(true);
-      setTooltip({ text: 'Publication en cours ...' });
+      setTooltip({ text: "Publication en cours ..." });
 
       const { uri } = await uploadToCloud({
         path: `shakes/${projectID}/${moment().valueOf()}.jpg`,
         uri: screenshotURI,
       });
 
-      await cloudInstance.functions().httpsCallable('shakes-submitNewShake')({
+      await cloudInstance.functions().httpsCallable("shakes-submitNewShake")({
         screenshot: uri,
-        description,
+        description: description.trim(),
         projectID,
       });
 
-      setTooltip({ text: 'Publication effectuée !' });
+      setTooltip({ text: "Publication effectuée !" });
       setShowModal(false);
     } catch (e) {
       console.log(e.message);
@@ -116,7 +116,7 @@ export default ({ projectID = null, children }) => {
 
         <Image
           resizeMode="contain"
-          source={require('../assets/images/logoFull.png')}
+          source={require("../assets/images/logoFull.png")}
           style={{ height: 30, width: 150 }}
         />
 
@@ -135,7 +135,7 @@ export default ({ projectID = null, children }) => {
         onRequestClose={() => {
           setShowModal(!showModal);
         }}
-        presentationStyle={'formSheet'}
+        presentationStyle={"formSheet"}
       >
         <LoadingProvider>
           <TooltipProvider>
@@ -146,13 +146,13 @@ export default ({ projectID = null, children }) => {
                 style={{
                   flex: 1,
                   padding: 20,
-                  backgroundColor: '#13131a',
+                  backgroundColor: "#13131a",
                 }}
               >
                 <Text
                   style={[
                     Fonts.primary.bold(17, Palette.mainWhite),
-                    { textAlign: 'center', marginBottom: 20 },
+                    { textAlign: "center", marginBottom: 20 },
                   ]}
                 >
                   {stepList[step].title}
@@ -160,10 +160,10 @@ export default ({ projectID = null, children }) => {
 
                 {!step ? (
                   <View
-                    style={{ flex: 0.8, borderRadius: 10, overflow: 'hidden' }}
+                    style={{ flex: 0.8, borderRadius: 10, overflow: "hidden" }}
                   >
                     <Image
-                      resizeMode={'cover'}
+                      resizeMode={"cover"}
                       style={{ flex: 1 }}
                       source={{
                         uri: screenshotURI,
@@ -180,7 +180,7 @@ export default ({ projectID = null, children }) => {
                 )}
 
                 <Button
-                  text={step === stepList.length - 1 ? 'Envoyer' : 'Continuer'}
+                  text={step === stepList.length - 1 ? "Envoyer" : "Continuer"}
                   primary
                   isAbsoluteBottom
                   textColor={Palette.mainWhite}
