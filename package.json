@@ -74,8 +74,10 @@
     "@legendapp/motion": "^2.1.10",
     "algoliasearch": "^4.14.2",
     "firebase": "^8.2.1",
+    "geofirex": "^0.1.0",
     "moment": "^2.29.4",
     "react-native-responsive-dimensions": "^3.1.1",
-    "reactn": "^2.2.7"
+    "reactn": "^2.2.7",
+    "rxjs": "^7.5.7"
   }
 }

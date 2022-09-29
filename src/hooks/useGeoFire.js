@@ -3,13 +3,12 @@ import * as geofirex from 'geofirex';
 
 const useGeoFire = ({
   ref,
-  firebase, // require
+  geo, // require
   center,
   formatFunction = null,
   radius = 100,
   parameter = 'point',
 }) => {
-  const geo = geofirex.init(firebase);
   const [data, setData] = useState([]);
 
   useEffect(() => {
