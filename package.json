@@ -1,24 +1,11 @@
 {
   "name": "react-native-minuit",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "react-native": "src/index",
   "source": "src/index",
-  "files": [
-    "src",
-    "lib",
-    "android",
-    "ios",
-    "cpp",
-    "react-native-shake-viewshot.podspec",
-    "!android/build",
-    "!ios/build",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__"
-  ],
   "scripts": {},
   "keywords": [
     "react-native",
