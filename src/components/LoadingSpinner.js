@@ -1,11 +1,7 @@
-import React, { useEffect, useRef, getGlobal } from 'reactn';
-import { Animated, Easing } from 'react-native';
+import React, { useEffect, useRef } from "reactn";
+import { Animated, Easing } from "react-native";
 
-export default ({ size = 50 }) => {
-  const {
-    _config: { colors },
-  } = getGlobal();
-
+export default ({ size = 50, color = "white" }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -31,7 +27,7 @@ export default ({ size = 50 }) => {
 
   const angle = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   return (
@@ -40,11 +36,11 @@ export default ({ size = 50 }) => {
         width: size,
         height: size,
         transform: [{ rotate: angle }],
-        tintColor: colors.primary,
-        alignItems: 'center',
-        justifyContent: 'center',
+        tintColor: color,
+        alignItems: "center",
+        justifyContent: "center",
       }}
-      source={require('../assets/icons/loadingspinner.png')}
+      source={require("../assets/icons/loadingspinner.png")}
     />
   );
 };

@@ -1,11 +1,14 @@
-import React, { useEffect, useGlobal } from 'reactn';
-import { Animated, StyleSheet } from 'react-native';
+import React, { useEffect, useGlobal } from "reactn";
+import { Animated, StyleSheet } from "react-native";
 
-import { useRef, useState } from 'react';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { useRef, useState } from "react";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default ({ children }) => {
-  const [isGlobalLoading] = useGlobal('_isLoading');
+  const [isGlobalLoading] = useGlobal("_isLoading");
+  const [config] = useGlobal("_config");
+
+  const { colors = {} } = config;
 
   const [renderLoading, setRenderLoading] = useState(false);
 
@@ -40,14 +43,14 @@ export default ({ children }) => {
       {renderLoading && isGlobalLoading && (
         <Animated.View
           style={{
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             opacity: loadingAnimatedValue,
             ...StyleSheet.absoluteFillObject,
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: "rgba(0,0,0,0.7)",
           }}
         >
-          <LoadingSpinner />
+          <LoadingSpinner color={colors.primary} />
         </Animated.View>
       )}
     </>
