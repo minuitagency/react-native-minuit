@@ -22,7 +22,7 @@ const stepList = [
   { title: "Description du problème" },
 ];
 
-export default ({ projectID = null, children }) => {
+export default ({ projectID = null, enabled = true, children }) => {
   const [, setTooltip] = useGlobal("_tooltip");
   const [, setIsLoading] = useGlobal("_isLoading");
 
@@ -34,9 +34,12 @@ export default ({ projectID = null, children }) => {
 
   React.useEffect(() => {
     const subscription = RNShake.addListener((data) => {
-      console.log("hello", data);
-      setScreenshotURI(data);
-      setShowModal(true);
+      if (enabled) {
+        setScreenshotURI(data);
+        setShowModal(true);
+      } else {
+        console.log("Shake disabled");
+      }
     });
 
     return () => {

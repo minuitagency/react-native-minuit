@@ -1,5 +1,5 @@
-import { useState, setGlobal } from 'reactn';
-import { useEffect } from 'react';
+import { useState, setGlobal } from "reactn";
+import { useEffect } from "react";
 
 export default function useDataFromRef({
   ref,
@@ -8,7 +8,7 @@ export default function useDataFromRef({
   refreshArray = [],
 
   initialDocumentRef = null,
-  documentID = 'id',
+  documentID = "id",
   listener = false,
 
   condition = true,
@@ -46,7 +46,7 @@ export default function useDataFromRef({
   const loadMore = () => {
     if (!loading && !endReached) {
       getData({ paginate: true });
-      console.log('Loading more');
+      console.log("Loading more");
     }
   };
 
@@ -98,16 +98,16 @@ export default function useDataFromRef({
 
       if (newData) {
         if (paginate) {
-          console.log('new pagination');
+          console.log("new pagination");
           await updateData([...data, ...newData]);
         } else {
           await updateData(newData);
         }
       } else {
-        console.log('NO DATA');
+        console.log("NO DATA");
       }
     } catch (e) {
-      console.log('useDataFromRef ' + e);
+      console.log("useDataFromRef " + e);
       await updateData([]);
     } finally {
       setLoading(false);
