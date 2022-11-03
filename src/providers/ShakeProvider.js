@@ -45,7 +45,7 @@ export default ({ projectID = null, enabled = true, children }) => {
     return () => {
       subscription?.remove?.();
     };
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
     if (showModal === false) {

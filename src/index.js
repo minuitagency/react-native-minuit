@@ -5,7 +5,7 @@ import cloudInstance from "./config/cloud";
 
 import { useEffect } from "react";
 
-const MinuitProvider = ({ projectID = null, children }) => {
+const MinuitProvider = ({ projectID = null, projectId = null, children }) => {
   const [isShakeEnabled, setIsShakeEnabled] = useState(false);
 
   setGlobal({
@@ -32,6 +32,8 @@ const MinuitProvider = ({ projectID = null, children }) => {
         projectID,
       });
 
+      console.log("Shake enabled: ", data);
+
       setIsShakeEnabled(data);
     } catch (e) {
       console.log(e);
@@ -39,7 +41,10 @@ const MinuitProvider = ({ projectID = null, children }) => {
   };
 
   return (
-    <ShakeProvider projectID={projectID} enabled={isShakeEnabled || false}>
+    <ShakeProvider
+      projectID={projectID || projectId}
+      enabled={isShakeEnabled || false}
+    >
       <LoadingProvider>
         <TooltipProvider>{children}</TooltipProvider>
       </LoadingProvider>
