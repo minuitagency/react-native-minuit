@@ -8,6 +8,7 @@ const useGeoFire = ({
   formatFunction = null,
   radius = 100,
   parameter = 'point',
+  refreshArray = [],
 }) => {
   const [data, setData] = useState([]);
 
@@ -18,7 +19,7 @@ const useGeoFire = ({
     } else {
       console.log(center);
     }
-  }, [center, radius]);
+  }, [...refreshArray, center, radius]);
 
   const fetchQuery = async ({ customLocation = null } = {}) => {
     try {
