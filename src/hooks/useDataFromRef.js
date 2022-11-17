@@ -107,7 +107,11 @@ export default function useDataFromRef({
         console.log("NO DATA");
       }
     } catch (e) {
-      console.log("useDataFromRef " + e);
+      if (e.code === 'firestore/permission-denied') {
+        console.warn("Permission denied for ref: ", ref?._collectionPath?.relativeName);
+      } else {
+        console.log(e);
+      }
       await updateData([]);
     } finally {
       setLoading(false);
@@ -130,7 +134,11 @@ export default function useDataFromRef({
         setLoading(false);
       },
       async (e) => {
-        console.log(e);
+        if (e.code === 'firestore/permission-denied') {
+          console.warn("Permission denied for ref: ", ref?._collectionPath?.relativeName);
+        } else {
+          console.log(e);
+        }
         await updateData([]);
         setLoading(false);
       }
