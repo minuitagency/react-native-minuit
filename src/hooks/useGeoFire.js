@@ -6,18 +6,24 @@ const useGeoFire = ({
   geo, // require
   center,
   formatFunction = null,
+  condition = true,
   radius = 100,
   parameter = 'point',
   refreshArray = [],
+  logs = false,
 }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    if (center?.latitude && center?.longitude) {
-      console.log('FETCH');
+    if (center?.latitude && center?.longitude && condition) {
+      if (logs) {
+        console.log('Fetch for coordinate', center);
+      }
       fetchQuery();
     } else {
-      console.log(center);
+      if (logs) {
+        console.log(center);
+      }
     }
   }, [...refreshArray, center, radius]);
 
