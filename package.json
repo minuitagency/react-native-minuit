@@ -1,6 +1,6 @@
 {
   "name": "react-native-minuit",
-  "version": "0.1.71",
+  "version": "0.1.8",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -13,7 +13,7 @@
     "android"
   ],
   "repository": "https://github.com/minuitagency/react-native-minuit",
-  "author": "Théo Hudry",
+  "author": "minuit.agency",
   "license": "MIT",
   "homepage": "https://minuit.agency/",
   "publishConfig": {
