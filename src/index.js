@@ -8,6 +8,8 @@ import { useEffect } from "react";
 const MinuitProvider = ({ projectID = null, projectId = null, children }) => {
   const [isShakeEnabled, setIsShakeEnabled] = useState(false);
 
+  let _projectID = projectID || projectId || null;
+
   setGlobal({
     _isLoading: false,
     _tooltip: null,
@@ -21,15 +23,17 @@ const MinuitProvider = ({ projectID = null, projectId = null, children }) => {
   });
 
   useEffect(() => {
-    checkIfShakeIsEnabled();
-  }, []);
+    if (!__DEV__ && _projectID) {
+      checkIfShakeIsEnabled();
+    }
+  }, [_projectID]);
 
   const checkIfShakeIsEnabled = async () => {
     try {
       const { data } = await cloudInstance
         .functions()
         .httpsCallable("shakes-isShakeEnabled")({
-        projectID,
+        projectID: _projectID,
       });
 
       console.log("Shake enabled: ", data);
@@ -41,10 +45,7 @@ const MinuitProvider = ({ projectID = null, projectId = null, children }) => {
   };
 
   return (
-    <ShakeProvider
-      projectID={projectID || projectId}
-      enabled={isShakeEnabled || false}
-    >
+    <ShakeProvider projectID={_projectID} enabled={isShakeEnabled || false}>
       <LoadingProvider>
         <TooltipProvider>{children}</TooltipProvider>
       </LoadingProvider>
