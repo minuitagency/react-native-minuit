@@ -23,9 +23,7 @@ import {
 
 const isHorizontal = responsiveHeight(100) < responsiveWidth(100);
 
-export default ({projectID = null, children}) => {
-  const enabled = true;
-
+export default ({projectID = null, enabled = false, children}) => {
   const [, setTooltip] = useGlobal('_tooltip');
   const [, setIsLoading] = useGlobal('_isLoading');
 
@@ -37,11 +35,11 @@ export default ({projectID = null, children}) => {
 
   const stepList = [
     {title: 'Envoyer un nouveau rapport', showTitle: !isHorizontal},
-    {title: 'Description du problème'},
+    {title: 'Description du problème', showTitle: true},
   ];
 
   React.useEffect(() => {
-    const subscription = RNShake.addListener(data => {
+    const subscription = RNShake.addListener((data) => {
       if (enabled) {
         setScreenshotURI(data);
         setShowModal(true);
@@ -103,33 +101,31 @@ export default ({projectID = null, children}) => {
 
   const Header = useCallback(() => {
     return (
-      <SafeAreaView
-        style={[
-          SharedStyles.containerRowSpaceBetween,
-          {backgroundColor: Palette.darkPurple, padding: 10, minHeight: 50},
-        ]}>
-        <Pressable
-          onPress={() => {
-            if (step === 0) {
-              setShowModal(false);
-            } else {
-              setStep(step - 1);
-            }
-          }}>
+      <SafeAreaView style={[{backgroundColor: Palette.darkPurple}]}>
+        <View style={{...SharedStyles.containerRowSpaceBetween, padding: 20}}>
+          <Pressable
+            onPress={() => {
+              if (step === 0) {
+                setShowModal(false);
+              } else {
+                setStep(step - 1);
+              }
+            }}>
+            <Image
+              resizeMode="contain"
+              source={icons.back}
+              style={{height: 20, width: 20, tintColor: Palette.mainWhite}}
+            />
+          </Pressable>
+
           <Image
             resizeMode="contain"
-            source={icons.back}
-            style={{height: 20, width: 20, tintColor: Palette.mainWhite}}
+            source={require('../assets/images/logoFull.png')}
+            style={{height: 20, width: 100}}
           />
-        </Pressable>
 
-        <Image
-          resizeMode="contain"
-          source={require('../assets/images/logoFull.png')}
-          style={{height: 20, width: 100}}
-        />
-
-        <View style={{width: 30}} />
+          <View style={{width: 30}} />
+        </View>
       </SafeAreaView>
     );
   }, [step]);
@@ -155,71 +151,79 @@ export default ({projectID = null, children}) => {
               <SafeAreaView
                 style={{
                   flex: 1,
-                  padding: 20,
                   backgroundColor: '#13131a',
                 }}>
-                {currentStep?.showTitle && (
-                  <Text
-                    style={[
-                      Fonts.primary.bold(17, Palette.mainWhite),
-                      {textAlign: 'center', marginBottom: 20},
-                    ]}>
-                    {currentStep?.title || ''}
-                  </Text>
-                )}
+                <View style={{flex: 1, padding: 20}}>
+                  {currentStep?.showTitle && (
+                    <Text
+                      style={[
+                        Fonts.primary.regular(15, Palette.mainWhite),
+                        {textAlign: 'center', marginBottom: 20},
+                      ]}>
+                      {currentStep?.title || ''}
+                    </Text>
+                  )}
 
-                {!step ? (
-                  <View
-                    style={{
-                      flex: 0.8,
-                      borderRadius: 10,
-                      overflow: 'hidden',
-                    }}>
-                    <Image
-                      resizeMode={'cover'}
-                      style={{flex: 1}}
-                      source={{
-                        uri: screenshotURI,
+                  {!step ? (
+                    <View
+                      style={{
+                        flex: 0.8,
+                        borderRadius: 10,
+                        overflow: 'hidden',
+                      }}>
+                      <Image
+                        resizeMode={'cover'}
+                        style={{flex: 1}}
+                        source={{
+                          uri: __DEV__
+                            ? 'https://m.media-amazon.com/images/I/51q1y-Ae9gL.png'
+                            : screenshotURI,
+                        }}
+                      />
+                    </View>
+                  ) : (
+                    <Input
+                      style={{
+                        height: isHorizontal ? 150 : 300,
+                        backgroundColor: Palette.mainWhite,
                       }}
+                      value={description}
+                      onChange={setDescription}
+                      isTextarea
                     />
-                  </View>
-                ) : (
-                  <Input
-                    style={{height: 300, backgroundColor: Palette.mainWhite}}
-                    value={description}
-                    onChange={setDescription}
-                    isTextarea
-                  />
-                )}
+                  )}
 
-                <Button
-                  text={step === stepList.length - 1 ? 'Envoyer' : 'Continuer'}
-                  primary
-                  isAbsoluteBottom
-                  containerStyle={
-                    isHorizontal
-                      ? {
-                          bottom: gutters,
-                          right: 0,
-                          left: 0,
-                        }
-                      : {}
-                  }
-                  style={{
-                    ...(isHorizontal
-                      ? {width: '40%', alignSelf: 'center', minHeight: 40}
-                      : {}),
-                    backgroundColor: Palette.primary,
-                  }}
-                  textColor={Palette.mainWhite}
-                  onPress={() => {
-                    if (step === stepList.length - 1) {
-                      submitShake();
-                    } else {
-                      setStep(step + 1);
+                  <Button
+                    text={
+                      step === stepList.length - 1 ? 'Envoyer' : 'Continuer'
                     }
-                  }}
-                />
+                    primary
+                    isAbsoluteBottom
+                    containerStyle={
+                      isHorizontal
+                        ? {
+                            bottom: gutters,
+                            right: 0,
+                            left: 0,
+                          }
+                        : {}
+                    }
+                    style={{
+                      ...(isHorizontal
+                        ? {width: '50%', alignSelf: 'center', minHeight: 40}
+                        : {}),
+                      backgroundColor: Palette.primary,
+                    }}
+                    textColor={Palette.mainWhite}
+                    onPress={() => {
+                      if (step === stepList.length - 1) {
+                        submitShake();
+                      } else {
+                        setStep(step + 1);
+                      }
+                    }}
+                  />
+                </View>
               </SafeAreaView>
             </DismissKeyboard>
           </TooltipProvider>
