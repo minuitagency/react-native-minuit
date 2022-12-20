@@ -1,9 +1,9 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { Motion } from '@legendapp/motion';
-import { Fonts, gutters, Palette, SharedStyles } from '../../styles';
-import { getGlobal } from 'reactn';
+import {Text} from 'react-native';
+import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {Motion} from '@legendapp/motion';
+import {Fonts, gutters, Palette, SharedStyles} from '../../styles';
+import {getGlobal} from 'reactn';
 
 const Button = ({
   beforeText = null,
@@ -22,8 +22,9 @@ const Button = ({
   isAbsoluteBottom = false,
 }) => {
   const {
-    _config: { colors },
+    _config: {colors = {}},
   } = getGlobal();
+
   const bgColor = primary ? colors.primary : Palette.tran;
   const textColorButton = primary ? Palette.mainWhite : textColor;
 
@@ -31,7 +32,7 @@ const Button = ({
     <Motion.Pressable
       onPress={onPress}
       style={[
-        { width: '100%' },
+        {width: '100%'},
         isAbsoluteBottom
           ? {
               position: 'absolute',
@@ -41,8 +42,7 @@ const Button = ({
             }
           : {},
         containerStyle,
-      ]}
-    >
+      ]}>
       <Motion.View
         style={[
           SharedStyles.containerCenter,
@@ -52,18 +52,17 @@ const Button = ({
             backgroundColor: bgColor,
             flexDirection: 'row',
           },
-          { flexDirection: 'row' },
+          {flexDirection: 'row'},
           style,
         ]}
-        whileTap={{ scale: 0.95 }}
+        whileTap={{scale: 0.95}}
         transition={{
           type: 'spring',
           damping: 20,
           stiffness: 300,
-        }}
-      >
+        }}>
         {beforeText?.()}
-        <Text style={[Fonts.primary.bold(15, textColorButton), textStyle]}>
+        <Text style={[Fonts.primary.bold(12, textColorButton), textStyle]}>
           {text}
         </Text>
       </Motion.View>

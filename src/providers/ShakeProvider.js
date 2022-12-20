@@ -1,44 +1,52 @@
-import React, { useState, useCallback, useEffect, useGlobal } from "reactn";
-import { Text, Modal, View, Image, Pressable } from "react-native";
-import moment from "moment";
+import React, {useState, useCallback, useEffect, useGlobal} from 'reactn';
+import {Text, Modal, View, Image, Pressable, SafeAreaView} from 'react-native';
+import moment from 'moment';
 
-import RNShake from "../../lib";
+import RNShake from '../../lib';
 
-import { uploadToCloud } from "../actions/userActions";
+import {uploadToCloud} from '../actions/userActions';
 
-import cloudInstance from "../config/cloud";
+import cloudInstance from '../config/cloud';
 
-import { SharedStyles, Fonts, Palette } from "../styles";
+import {SharedStyles, Fonts, Palette, gutters} from '../styles';
 
-import { LoadingProvider, TooltipProvider } from "../providers";
+import {LoadingProvider, TooltipProvider} from '../providers';
 
-import { icons } from "../assets/";
-import Button from "../components/Buttons/Button";
-import Input from "../components/Inputs/Input";
-import DismissKeyboard from "../components/Inputs/DismissKeyboard";
+import {icons} from '../assets/';
+import Button from '../components/Buttons/Button';
+import Input from '../components/Inputs/Input';
+import DismissKeyboard from '../components/Inputs/DismissKeyboard';
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
-const stepList = [
-  { title: "Envoyer un nouveau rapport" },
-  { title: "Description du problème" },
-];
+const isHorizontal = responsiveHeight(100) < responsiveWidth(100);
 
-export default ({ projectID = null, enabled = true, children }) => {
-  const [, setTooltip] = useGlobal("_tooltip");
-  const [, setIsLoading] = useGlobal("_isLoading");
+export default ({projectID = null, children}) => {
+  const enabled = true;
 
-  const [showModal, setShowModal] = useState(false);
+  const [, setTooltip] = useGlobal('_tooltip');
+  const [, setIsLoading] = useGlobal('_isLoading');
+
+  const [showModal, setShowModal] = useState(true);
   const [step, setStep] = useState(0);
 
   const [screenshotURI, setScreenshotURI] = useState(null);
-  const [description, setDescription] = useState(__DEV__ ? "teeeeeeeest" : "");
+  const [description, setDescription] = useState(__DEV__ ? 'teeeeeeeest' : '');
+
+  const stepList = [
+    {title: 'Envoyer un nouveau rapport', showTitle: !isHorizontal},
+    {title: 'Description du problème'},
+  ];
 
   React.useEffect(() => {
-    const subscription = RNShake.addListener((data) => {
+    const subscription = RNShake.addListener(data => {
       if (enabled) {
         setScreenshotURI(data);
         setShowModal(true);
       } else {
-        console.log("Shake disabled");
+        console.log('Shake disabled');
       }
     });
 
@@ -50,7 +58,7 @@ export default ({ projectID = null, enabled = true, children }) => {
   useEffect(() => {
     if (showModal === false) {
       setScreenshotURI(null);
-      setDescription("");
+      setDescription('');
       setStep(0);
     }
   }, [showModal]);
@@ -58,11 +66,11 @@ export default ({ projectID = null, enabled = true, children }) => {
   const submitShake = async () => {
     try {
       if (description.length < 5) {
-        throw new Error("Description trop courte");
+        throw new Error('Description trop courte');
       }
 
       if (description.length > 500) {
-        throw new Error("Description trop longue");
+        throw new Error('Description trop longue');
       }
 
       if (!screenshotURI) {
@@ -70,24 +78,24 @@ export default ({ projectID = null, enabled = true, children }) => {
       }
 
       setIsLoading(true);
-      setTooltip({ text: "Publication en cours ..." });
+      setTooltip({text: 'Publication en cours ...'});
 
-      const { uri } = await uploadToCloud({
+      const {uri} = await uploadToCloud({
         path: `shakes/${projectID}/${moment().valueOf()}.jpg`,
         uri: screenshotURI,
       });
 
-      await cloudInstance.functions().httpsCallable("shakes-submitNewShake")({
+      await cloudInstance.functions().httpsCallable('shakes-submitNewShake')({
         screenshot: uri,
         description: description.trim(),
         projectID,
       });
 
-      setTooltip({ text: "Publication effectuée !" });
+      setTooltip({text: 'Publication effectuée !'});
       setShowModal(false);
     } catch (e) {
       console.log(e.message);
-      setTooltip({ text: e.message });
+      setTooltip({text: e.message});
     } finally {
       setIsLoading(false);
     }
@@ -95,12 +103,11 @@ export default ({ projectID = null, enabled = true, children }) => {
 
   const Header = useCallback(() => {
     return (
-      <View
+      <SafeAreaView
         style={[
           SharedStyles.containerRowSpaceBetween,
-          { backgroundColor: Palette.darkPurple, padding: 20 },
-        ]}
-      >
+          {backgroundColor: Palette.darkPurple, padding: 10, minHeight: 50},
+        ]}>
         <Pressable
           onPress={() => {
             if (step === 0) {
@@ -108,29 +115,30 @@ export default ({ projectID = null, enabled = true, children }) => {
             } else {
               setStep(step - 1);
             }
-          }}
-        >
+          }}>
           <Image
             resizeMode="contain"
             source={icons.back}
-            style={{ height: 30, width: 30, tintColor: Palette.mainWhite }}
+            style={{height: 20, width: 20, tintColor: Palette.mainWhite}}
           />
         </Pressable>
 
         <Image
           resizeMode="contain"
-          source={require("../assets/images/logoFull.png")}
-          style={{ height: 30, width: 150 }}
+          source={require('../assets/images/logoFull.png')}
+          style={{height: 20, width: 100}}
         />
 
-        <View style={{ width: 30 }} />
-      </View>
+        <View style={{width: 30}} />
+      </SafeAreaView>
     );
   }, [step]);
 
+  const currentStep = stepList[step];
+
   return (
     <>
-      <View style={{ flex: 1 }}>{children}</View>
+      <View style={{flex: 1}}>{children}</View>
 
       <Modal
         animationType="slide"
@@ -138,36 +146,38 @@ export default ({ projectID = null, enabled = true, children }) => {
         onRequestClose={() => {
           setShowModal(!showModal);
         }}
-        presentationStyle={"formSheet"}
-      >
+        presentationStyle={'formSheet'}>
         <LoadingProvider>
           <TooltipProvider>
             <DismissKeyboard>
               <Header />
 
-              <View
+              <SafeAreaView
                 style={{
                   flex: 1,
                   padding: 20,
-                  backgroundColor: "#13131a",
-                }}
-              >
-                <Text
-                  style={[
-                    Fonts.primary.bold(17, Palette.mainWhite),
-                    { textAlign: "center", marginBottom: 20 },
-                  ]}
-                >
-                  {stepList[step].title}
-                </Text>
+                  backgroundColor: '#13131a',
+                }}>
+                {currentStep?.showTitle && (
+                  <Text
+                    style={[
+                      Fonts.primary.bold(17, Palette.mainWhite),
+                      {textAlign: 'center', marginBottom: 20},
+                    ]}>
+                    {currentStep?.title || ''}
+                  </Text>
+                )}
 
                 {!step ? (
                   <View
-                    style={{ flex: 0.8, borderRadius: 10, overflow: "hidden" }}
-                  >
+                    style={{
+                      flex: 0.8,
+                      borderRadius: 10,
+                      overflow: 'hidden',
+                    }}>
                     <Image
-                      resizeMode={"cover"}
-                      style={{ flex: 1 }}
+                      resizeMode={'cover'}
+                      style={{flex: 1}}
                       source={{
                         uri: screenshotURI,
                       }}
@@ -175,7 +185,7 @@ export default ({ projectID = null, enabled = true, children }) => {
                   </View>
                 ) : (
                   <Input
-                    style={{ height: 300, backgroundColor: Palette.mainWhite }}
+                    style={{height: 300, backgroundColor: Palette.mainWhite}}
                     value={description}
                     onChange={setDescription}
                     isTextarea
@@ -183,9 +193,24 @@ export default ({ projectID = null, enabled = true, children }) => {
                 )}
 
                 <Button
-                  text={step === stepList.length - 1 ? "Envoyer" : "Continuer"}
+                  text={step === stepList.length - 1 ? 'Envoyer' : 'Continuer'}
                   primary
                   isAbsoluteBottom
+                  containerStyle={
+                    isHorizontal
+                      ? {
+                          bottom: gutters,
+                          right: 0,
+                          left: 0,
+                        }
+                      : {}
+                  }
+                  style={{
+                    ...(isHorizontal
+                      ? {width: '40%', alignSelf: 'center', minHeight: 40}
+                      : {}),
+                    backgroundColor: Palette.primary,
+                  }}
                   textColor={Palette.mainWhite}
                   onPress={() => {
                     if (step === stepList.length - 1) {
@@ -195,7 +220,7 @@ export default ({ projectID = null, enabled = true, children }) => {
                     }
                   }}
                 />
-              </View>
+              </SafeAreaView>
             </DismissKeyboard>
           </TooltipProvider>
         </LoadingProvider>
