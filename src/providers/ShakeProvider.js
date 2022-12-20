@@ -27,7 +27,7 @@ export default ({projectID = null, enabled = false, children}) => {
   const [, setTooltip] = useGlobal('_tooltip');
   const [, setIsLoading] = useGlobal('_isLoading');
 
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState(0);
 
   const [screenshotURI, setScreenshotURI] = useState(null);
