@@ -1,11 +1,22 @@
-import React, {useState, setGlobal} from 'reactn';
-import {TooltipProvider, LoadingProvider, ShakeProvider} from './providers';
+import React, { useState, setGlobal } from 'reactn';
+import { TooltipProvider, LoadingProvider, ShakeProvider } from './providers';
 
 import cloudInstance from './config/cloud';
 
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
-const MinuitProvider = ({projectID = null, projectId = null, children}) => {
+const defaultThemeColor = {
+  primary: 'rgba(0,187,255,0.57)',
+  secondary: 'rgba(34,119,183,0.57)',
+  destructive: 'red',
+};
+
+const MinuitProvider = ({
+  projectID = null,
+  projectId = null,
+  children,
+  themeColors = defaultThemeColor,
+}) => {
   const [isShakeEnabled, setIsShakeEnabled] = useState(false);
 
   let _projectID = projectID || projectId || null;
@@ -14,11 +25,7 @@ const MinuitProvider = ({projectID = null, projectId = null, children}) => {
     _isLoading: false,
     _tooltip: null,
     _config: {
-      colors: {
-        primary: 'rgba(0,187,255,0.57)',
-        secondary: 'rgba(34,119,183,0.57)',
-        destructive: 'red',
-      },
+      colors: themeColors,
     },
   });
 
@@ -30,7 +37,7 @@ const MinuitProvider = ({projectID = null, projectId = null, children}) => {
 
   const checkIfShakeIsEnabled = async () => {
     try {
-      const {data} = await cloudInstance
+      const { data } = await cloudInstance
         .functions()
         .httpsCallable('shakes-isShakeEnabled')({
         projectID: _projectID,
@@ -53,4 +60,4 @@ const MinuitProvider = ({projectID = null, projectId = null, children}) => {
   );
 };
 
-export {MinuitProvider};
+export { MinuitProvider };
