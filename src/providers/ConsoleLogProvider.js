@@ -3,7 +3,7 @@ import React, { useGlobal } from "reactn";
 export default ({ children }) => {
   const [consoleLogs, setConsoleLogs] = useGlobal("_consoleLogs");
 
-  console.log = (function (old_function) {
+  /* console.log = (function (old_function) {
     return function (...args) {
       let newLogs = [...consoleLogs, ...args];
 
@@ -15,7 +15,7 @@ export default ({ children }) => {
 
       old_function.apply(this, args);
     };
-  })(console.log);
+  })(console.log); */
 
   return children;
 };
