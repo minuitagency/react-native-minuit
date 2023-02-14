@@ -2,8 +2,14 @@ import React, { useRef } from 'react';
 import { FlatList, View } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import { useGlobal } from 'reactn';
+import { gutters } from 'src/styles';
 
-export default function MessageList({ messages, loadMoreMsg, MessagesConfig }) {
+export default function MessageList({
+  messages,
+  loadMoreMsg,
+  MessagesConfig,
+  loadingComponent = null,
+}) {
   const [uid] = useGlobal('uid');
   const flatListRef = useRef();
 
@@ -15,11 +21,12 @@ export default function MessageList({ messages, loadMoreMsg, MessagesConfig }) {
         onLayout={() =>
           setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
         }
+        ListFooterComponent={() => loadingComponent && loadingComponent()}
         onEndReached={() => loadMoreMsg()}
         onEndReachedThreshold={0.5}
         contentContainerStyle={{
           paddingBottom: responsiveHeight(2),
-          paddingHorizontal: 22,
+          paddingHorizontal: gutters,
           flexGrow: 1,
           justifyContent: 'flex-end',
         }}
