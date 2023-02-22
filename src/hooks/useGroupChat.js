@@ -14,10 +14,10 @@ export default function useGroupChat({
   formatConversation = (data) => data,
   formatMessages = (data) => data,
   messagesPerBatch = 20,
+  senderData = {}, // user this for name or picture
 }) {
   const DEFAULT_MSG_TYPE = 'MESSAGE';
   const [uid] = useGlobal('uid'); // required for sending messages
-  const [user] = useGlobal('user'); // required for sending messages should contain name props
   const [, setGlobalLoading] = useGlobal('_isLoading');
   const [convId, setConvId] = useState(conversationId);
   const [newDocSnap, setNewDocSnap] = useState(null);
@@ -127,7 +127,7 @@ export default function useGroupChat({
         type,
         time: firestore.Timestamp.now(),
         sender: uid,
-        name: user?.name || '',
+        senderData,
         ...moreData,
       });
       if (messages?.length === 0) {
@@ -153,7 +153,7 @@ export default function useGroupChat({
         lastMessage: {
           content: message,
           sender: uid,
-          name: user?.name || '',
+          senderData,
         },
       });
       setConvId(id);
