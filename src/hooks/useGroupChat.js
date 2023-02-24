@@ -14,7 +14,7 @@ export default function useGroupChat({
   formatConversation = (data) => data,
   formatMessages = (data) => data,
   messagesPerBatch = 20,
-  senderData = {}, // user this for name or picture
+  senderData = {}, // use this for name or picture
 }) {
   const DEFAULT_MSG_TYPE = 'MESSAGE';
   const [uid] = useGlobal('uid'); // required for sending messages
@@ -182,8 +182,18 @@ export default function useGroupChat({
     }
   }
 
+  async function deleteMessage(messageId) {
+    try {
+      await messageRef.doc(messageId).delete();
+      setMessages((prev) => prev.filter((msg) => msg.id !== messageId));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return {
     sendMessage,
+    deleteMessage,
     msgLoading: convId === null ? false : loading,
     getMoreMsg: loadMore,
     messages,
