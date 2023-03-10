@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { FlatList } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import { useGlobal } from 'reactn';
-import { gutters } from 'src/styles';
+import { gutters } from '../../styles';
 
 export default function MessageList({
   messages,
