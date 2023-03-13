@@ -73,7 +73,7 @@ export default function useGroupChat({
           id: newDocSnap.id,
           ...newDocSnap.data(),
         };
-        setMessages((prev) => [newMsg, ...prev]);
+        setMessages((prev) => [...formatMessages([newMsg]), ...prev]);
       }
       setNewDocSnap(null);
     }
