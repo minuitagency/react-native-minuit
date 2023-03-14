@@ -22,11 +22,18 @@ export default function useGroupChat({
   const [convId, setConvId] = useState(conversationId);
   const [newDocSnap, setNewDocSnap] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [pendingMsg, setPendingMsg] = useState(null);
 
   const messageRef = useMemo(
     () => (convId ? conversationRef.doc(convId).collection('messages') : null),
     [convId]
   );
+
+  useEffect(() => {
+    if (messageRef && pendingMsg) {
+      sendMessage(pendingMsg).then(() => setPendingMsg(null));
+    }
+  }, [messageRef, pendingMsg]);
 
   useDataFromRef({
     ref: convId && conversationRef.doc(convId),
@@ -157,7 +164,7 @@ export default function useGroupChat({
         },
       });
       setConvId(id);
-      await sendMsg({ message, type, moreData });
+      setPendingMsg({ message, type, moreData });
     } catch (e) {
       console.log(e);
     }
