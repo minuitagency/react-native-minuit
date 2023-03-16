@@ -113,7 +113,7 @@ export default function useGroupChat({
         .orderBy('time', 'desc')
         .limit(1)
         .onSnapshot((snapshot) => {
-          snapshot.docChanges().forEach((change) => {
+          snapshot?.docChanges()?.forEach((change) => {
             if (change.type === 'added') {
               setNewDocSnap(change.doc);
             }
