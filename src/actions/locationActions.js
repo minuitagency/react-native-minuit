@@ -17,6 +17,9 @@ export const animateToCoordinates = ({
 };
 
 export function getDistance(point1, point2) {
+  if (!point1?.latitude || !point2?.latitude) {
+    return null;
+  }
   let lat1 = point1.latitude;
   let lat2 = point2.latitude;
   let lon1 = point1.longitude;
