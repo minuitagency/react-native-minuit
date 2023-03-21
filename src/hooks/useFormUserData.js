@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export function useFormUserData({ initialUserData, initialState }) {
   const [userData, setUser] = useState(initialState);
@@ -13,10 +13,20 @@ export function useFormUserData({ initialUserData, initialState }) {
     setUser({ ...userData, [name]: value });
   };
 
+  const updatedData = useMemo(() => {
+    if (!userData || !initialData) {
+      return {};
+    }
+    return _.pickBy(userData, (value, key) => {
+      return !_.isEqual(value, initialData[key]);
+    });
+  }, [userData, initialData]);
+
   return {
     userData,
     onChangeInput,
     initialData,
+    updatedData,
     contentChange: !_.isEqual(userData, initialData),
   };
 }
