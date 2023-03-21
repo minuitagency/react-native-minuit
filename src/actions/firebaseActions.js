@@ -23,3 +23,13 @@ export function uploadToFirebase(firebase, file, path) {
     }
   });
 }
+
+export async function isAlreadyInFirestore({
+  ref,
+  field,
+  value,
+  operator = '==',
+}) {
+  const { docs = [] } = await ref.where(field, operator, value).get();
+  return docs.length > 0;
+}
