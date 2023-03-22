@@ -1,9 +1,9 @@
-import { useEffect, useState } from "reactn";
+import { useEffect, useState } from 'reactn';
 
-import algoliasearch from "algoliasearch/lite";
+import algoliasearch from 'algoliasearch/lite';
 
 export default ({
-  query = "",
+  query = '',
   algoliaObject: { index = null, projectID, publicKey },
 }) => {
   const [result, setResult] = useState([]);
@@ -27,7 +27,7 @@ export default ({
 
   const getSearchResult = async () => {
     try {
-      if (query.length > 1) {
+      if (query.length > 0) {
         const { hits } = await indexAlgolia.search(query);
 
         setResult(
@@ -38,7 +38,7 @@ export default ({
       }
     } catch (e) {
       setResult([]);
-      console.log("ALGOLIA" + e);
+      console.log('ALGOLIA' + e);
     }
   };
 
