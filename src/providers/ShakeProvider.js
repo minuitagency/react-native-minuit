@@ -39,6 +39,7 @@ export default ({ projectID = null, enabled = false, children }) => {
   const [step, setStep] = useState(0);
 
   const [screenshotURI, setScreenshotURI] = useState(null);
+  const [tmpScreenshotURI, setTmpScreenshotURI] = useState(null);
   const [description, setDescription] = useState(__DEV__ ? 'teeeeeeeest' : '');
 
   const stepList = [
@@ -46,19 +47,17 @@ export default ({ projectID = null, enabled = false, children }) => {
     { title: 'Description du problème', showTitle: true },
   ];
 
-  function onNewShake(data) {
-    if (!screenshotURI) {
-      setScreenshotURI(data);
-      setShowModal(true);
-    } else {
-      console.log('Shake disabled');
+  useEffect(() => {
+    if (tmpScreenshotURI && !screenshotURI) {
+      setScreenshotURI(tmpScreenshotURI);
     }
-  }
+  }, [tmpScreenshotURI]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const subscription = RNShake.addListener((data) => {
       if (enabled) {
-        onNewShake(data);
+        setTmpScreenshotURI(data);
+        setShowModal(true);
       } else {
         console.log('Shake disabled');
       }
@@ -71,6 +70,7 @@ export default ({ projectID = null, enabled = false, children }) => {
 
   useEffect(() => {
     if (showModal === false) {
+      setTmpScreenshotURI(null);
       setScreenshotURI(null);
       setDescription('');
       setStep(0);
