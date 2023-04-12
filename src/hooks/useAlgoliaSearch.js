@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
+import _ from 'lodash';
 
 export default ({
   query = '',
@@ -9,38 +10,43 @@ export default ({
   batch = 20,
 }) => {
   const [result, setResult] = useState([]);
-  const [indexAlgolia, setIndexAlgolia] = useState(null);
   const [currPage, setCurrPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [nbHits, setNbHits] = useState(0);
 
-  useEffect(() => {
-    if (!indexAlgolia) {
-      setIndexAlgolia(algoliasearch(projectID, publicKey).initIndex(index));
-    }
+  const indexAlgolia = useMemo(
+    () => algoliasearch(projectID, publicKey).initIndex(index),
+    [index]
+  );
 
-    return () => {
-      setIndexAlgolia(null);
-    };
-  }, [index]);
+  function resetAllStates() {
+    setResult([]);
+    setCurrPage(0);
+    setTotalPage(0);
+    setNbHits(0);
+  }
 
   useEffect(() => {
     if (indexAlgolia) {
-      console.log({ currPage });
-      setResult([]);
-      setCurrPage(0);
-      setTotalPage(0);
-      setNbHits(0);
+      resetAllStates();
       getSearchResult(0);
     }
-  }, [query, indexAlgolia]);
+  }, [
+    query,
+    indexAlgolia,
+    Object.values(searchParams).length,
+    searchParams?.filters,
+  ]);
 
   async function getSearchResult(pageToSearch = 0) {
     try {
-      setLoading(true);
-      if (query.length > 0) {
-        console.log('searching for page: ', pageToSearch);
+      if (loading) {
+        return;
+      }
+      if (query.length > 0 || _.size(searchParams) > 0) {
+        setLoading(true);
+        console.log('SEARCH', searchParams);
         const {
           hits = [],
           nbPages = 0,
@@ -50,22 +56,23 @@ export default ({
           hitsPerPage: batch,
           ...searchParams,
         });
-        setCurrPage(pageToSearch + 1);
-        setTotalPage(nbPages);
-        setNbHits(nbHits);
         const unformattedHit = hits.map((itemHit) => ({
           ...itemHit,
           id: itemHit.objectID,
         }));
         const formattedHits = await format(unformattedHit);
-        setResult((prev) => [...prev, ...formattedHits]);
+        if (formattedHits.length > 0) {
+          setResult((prev) => [...prev, ...formattedHits]);
+        }
+        setCurrPage(pageToSearch + 1);
+        setTotalPage(nbPages);
+        setNbHits(nbHits);
       } else {
         setResult([]);
       }
     } catch (e) {
       setResult([]);
-      console.log('Algolia error');
-      console.log(e);
+      console.log('Algolia', e);
     } finally {
       setLoading(false);
     }
