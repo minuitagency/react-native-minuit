@@ -35,8 +35,9 @@ export default ({
   }, [
     query,
     indexAlgolia,
-    Object.values(searchParams).length,
-    searchParams?.filters,
+    searchParams.filters,
+    searchParams.aroundLatLng,
+    searchParams.aroundRadius,
   ]);
 
   async function getSearchResult(pageToSearch = 0) {
@@ -46,7 +47,6 @@ export default ({
       }
       if (query.length > 0 || _.size(searchParams) > 0) {
         setLoading(true);
-        console.log('SEARCH', searchParams);
         const {
           hits = [],
           nbPages = 0,
