@@ -1,18 +1,19 @@
-import { useState, setGlobal } from "reactn";
-import { useEffect } from "react";
+import { useState, setGlobal } from 'reactn';
+import { useEffect } from 'react';
+
+const log = (d) => console.log(`\x1b[35m ${d}\x1b[0m`);
 
 export default function useDataFromRef({
   ref,
 
-  initialState = [],
-  refreshArray = [],
-
-  initialDocumentRef = null,
-  documentID = "id",
+  documentID = 'id',
   listener = false,
 
   condition = true,
   simpleRef = false,
+
+  initialState = simpleRef ? null : [],
+  refreshArray = [],
 
   usePagination = false,
 
@@ -29,130 +30,109 @@ export default function useDataFromRef({
   const [lastVisible, setLastVisible] = useState(null);
 
   useEffect(() => {
-    if (condition) {
-      if (listener && !usePagination) {
-        const subData = getListenerData();
-        return () => subData?.();
-      } else {
-        resetState();
-
-        getData({ paginate: usePagination });
-      }
-    } else {
-      resetState();
-    }
-  }, [...refreshArray, condition, usePagination]);
-
-  const loadMore = () => {
-    if (!loading && !endReached) {
-      getData({ paginate: true });
-      console.log("Loading more");
-    }
-  };
-
-  const resetState = () => {
     if (data !== initialState) {
       onUpdate(initialState);
     }
-
     setEndReached(false);
     setLastVisible(null);
     setData(initialState);
-  };
+    if (listener && !usePagination) {
+      const subData = getListenerData();
+      return () => subData?.();
+    } else {
+      getData(null);
+    }
+  }, [...refreshArray, condition, usePagination]);
 
-  const getData = async ({ paginate = false } = {}) => {
+  function loadMore() {
+    if (!loading && !endReached) {
+      if (listener) {
+        log('Cannot use loadMore with listener');
+      } else {
+        getData(data).then(() => log('Loading more'));
+      }
+    }
+  }
+
+  async function getData(currData = null) {
     try {
       setLoading(true);
-      let newData = simpleRef ? null : [];
-      let initialDoc = null;
 
-      if (initialDocumentRef && !lastVisible && !simpleRef) {
-        initialDoc = await initialDocumentRef.get();
+      let dynamicRef = ref;
+      if (lastVisible) {
+        dynamicRef = dynamicRef.startAfter(lastVisible);
       }
-
-      const dynamicRef =
-        paginate && lastVisible
-          ? ref.startAfter(lastVisible).limit(batchSize)
-          : initialDoc
-          ? ref.startAt(initialDoc).limit(batchSize)
-          : paginate
-          ? ref.limit(batchSize)
-          : ref;
-
+      if (usePagination) {
+        dynamicRef = dynamicRef.limit(batchSize);
+      }
       const dataSnap = await dynamicRef.get();
-
-      if (simpleRef && dataSnap.data()) {
-        newData = { ...dataSnap.data(), [documentID]: dataSnap.id };
-      } else if (!simpleRef && dataSnap.docs.length > 0) {
-        newData = dataSnap.docs.map((item) => {
-          return { ...item.data(), [documentID]: item.id };
-        });
-
-        if (paginate) {
-          if (batchSize !== dataSnap.docs.length) {
-            setEndReached(true);
-          }
-          setLastVisible(dataSnap.docs[dataSnap.docs.length - 1]);
-        }
-      }
+      const newData = snapshotToData(dataSnap);
 
       if (newData) {
-        if (paginate) {
-          console.log("new pagination");
-          await updateData([...data, ...newData]);
-        } else {
-          await updateData(newData);
-        }
+        await updateData(newData, currData);
       } else {
-        console.log("NO DATA");
+        log('No data');
       }
     } catch (e) {
-      if (e.code === 'firestore/permission-denied') {
-        console.warn("Permission denied for ref: ", ref?._collectionPath?.relativeName);
-      } else {
-        console.log(e);
-      }
-      await updateData([]);
+      await handleError(e);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const getListenerData = () => {
+  function getListenerData() {
     return ref?.onSnapshot(
       async (dataSnap) => {
-        let newData;
-
-        if (simpleRef) {
-          newData = { ...dataSnap.data(), [documentID]: dataSnap.id };
-        } else {
-          newData = dataSnap.docs.map((item) => {
-            return { ...item.data(), [documentID]: item.id };
-          });
-        }
+        const newData = snapshotToData(dataSnap);
         await updateData(newData);
         setLoading(false);
       },
       async (e) => {
-        if (e.code === 'firestore/permission-denied') {
-          console.warn("Permission denied for ref: ", ref?._collectionPath?.relativeName);
-        } else {
-          console.log(e);
-        }
-        await updateData([]);
         setLoading(false);
+        await handleError(e);
       }
     );
-  };
+  }
 
-  const updateData = async (newData) => {
-    setData(format ? await format(newData) : newData);
-    onUpdate(newData);
+  function snapshotToData(snapshot) {
+    if (usePagination) {
+      if (batchSize !== snapshot.docs.length) {
+        log('End reached');
+        setEndReached(true);
+      }
+      setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+    }
+    if (simpleRef) {
+      return { ...snapshot.data(), [documentID]: snapshot.id };
+    } else {
+      return snapshot.docs.map((item) => {
+        return { ...item.data(), [documentID]: item.id };
+      });
+    }
+  }
+
+  async function updateData(newData, currData = null) {
+    const formatData = format ? await format(newData) : newData;
+    const _data = currData ? [...currData, ...formatData] : formatData;
+    setData(_data);
+    onUpdate(_data);
 
     if (updateGlobalState) {
-      setGlobal({ [updateGlobalState]: data });
+      await setGlobal({ [updateGlobalState]: _data });
     }
-  };
+  }
+
+  async function handleError(e) {
+    if (e.code === 'firestore/permission-denied') {
+      console.warn(
+        'Permission denied for ref: ',
+        ref?._collectionPath?.relativeName
+      );
+    } else {
+      console.log(e);
+    }
+    await updateData([]);
+  }
 
   return { data, setData, loading, loadMore };
 }
