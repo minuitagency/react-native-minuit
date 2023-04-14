@@ -30,17 +30,19 @@ export default function useDataFromRef({
   const [lastVisible, setLastVisible] = useState(null);
 
   useEffect(() => {
-    if (data !== initialState) {
-      onUpdate(initialState);
-    }
-    setEndReached(false);
-    setLastVisible(null);
-    setData(initialState);
-    if (listener && !usePagination) {
-      const subData = getListenerData();
-      return () => subData?.();
-    } else {
-      getData(null);
+    if (condition) {
+      if (data !== initialState) {
+        onUpdate(initialState);
+      }
+      setEndReached(false);
+      setLastVisible(null);
+      setData(initialState);
+      if (listener && !usePagination) {
+        const subData = getListenerData();
+        return () => subData?.();
+      } else {
+        getData();
+      }
     }
   }, [...refreshArray, condition, usePagination]);
 
@@ -49,18 +51,19 @@ export default function useDataFromRef({
       if (listener) {
         log('Cannot use loadMore with listener');
       } else {
-        getData(data).then(() => log('Loading more'));
+        log('Loading more');
+        getData({ currData: data, startAfter: lastVisible });
       }
     }
   }
 
-  async function getData(currData = null) {
+  async function getData({ currData = null, startAfter = null } = {}) {
     try {
       setLoading(true);
 
       let dynamicRef = ref;
-      if (lastVisible) {
-        dynamicRef = dynamicRef.startAfter(lastVisible);
+      if (startAfter) {
+        dynamicRef = dynamicRef.startAfter(startAfter);
       }
       if (usePagination) {
         dynamicRef = dynamicRef.limit(batchSize);
@@ -84,7 +87,7 @@ export default function useDataFromRef({
     return ref?.onSnapshot(
       async (dataSnap) => {
         const newData = snapshotToData(dataSnap);
-        await updateData(newData);
+        await updateData(newData, lastVisible);
         setLoading(false);
       },
       async (e) => {
