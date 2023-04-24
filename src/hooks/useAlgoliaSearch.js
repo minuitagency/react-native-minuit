@@ -8,6 +8,7 @@ export default ({
   searchParams = {},
   format = (rst) => rst,
   batch = 20,
+  condition = true,
 }) => {
   const [result, setResult] = useState([]);
   const [currPage, setCurrPage] = useState(0);
@@ -28,8 +29,8 @@ export default ({
   }
 
   useEffect(() => {
-    if (indexAlgolia) {
-      resetAllStates();
+    resetAllStates();
+    if (indexAlgolia && condition) {
       getSearchResult(0);
     }
   }, [
@@ -38,6 +39,7 @@ export default ({
     searchParams.filters,
     searchParams.aroundLatLng,
     searchParams.aroundRadius,
+    condition,
   ]);
 
   async function getSearchResult(pageToSearch = 0) {

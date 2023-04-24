@@ -1,6 +1,6 @@
 {
   "name": "react-native-minuit",
-  "version": "1.3.25",
+  "version": "1.3.26",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
