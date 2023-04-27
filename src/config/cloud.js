@@ -15,8 +15,7 @@ export const credentials = {
 let cloudInstance = firebase;
 
 if (!firebase.apps.filter(({ name_ }) => name_ === 'CLOUD').length) {
-  cloudInstance = firebase.initializeApp(credentials, 'CLOUD');
-  __DEV__ && cloudInstance.functions().useEmulator('localhost', 5001);
+  cloudInstance = firebase.initializeApp(credentials, "CLOUD");
 }
 
 export const projectsRef = cloudInstance.firestore().collection('projects');
