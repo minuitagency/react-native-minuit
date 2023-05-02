@@ -1,9 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import useDataFromRef from './useDataFromRef';
+import _ from 'lodash';
 
 function sortUsers(users) {
   return users.sort((a, b) => a.localeCompare(b));
+}
+
+function snapShotToData(snap) {
+  return {
+    id: snap.id,
+    ...snap.data(),
+  };
 }
 
 export default function useGroupChat({
@@ -21,6 +29,7 @@ export default function useGroupChat({
   const [, setGlobalLoading] = useGlobal('_isLoading');
   const [convId, setConvId] = useState(conversationId);
   const [newDocSnap, setNewDocSnap] = useState(null);
+  const [changeDocSnap, setChangeDocSnap] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const [pendingMsg, setPendingMsg] = useState(null);
 
@@ -62,29 +71,73 @@ export default function useGroupChat({
     format: formatMessages,
   });
 
+  useEffect(() => {
+    let messageSub = null;
+    if (messageRef) {
+      messageSub = messageRef
+        .orderBy('lastUpdate', 'desc')
+        .limit(1)
+        .onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            if (['added', 'modified'].includes(change.type)) {
+              setChangeDocSnap(change.doc);
+            }
+          });
+        });
+    }
+
+    return () => {
+      if (messageSub) {
+        messageSub();
+      }
+    };
+  }, [messageRef]);
+
   async function onNewMessageReceived(data) {
-    const { lastMessage } = data;
-    const isLastMessageUnread = !lastMessage?.readBy?.includes(uid);
-    if (isLastMessageUnread) {
-      await conversationRef.doc(convId).update({
-        readBy: firestore.FieldValue.arrayUnion(uid),
-      });
+    const { lastMessage, unreadMsg = [] } = data;
+    const newConvData = {};
+    const userFind = unreadMsg.find((u) => u.userId === uid);
+    if (userFind && userFind.count > 0) {
+      for (let i = 0; i < unreadMsg.length; i++) {
+        if (unreadMsg[i].userId === uid) {
+          unreadMsg[i].count = 0;
+        }
+      }
+      newConvData.unreadMsg = unreadMsg;
+    }
+    if (!lastMessage?.readBy?.includes(uid)) {
+      newConvData.readBy = firestore.FieldValue.arrayUnion(uid);
+    }
+    if (_.size(newConvData) > 0) {
+      await conversationRef.doc(convId).update(newConvData);
     }
   }
 
   useEffect(() => {
     if (newDocSnap && messages.length > 0) {
-      const includeInCon = messages.some((doc) => doc.id === newDocSnap.id);
-      if (!includeInCon) {
-        const newMsg = {
-          id: newDocSnap.id,
-          ...newDocSnap.data(),
-        };
-        setMessages((prev) => [...formatMessages([newMsg]), ...prev]);
+      const msgIdx = messages.findIndex((doc) => doc.id === newDocSnap.id);
+      const newMsg = formatMessages(snapShotToData(newDocSnap));
+      if (msgIdx === -1) {
+        setMessages((prev) => [newMsg, ...prev]);
       }
       setNewDocSnap(null);
     }
   }, [newDocSnap]);
+
+  useEffect(() => {
+    if (changeDocSnap && messages.length > 0) {
+      const msgIdx = messages.findIndex((doc) => doc.id === changeDocSnap.id);
+      const newMsg = formatMessages(snapShotToData(changeDocSnap));
+      if (msgIdx === -1) {
+        console.log('Not found');
+      } else {
+        const newMessages = [...messages];
+        newMessages[msgIdx] = newMsg;
+        setMessages(newMessages);
+      }
+      setChangeDocSnap(null);
+    }
+  }, [changeDocSnap]);
 
   useEffect(() => {
     if (!convId) {
@@ -189,6 +242,19 @@ export default function useGroupChat({
     }
   }
 
+  async function updateMessage(messageId, data) {
+    try {
+      await messageRef.doc(messageId).update(data);
+      const updatedMsg = await messageRef.doc(messageId).get();
+      const newMsg = await formatMessages(snapShotToData(updatedMsg));
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === messageId ? newMsg : msg))
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async function deleteMessage(messageId) {
     try {
       await messageRef.doc(messageId).delete();
@@ -200,6 +266,7 @@ export default function useGroupChat({
 
   return {
     sendMessage,
+    updateMessage,
     deleteMessage,
     msgLoading: convId === null ? false : loading,
     getMoreMsg: loadMore,
