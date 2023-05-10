@@ -13,6 +13,7 @@ const useGeoFire = ({
   logs = false,
 }) => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (center?.latitude && center?.longitude && condition) {
@@ -25,10 +26,11 @@ const useGeoFire = ({
         console.log(center);
       }
     }
-  }, [...refreshArray, center, radius]);
+  }, [...refreshArray, center, radius, condition]);
 
   const fetchQuery = async ({ customLocation = null } = {}) => {
     try {
+      setLoading(true);
       const geoQuery = geo
         .query(ref)
         .within(
@@ -45,10 +47,12 @@ const useGeoFire = ({
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { data };
+  return { data, loading };
 };
 
 export default useGeoFire;
