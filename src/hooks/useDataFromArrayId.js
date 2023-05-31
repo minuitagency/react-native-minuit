@@ -60,7 +60,9 @@ export default function useDataFromArrayDocId({
         getAllDocs(arrayId);
       }
     } else {
-      setData([]);
+      if (data !== []) {
+        setData([]);
+      }
     }
   }, [ref, arrayId, condition]);
 
