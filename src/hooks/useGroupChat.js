@@ -23,6 +23,7 @@ export default function useGroupChat({
   formatMessages = (data) => data,
   messagesPerBatch = 20,
   senderData = {}, // use this for name or picture
+  initialConvData = {},
 }) {
   const DEFAULT_MSG_TYPE = 'MESSAGE';
   const [uid] = useGlobal('uid'); // required for sending messages
@@ -210,6 +211,7 @@ export default function useGroupChat({
         lastUpdate: firestore.Timestamp.now(),
         users: sortUsers([...usersToChat, uid]),
         readBy: [uid],
+        ...initialConvData,
         lastMessage: {
           content: message,
           sender: uid,
