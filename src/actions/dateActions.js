@@ -4,6 +4,9 @@ export const validateDate = (date = null) => {
   if (!date) {
     return null;
   }
+  if (typeof date === 'number') {
+    return new Date(date);
+  }
   if (moment(date).isValid()) {
     return date;
   }

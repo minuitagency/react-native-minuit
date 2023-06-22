@@ -64,7 +64,7 @@ export default function useDataFromArrayDocId({
         setData([]);
       }
     }
-  }, [ref, arrayId, condition]);
+  }, [ref, ...arrayId, condition]);
 
   async function loadMore() {
     if (ref && arrayId?.length > 0 && !!condition && !loading) {
