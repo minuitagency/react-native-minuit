@@ -53,7 +53,7 @@ export function handleFirebaseError(code) {
     case 'auth/invalid-email':
       return 'Email invalide.';
     case 'auth/wrong-password':
-      return 'Mot de passe incorrect. Celui-ci doit contenir plus de 6 caractères.';
+      return 'Mot de passe incorrect.';
     case 'auth/invalid-verification-id':
       return 'Impossible de vous authentifié, réessayez dans quelques secondes.';
     case 'auth/invalid-phone-number':
