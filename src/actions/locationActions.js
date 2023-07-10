@@ -49,8 +49,8 @@ export async function openInMap({
   try {
     await Linking.openURL(
       Platform.select({
-        ios: `maps:0,0?q=${name}@${latitude},${longitude}`,
-        android: `geo:0,0?q=${latitude},${longitude}(${name})`,
+        ios: `maps:${latitude},${longitude}?q=${name}`,
+        android: `geo:${latitude},${longitude}?q=(${name})`,
       })
     );
   } catch (e) {
