@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import algoliasearch from 'algoliasearch/lite';
-import _ from 'lodash';
+import { useEffect, useMemo, useState } from "react";
+import algoliasearch from "algoliasearch/lite";
+import _ from "lodash";
 
 export default ({
-  query = '',
+  query = "",
   algoliaObject: { index = null, projectID, publicKey },
+  algoliaParams = {},
   searchParams = {},
   format = (rst) => rst,
   batch = 20,
@@ -17,7 +18,7 @@ export default ({
   const [nbHits, setNbHits] = useState(0);
 
   const indexAlgolia = useMemo(
-    () => algoliasearch(projectID, publicKey).initIndex(index),
+    () => algoliasearch(projectID, publicKey, algoliaParams).initIndex(index),
     [index]
   );
 
@@ -74,7 +75,7 @@ export default ({
       }
     } catch (e) {
       setResult([]);
-      console.log('Algolia', e);
+      console.log("Algolia", e);
     } finally {
       setLoading(false);
     }
