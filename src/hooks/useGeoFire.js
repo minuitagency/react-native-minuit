@@ -7,6 +7,7 @@ const useGeoFire = ({
   center,
   formatFunction = null,
   condition = true,
+  listener = false,
   radius = 100,
   parameter = 'point',
   refreshArray = [],
@@ -28,6 +29,14 @@ const useGeoFire = ({
     }
   }, [...refreshArray, center, radius, condition]);
 
+  function formatHits(hits) {
+    if (formatFunction) {
+      setData(formatFunction(hits));
+    } else {
+      setData(hits);
+    }
+  }
+
   const fetchQuery = async ({ customLocation = null } = {}) => {
     try {
       setLoading(true);
@@ -39,11 +48,11 @@ const useGeoFire = ({
           parameter
         );
 
-      const hits = await geofirex.get(geoQuery);
-      if (formatFunction) {
-        setData(formatFunction(hits));
+      if (listener) {
+        geoQuery.subscribe((hits) => formatHits(hits));
       } else {
-        setData(hits);
+        const hits = await geofirex.get(geoQuery);
+        formatHits(hits);
       }
     } catch (e) {
       console.log(e);
