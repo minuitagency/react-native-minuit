@@ -1,19 +1,18 @@
-import React, { useState, setGlobal } from "reactn";
+import React, { useState, setGlobal } from 'reactn';
 import {
   TooltipProvider,
   LoadingProvider,
   ShakeProvider,
   ConsoleLogProvider,
-} from "./providers";
+} from './providers';
+import cloudInstance from './config/cloud';
 
-import cloudInstance from "./config/cloud";
-
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 const defaultThemeColor = {
-  primary: "rgba(0,187,255,0.57)",
-  secondary: "rgba(34,119,183,0.57)",
-  destructive: "red",
+  primary: 'rgba(0,187,255,0.57)',
+  secondary: 'rgba(34,119,183,0.57)',
+  destructive: 'red',
 };
 
 const MinuitProvider = ({
@@ -45,11 +44,11 @@ const MinuitProvider = ({
     try {
       const { data } = await cloudInstance
         .functions()
-        .httpsCallable("shakes-isShakeEnabled")({
+        .httpsCallable('shakes-isShakeEnabled')({
         projectID: _projectID,
       });
 
-      console.log("Shake enabled: ", data);
+      console.log('Shake enabled: ', data);
 
       setIsShakeEnabled(data);
     } catch (e) {
