@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -57,8 +57,26 @@ LocaleConfig.locales.fr = {
 };
 LocaleConfig.defaultLocale = 'fr';
 
+const MinuitTheme = {
+  primary: Palette.primary,
+  halfPrimary: Palette.primary, // for selected day background in range
+  modalBackdrop: 'rgba(16, 15, 15, 0.7)',
+  backgroundColor: Palette.mainBlack,
+  dayBackgroundColor: Palette.darkPurple,
+  text: Palette.mainWhite,
+  selectedDay: Palette.mainWhite,
+  disableDay: Palette.mainGrey,
+  fontFamily: 'DMSans-Regular',
+  dayFontFamily: 'DMSans-Regular',
+  iconColor: Palette.mainWhite,
+  iconBackgroundColor: Palette.darkGrey,
+  monthTextSize: 20,
+  dayTextSize: 16,
+};
+
 export default function RangeCalendarModal({
   isOpen = false,
+  selectionType = 'both', // single Pour une date, range Pour une période, both Pour les deux
   maxDate = null,
   minDate = null,
   initialRange = [],
@@ -69,21 +87,7 @@ export default function RangeCalendarModal({
     bottom: 0,
     top: 0,
   },
-  theme = {
-    primary: Palette.primary,
-    halfPrimary: Palette.primary, // for selected day background in range
-    modalBackdrop: 'rgba(16, 15, 15, 0.7)',
-    backgroundColor: Palette.mainBlack,
-    dayBackgroundColor: Palette.darkPurple,
-    text: Palette.mainWhite,
-    selectedDay: Palette.mainWhite,
-    disableDay: Palette.mainGrey,
-    fontFamily: 'DMSans-Regular',
-    iconColor: Palette.mainWhite,
-    iconBackgroundColor: Palette.darkGrey,
-    monthTextSize: 20,
-    dayTextSize: 16,
-  },
+  theme = MinuitTheme,
   arrowSize = responsiveWidth(9),
   modalStyle = {},
   calendarStyle = {},
@@ -93,6 +97,8 @@ export default function RangeCalendarModal({
 }) {
   const [markedDays, setMarkedDays] = useState({});
   const [days, setDays] = useState([]);
+
+  const _theme = useMemo(() => ({ ...MinuitTheme, ...theme }), [theme]);
 
   useEffect(() => {
     if (initialRange.length === 2) {
@@ -104,15 +110,15 @@ export default function RangeCalendarModal({
   }, [initialRange]);
 
   function period(day) {
-    let _days = Array.from(days);
-
-    if (_days.length < 2 && moment(days[0]).isBefore(moment(day))) {
-      _days.push(day);
+    if (selectionType === 'single') {
+      setDays([day]);
     } else {
-      _days = [day];
-    }
-
-    if (typeof setDays === 'function') {
+      let _days = Array.from(days);
+      if (_days.length < 2 && moment(days[0]).isBefore(moment(day))) {
+        _days.push(day);
+      } else {
+        _days = [day];
+      }
       setDays(_days.sort((a, b) => moment(b).isBefore(a)));
     }
   }
@@ -123,24 +129,24 @@ export default function RangeCalendarModal({
       tmp[days[0]] = {
         startingDay: true,
         endingDay: true,
-        color: theme.primary,
+        color: _theme.primary,
       };
     } else if (days.length === 2) {
       days.sort((a, b) => a > b);
       const selectedDates = moment.range(days[0], days[1]);
       const arrayDates = Array.from(selectedDates.by('day'));
-      tmp[days[0]] = { startingDay: true, color: theme.primary };
+      tmp[days[0]] = { startingDay: true, color: _theme.primary };
       tmp[days[1]] = {
         ...tmp[days[1]],
-        color: theme.primary,
+        color: _theme.primary,
         endingDay: true,
       };
       arrayDates.forEach(
         (date) =>
           (tmp[moment(date).format('YYYY-MM-DD')] = {
-            color: theme.halfPrimary,
+            color: _theme.halfPrimary,
             ...tmp[moment(date).format('YYYY-MM-DD')],
-            textColor: theme.selectedDay,
+            textColor: _theme.selectedDay,
           })
       );
     }
@@ -151,13 +157,13 @@ export default function RangeCalendarModal({
     <Modalbox
       style={{
         height: responsiveHeight(70) - insets.bottom,
-        backgroundColor: theme.backgroundColor,
+        backgroundColor: _theme.backgroundColor,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         ...modalStyle,
       }}
       useNativeDriver={true}
-      backdropColor={theme.modalBackdrop}
+      backdropColor={_theme.modalBackdrop}
       animationDuration={500}
       backdrop={true}
       backdropPressToClose={false}
@@ -172,7 +178,7 @@ export default function RangeCalendarModal({
           paddingTop: responsiveHeight(1),
           borderTopLeftRadius: 25,
           borderTopRightRadius: 25,
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: _theme.backgroundColor,
           ...calendarStyle,
         }}
         current={moment().format('YYYY-MM-DD')}
@@ -206,7 +212,7 @@ export default function RangeCalendarModal({
               height: arrowSize,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: theme.iconBackgroundColor,
+              backgroundColor: _theme.iconBackgroundColor,
               borderRadius: 100,
             }}
           >
@@ -215,7 +221,7 @@ export default function RangeCalendarModal({
               style={{
                 width: arrowSize * 0.4,
                 height: arrowSize * 0.4,
-                tintColor: theme.iconColor,
+                tintColor: _theme.iconColor,
                 transform: direction === 'left' ? [] : [{ rotate: '180deg' }],
               }}
               source={icons.back2}
@@ -243,8 +249,8 @@ export default function RangeCalendarModal({
                 borderRadius: 5,
                 backgroundColor: isDisabled
                   ? 'transparent'
-                  : color || theme.dayBackgroundColor,
-                borderColor: theme.primary,
+                  : color || _theme.dayBackgroundColor,
+                borderColor: _theme.primary,
                 borderWidth: isToday ? 1 : 0,
                 marginBottom: '8%',
                 ...dayContainerStyle,
@@ -252,7 +258,8 @@ export default function RangeCalendarModal({
             >
               <Text
                 style={{
-                  color: isDisabled ? theme.disableDay : theme.selectedDay,
+                  color: isDisabled ? _theme.disableDay : _theme.selectedDay,
+                  fontFamily: _theme.dayFontFamily,
                   ...dayTextStyle,
                 }}
               >
@@ -262,8 +269,8 @@ export default function RangeCalendarModal({
           );
         }}
         theme={{
-          'calendarBackground': theme.backgroundColor,
-          'textSectionTitleColor': theme.backgroundColor,
+          'calendarBackground': _theme.backgroundColor,
+          'textSectionTitleColor': _theme.backgroundColor,
           'stylesheet.calendar.main': {
             week: {
               flexDirection: 'row',
@@ -282,18 +289,18 @@ export default function RangeCalendarModal({
               marginBottom: responsiveHeight(1),
             },
             monthText: {
-              fontSize: theme.monthTextSize,
-              fontFamily: theme.fontFamily,
+              fontSize: _theme.monthTextSize,
+              fontFamily: _theme.fontFamily,
               fontWeight: 'bold',
-              color: theme.text,
+              color: _theme.text,
             },
             arrowImage: {
-              tintColor: theme.iconBackgroundColor,
+              tintColor: _theme.iconBackgroundColor,
             },
             dayHeader: {
-              color: theme.text,
-              fontSize: theme.dayTextSize,
-              fontFamily: theme.fontFamily,
+              color: _theme.text,
+              fontSize: _theme.dayTextSize,
+              fontFamily: _theme.fontFamily,
               fontWeight: '700',
               marginBottom: responsiveHeight(1),
             },
@@ -301,15 +308,26 @@ export default function RangeCalendarModal({
         }}
       />
       <Button
-        disabled={days.length !== 2}
+        disabled={
+          (selectionType === 'range' && days.length !== 2) ||
+          (selectionType === 'single' && days.length !== 1)
+        }
         onPress={() => {
-          onRangeSelected([
-            moment(days[0], 'YYYY-MM-DD').toDate(),
-            moment(days[1], 'YYYY-MM-DD').toDate(),
-          ]);
+          if (selectionType === 'single') {
+            onRangeSelected(moment(days[0], 'YYYY-MM-DD').toDate());
+          } else if (selectionType === 'range' || selectionType === 'both') {
+            onRangeSelected([
+              moment(days[0], 'YYYY-MM-DD').toDate(),
+              moment(days[1], 'YYYY-MM-DD').toDate(),
+            ]);
+          }
         }}
         style={{
-          backgroundColor: days.length !== 2 ? theme.disableDay : theme.primary,
+          backgroundColor:
+            (selectionType === 'range' && days.length !== 2) ||
+            (selectionType === 'single' && days.length !== 1)
+              ? _theme.disableDay
+              : _theme.primary,
         }}
         containerStyle={{
           width: 'auto',
@@ -319,7 +337,7 @@ export default function RangeCalendarModal({
           bottom: insets.bottom || responsiveHeight(2),
           ...buttonStyle,
         }}
-        textColor={theme.text}
+        textColor={_theme.text}
         text={'Valider'}
       />
     </Modalbox>
