@@ -6,7 +6,8 @@ import {
   Image,
   Pressable,
   SafeAreaView,
-} from 'react-native';
+  Platform,
+} from "react-native";
 import moment from 'moment';
 
 import RNShake from '../../lib';
@@ -99,11 +100,12 @@ export default ({ projectID = null, enabled = false, children }) => {
         uri: screenshotURI,
       });
 
-      await cloudInstance.functions().httpsCallable('shakes-submitNewShake')({
+      await cloudInstance.functions().httpsCallable("shakes-submitNewShake")({
         screenshot: uri,
         description: description.trim(),
         projectID,
         consoleLogs,
+        platform: Platform.OS === "ios" ? "IOS" : "ANDROID",
       });
 
       await setTooltip({ text: 'Publication effectuée !' });
