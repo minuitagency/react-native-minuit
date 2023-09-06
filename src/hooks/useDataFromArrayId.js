@@ -25,9 +25,9 @@ export default function useDataFromArrayDocId({
           }
         });
       });
-      await Promise.all(promises).then((values) => {
+      await Promise.all(promises).then(async (values) => {
         const validData = values.filter((value) => value !== null);
-        const newData = format ? format(validData) : validData;
+        const newData = format ? await format(validData) : validData;
         if (currentPage > 0) {
           setData((prev) => [...prev, ...newData]);
         } else {
