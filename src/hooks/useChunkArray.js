@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useChunkArray({
   ref,
@@ -16,7 +16,6 @@ export default function useChunkArray({
   const [allListener, setAllListener] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   function getChunkArray() {
     const chunkedArray = [];
     for (let i = 0; i < arrayToChunk.length; i += chunkSize) {
@@ -30,14 +29,14 @@ export default function useChunkArray({
       setLoading(true);
       const snapCollection = [];
       for await (const snap of chunkedArray.map(
-        async chunk => await ref.where(keyName, operator, chunk).get(),
+        async (chunk) => await ref.where(keyName, operator, chunk).get()
       )) {
         snapCollection.push(snap);
       }
       const results = [];
-      (await Promise.all(snapCollection)).map(({docs = []}) => {
-        docs.map(snap => {
-          results.push({...snap.data(), id: snap.id});
+      (await Promise.all(snapCollection)).map(({ docs = [] }) => {
+        docs.map((snap) => {
+          results.push({ ...snap.data(), id: snap.id });
         });
       });
       if (format) {
@@ -56,13 +55,12 @@ export default function useChunkArray({
     if (condition) {
       const chunkedArray = getChunkArray();
       if (listener) {
-        chunkedArray.map(chunk => {
-          const listener = ref
-            .where(keyName, operator, chunk)
-            .onSnapshot(snap => {
+        chunkedArray.map((chunk) => {
+          const listener = ref.where(keyName, operator, chunk).onSnapshot(
+            (snap) => {
               const results = [];
-              snap?.docs.map(snap => {
-                results.push({...snap.data(), id: snap.id});
+              snap?.docs.map((snap) => {
+                results.push({ ...snap.data(), id: snap.id });
               });
               if (format) {
                 setData(format(results));
@@ -70,11 +68,13 @@ export default function useChunkArray({
                 setData(results);
               }
               setLoading(false);
-            }, (e) => {
+            },
+            (e) => {
               console.log(e);
               setLoading(false);
-            });
-          setAllListener(prev => [...prev, listener]);
+            }
+          );
+          setAllListener((prev) => [...prev, listener]);
         });
       } else {
         makeAllRequests(chunkedArray);
@@ -83,11 +83,11 @@ export default function useChunkArray({
 
     return () => {
       if (listener) {
-        allListener.map(l => l());
+        allListener.map((l) => l());
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...refreshArray]);
 
-  return {data, setData, loading};
+  return { data, setData, loading };
 }

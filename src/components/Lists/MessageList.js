@@ -44,6 +44,7 @@ export default function MessageList({
         const MessageComponent =
           MessagesConfig?.find((conf) => conf?.type === type)?.component ||
           null;
+        const prevMsg = messages[index - 1] || null;
         if (!MessageComponent) {
           console.log(`Message type ${type} not found in config array`);
           return null;
@@ -53,6 +54,7 @@ export default function MessageList({
               prevSenderIsSame={prevSenderIsSame}
               nextSenderIsSame={nextSenderIsSame}
               isMyMessage={sender === uid}
+              prevMsg={prevMsg}
               {...item}
             />
           );
