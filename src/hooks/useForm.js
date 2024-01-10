@@ -1,12 +1,11 @@
 import _ from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-export function useFormUserData({ initialUserData, initialState }) {
-  const [userData, setUser] = useState(initialState);
-  const [initialData, setInitialData] = useState(null);
+export function useForm({ initialUserData = {}, formState = {} }) {
+  const [userData, setUser] = useState(formState);
 
-  useEffect(() => {
-    setInitialData(_.pick(initialUserData, Object.keys(initialState)));
+  const initialData = useMemo(() => {
+    return _.pick(initialUserData, Object.keys(formState));
   }, [initialUserData]);
 
   const onChangeInput = (name, value) => {
@@ -14,13 +13,13 @@ export function useFormUserData({ initialUserData, initialState }) {
   };
 
   const updatedData = useMemo(() => {
-    if (!userData || !initialData) {
+    if (_.isEmpty(initialData)) {
       return {};
     }
     return _.pickBy(userData, (value, key) => {
       return !_.isEqual(value, initialData[key]);
     });
-  }, [userData, initialData]);
+  }, [userData]);
 
   return {
     userData,

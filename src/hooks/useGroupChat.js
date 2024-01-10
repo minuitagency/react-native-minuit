@@ -45,7 +45,7 @@ export default function useGroupChat({
     }
   }, [messageRef, pendingMsg]);
 
-  useDataFromRef({
+  const { data: convData } = useDataFromRef({
     ref: convId && conversationRef.doc(convId),
     initialState: null,
     simpleRef: true,
@@ -273,5 +273,6 @@ export default function useGroupChat({
     msgLoading: convId === null ? false : loading,
     getMoreMsg: loadMore,
     messages,
+    convData,
   };
 }
