@@ -72,5 +72,5 @@ export default function useDataFromArrayDocId({
     }
   }
 
-  return { data, loading, loadMore };
+  return { data, setData, loading, loadMore };
 }
