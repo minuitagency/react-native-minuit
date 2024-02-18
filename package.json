@@ -60,7 +60,7 @@
   "dependencies": {
     "@legendapp/motion": "^2.1.10",
     "algoliasearch": "^4.14.2",
-    "firebase": "^9.17.2",
+    "firebase": "^9.20.0",
     "geofirex": "^0.1.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

@@ -1,6 +1,6 @@
-import { Linking } from 'react-native';
+import { Linking } from "react-native";
 
-import cloudInstance from '../config/cloud';
+import cloudInstance from "../config/cloud";
 
 export const openURL = (url) => {
   if (url) {
@@ -11,17 +11,21 @@ export const openURL = (url) => {
 export function uploadToCloud({ uri, path = null }) {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(path);
+      let resultResize = { uri };
 
-      const response = await fetch(uri);
+      const response = await fetch(resultResize.uri);
       const blob = await response.blob();
 
       const uploadTask = cloudInstance.storage().ref(path).put(blob);
 
       uploadTask.on(
-        'state_changed',
+        cloudInstance.storage.TaskEvent.STATE_CHANGED,
         (snapshot) => {
-          console.log(snapshot);
+          if (snapshot.state === cloudInstance.storage.TaskState.SUCCESS) {
+            snapshot.ref.getDownloadURL().then((resultURI) => {
+              resolve({ resultURI });
+            });
+          }
         },
         (error) => {
           reject(error);
