@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 const defaultThemeColor = {
   primary: 'rgba(0,187,255,0.57)',
   secondary: 'rgba(34,119,183,0.57)',
+  background: 'black',
   destructive: 'red',
 };
 
@@ -19,7 +20,7 @@ const MinuitProvider = ({
   projectID = null,
   projectId = null,
   children,
-  themeColors = defaultThemeColor,
+  themeColors = {},
 }) => {
   const [isShakeEnabled, setIsShakeEnabled] = useState(false);
 
@@ -29,8 +30,13 @@ const MinuitProvider = ({
     _isLoading: false,
     _tooltip: null,
     _config: {
-      colors: themeColors,
+      colors: {
+        ...defaultThemeColor,
+        ...themeColors,
+      },
     },
+    _webviewURL: null,
+    _zoomPicture: null,
     _consoleLogs: [],
   });
 
@@ -60,7 +66,14 @@ const MinuitProvider = ({
     <ConsoleLogProvider>
       <ShakeProvider projectID={_projectID} enabled={isShakeEnabled || false}>
         <LoadingProvider>
-          <TooltipProvider>{children}</TooltipProvider>
+          <TooltipProvider>
+            {/*NATIVE MODULE NOT WORK*/}
+            {/*<WebViewProvider>*/}
+            {/*  <ZoomPictureProvider>*/}
+            {children}
+            {/*</ZoomPictureProvider>*/}
+            {/*</WebViewProvider>*/}
+          </TooltipProvider>
         </LoadingProvider>
       </ShakeProvider>
     </ConsoleLogProvider>
