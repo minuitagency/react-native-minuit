@@ -22,6 +22,9 @@ export default function MessageList({
       onLayout={() =>
         setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
       }
+      onContentSizeChange={() =>
+        setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
+      }
       ListFooterComponent={() => loadingComponent && loadingComponent()}
       onEndReached={() => loadMoreMsg()}
       onEndReachedThreshold={0.5}
