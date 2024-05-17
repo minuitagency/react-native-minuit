@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { useGlobal } from 'reactn';
+import { useEffect, useGlobal } from 'reactn';
 import { gutters } from '../../styles';
 
 export default function MessageList({
@@ -15,14 +15,24 @@ export default function MessageList({
   const [uid] = useGlobal('uid');
   const flatListRef = useRef();
 
+  const [lastMessageId, setLastMessageId] = useState(
+    messages[messages.length - 1]?.id
+  );
+
+  useEffect(() => {
+    // Check if there is a new message by comparing the last message id
+    const currentLastMessageId = messages[messages.length - 1]?.id;
+    if (currentLastMessageId !== lastMessageId) {
+      setLastMessageId(currentLastMessageId);
+      flatListRef.current?.scrollToOffset({ y: 0, animated: true });
+    }
+  }, [messages, lastMessageId]);
+
   return (
     <FlatList
       ref={flatListRef}
       inverted={true}
       onLayout={() =>
-        setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
-      }
-      onContentSizeChange={() =>
         setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
       }
       ListFooterComponent={() => loadingComponent && loadingComponent()}
