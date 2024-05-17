@@ -15,16 +15,13 @@ export default function MessageList({
   const [uid] = useGlobal('uid');
   const flatListRef = useRef();
 
-  const [lastMessageId, setLastMessageId] = useState(
-    messages[messages.length - 1]?.id
-  );
+  const [lastMessageId, setLastMessageId] = useState(messages[0]?.id);
 
   useEffect(() => {
-    // Check if there is a new message by comparing the last message id
-    const currentLastMessageId = messages[messages.length - 1]?.id;
+    const currentLastMessageId = messages[0]?.id;
     if (currentLastMessageId !== lastMessageId) {
       setLastMessageId(currentLastMessageId);
-      flatListRef.current?.scrollToOffset({ y: 0, animated: true });
+      flatListRef.current?.scrollToOffset({ y: 0 }, 200);
     }
   }, [messages, lastMessageId]);
 
