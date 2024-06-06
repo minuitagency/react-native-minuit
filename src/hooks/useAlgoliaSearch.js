@@ -2,7 +2,39 @@ import { useEffect, useMemo, useState } from "react";
 import algoliasearch from "algoliasearch/lite";
 import _ from "lodash";
 
-export default ({
+interface AlgoliaObject {
+  index: string | null;
+  projectID: string;
+  publicKey: string;
+}
+
+interface AlgoliaParams {
+  [key: string]: any;
+}
+
+interface SearchParams {
+  filters?: string;
+  aroundLatLng?: string;
+  aroundRadius?: number;
+  [key: string]: any;
+}
+
+interface Props {
+  query?: string;
+  algoliaObject: AlgoliaObject;
+  algoliaParams?: AlgoliaParams;
+  searchParams?: SearchParams;
+  format?: (rst: any) => any;
+  batch?: number;
+  condition?: boolean;
+}
+
+interface Hit {
+  objectID: string;
+  [key: string]: any;
+}
+
+const useAlgoliaSearch = ({
   query = "",
   algoliaObject: { index = null, projectID, publicKey },
   algoliaParams = {},
@@ -10,8 +42,8 @@ export default ({
   format = (rst) => rst,
   batch = 20,
   condition = true,
-}) => {
-  const [result, setResult] = useState([]);
+}: Props) => {
+  const [result, setResult] = useState<any[]>([]);
   const [currPage, setCurrPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -59,7 +91,7 @@ export default ({
           hitsPerPage: batch,
           ...searchParams,
         });
-        const unformattedHit = hits.map((itemHit) => ({
+        const unformattedHit = hits.map((itemHit: Hit) => ({
           ...itemHit,
           id: itemHit.objectID,
         }));
@@ -101,3 +133,5 @@ export default ({
     loadMore,
   };
 };
+
+export default useAlgoliaSearch;
