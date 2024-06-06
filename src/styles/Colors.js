@@ -1,29 +1,56 @@
 import Palette from "./Palette";
-
-const Colors = {
-  background: Palette.white,
+enum Color {
+  White = "white",
+  MainGrey = "mainGrey",
+  MainPink = "mainPink",
+}
+interface TextColors {
+  primary: string;
+  secondary: Color;
+  link: Color;
+}
+interface ButtonColors {
+  background: Color | string;
+  text: Color;
+  border: Color;
+}
+interface InputColors {
+  background: Color;
+  text: Color;
+  placeholder: string;
+}
+interface Colors {
+  background: Color;
+  text: TextColors;
+  button: {
+    primary: ButtonColors;
+    secondary: ButtonColors;
+  };
+  input: InputColors;
+}
+const Colors: Colors = {
+  background: Color.White,
   text: {
     primary: "rgba(0,0,0,0.7)",
-    secondary: Palette.mainGrey,
-    link: Palette.mainGrey,
+    secondary: Color.MainGrey,
+    link: Color.MainGrey,
   },
   button: {
     primary: {
-      background: Palette.mainPink,
-      text: Palette.white,
-      border: Palette.mainPink,
+      background: Color.MainPink,
+      text: Color.White,
+      border: Color.MainPink,
     },
     secondary: {
       background: "transparent",
-      text: Palette.mainGrey,
-      border: Palette.mainGrey,
+      text: Color.MainGrey,
+      border: Color.MainGrey,
     },
   },
   input: {
-    background: Palette.mainGrey,
-    text: Palette.mainGrey,
+    background: Color.MainGrey,
+    text: Color.MainGrey,
     placeholder: "#8E9192",
   },
 };
-
 export default Colors;
