@@ -1,22 +1,37 @@
-import React, { useRef, useState } from 'react';
-import { FlatList } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { FlatList, FlatListProps } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { useEffect, useGlobal } from 'reactn';
+import { useGlobal } from 'reactn';
 import { gutters } from '../../styles';
-
-export default function MessageList({
+interface Message {
+  id: string;
+  sender: string;
+  type: string;
+  [key: string]: any;
+}
+interface MessagesConfigItem {
+  type: string;
+  component: React.ComponentType<any>;
+}
+interface MessageListProps {
+  messages: Message[];
+  loadMoreMsg: () => void;
+  MessagesConfig: MessagesConfigItem[];
+  loadingComponent?: React.ReactNode;
+  style?: FlatListProps<Message>['style'];
+  contentContainerStyle?: FlatListProps<Message>['contentContainerStyle'];
+}
+const MessageList: React.FC<MessageListProps> = ({
   messages,
   loadMoreMsg,
   MessagesConfig,
   loadingComponent = null,
   style,
   contentContainerStyle,
-}) {
+}) => {
   const [uid] = useGlobal('uid');
-  const flatListRef = useRef();
-
-  const [lastMessageId, setLastMessageId] = useState(messages[0]?.id);
-
+  const flatListRef = useRef<FlatList<Message>>(null);
+  const [lastMessageId, setLastMessageId] = useState<string | undefined>(messages[0]?.id);
   useEffect(() => {
     const currentLastMessageId = messages[0]?.id;
     if (currentLastMessageId !== lastMessageId) {
@@ -24,7 +39,6 @@ export default function MessageList({
       flatListRef.current?.scrollToOffset({ y: 0 }, 200);
     }
   }, [messages, lastMessageId]);
-
   return (
     <FlatList
       ref={flatListRef}
@@ -32,7 +46,7 @@ export default function MessageList({
       onLayout={() =>
         setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
       }
-      ListFooterComponent={() => loadingComponent && loadingComponent()}
+      ListFooterComponent={() => loadingComponent && loadingComponent}
       onEndReached={() => loadMoreMsg()}
       onEndReachedThreshold={0.5}
       style={style}
@@ -73,4 +87,5 @@ export default function MessageList({
       extraData={messages}
     />
   );
-}
+};
+export default MessageList;
