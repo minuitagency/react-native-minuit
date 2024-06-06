@@ -1,14 +1,29 @@
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { Colors, resHeight, resWidth } from "../styles";
 
-export const scaleFromFigma = (s) => responsiveFontSize(s / 7.6);
+export const scaleFromFigma = (s: number): number => responsiveFontSize(s / 7.6);
 
-const base = (fontSize = 14, color = Colors.text.primary) => ({
+interface BaseStyle {
+  fontSize: number;
+  color: string;
+}
+
+const base = (fontSize: number = 14, color: string = Colors.text.primary): BaseStyle => ({
   fontSize: scaleFromFigma(fontSize),
   ////fontFamily: "DMSans-Regular",
   color,
 });
-const margin = (left, top, right, bottom, x, y) => ({
+
+interface MarginStyle {
+  marginLeft?: number | string;
+  marginTop?: number | string;
+  marginRight?: number | string;
+  marginBottom?: number | string;
+  marginHorizontal?: number | string;
+  marginVertical?: number | string;
+}
+
+const margin = (left?: number | string, top?: number | string, right?: number | string, bottom?: number | string, x?: number | string, y?: number | string): MarginStyle => ({
   marginLeft: typeof left === "number" ? resWidth(left) : left,
   marginTop: typeof top === "number" ? resHeight(top) : top,
   marginRight: typeof right === "number" ? resWidth(right) : right,
@@ -16,25 +31,56 @@ const margin = (left, top, right, bottom, x, y) => ({
   marginHorizontal: typeof x === "number" ? resWidth(x) : x,
   marginVertical: typeof y === "number" ? resHeight(y) : y,
 });
+
+interface AlignStyle {
+  alignSelf?: string;
+  textAlign?: string;
+  textAlignVertical?: string;
+}
+
 const align = (
-  self = "auto",
-  textAlign = "auto",
-  textAlignVertical = "auto"
-) => ({
+  self: string = "auto",
+  textAlign: string = "auto",
+  textAlignVertical: string = "auto"
+): AlignStyle => ({
   alignSelf: self,
   textAlign,
   textAlignVertical,
 });
-const decoration = (dec, style, color) => ({
+
+interface DecorationStyle {
+  textDecorationLine?: string;
+  textDecorationStyle?: string;
+  textDecorationColor?: string;
+}
+
+const decoration = (dec?: string, style?: string, color?: string): DecorationStyle => ({
   ...(typeof dec === "string" ? { textDecorationLine: dec } : {}),
   ...(typeof style === "string" ? { textDecorationStyle: style } : {}),
   ...(typeof color === "string" ? { textDecorationColor: color } : {}),
 });
+
+interface FontOptions {
+  l?: number | string;
+  t?: number | string;
+  r?: number | string;
+  b?: number | string;
+  x?: number | string;
+  y?: number | string;
+  self?: string;
+  text?: string;
+  op?: number;
+  dec?: string;
+  decStyle?: string;
+  secColor?: string;
+  textVer?: string;
+}
+
 const Fonts = {
   primary: {
     bold: (
-      fontSize,
-      color,
+      fontSize: number,
+      color: string,
       {
         l,
         t,
@@ -49,7 +95,7 @@ const Fonts = {
         decStyle,
         secColor,
         textVer,
-      } = {}
+      }: FontOptions = {}
     ) => ({
       ...base(fontSize, color),
       ...margin(l, t, r, b, x, y),
@@ -60,8 +106,8 @@ const Fonts = {
       fontWeight: "700",
     }),
     semibold: (
-      fontSize,
-      color,
+      fontSize: number,
+      color: string,
       {
         l,
         t,
@@ -76,7 +122,7 @@ const Fonts = {
         decStyle,
         secColor,
         textVer,
-      } = {}
+      }: FontOptions = {}
     ) => ({
       ...base(fontSize, color),
       ...margin(l, t, r, b, x, y),
@@ -87,8 +133,8 @@ const Fonts = {
       fontWeight: "600",
     }),
     medium: (
-      fontSize,
-      color,
+      fontSize: number,
+      color: string,
       {
         l,
         t,
@@ -103,7 +149,7 @@ const Fonts = {
         decStyle,
         secColor,
         textVer,
-      } = {}
+      }: FontOptions = {}
     ) => ({
       ...base(fontSize, color),
       ...margin(l, t, r, b, x, y),
@@ -114,8 +160,8 @@ const Fonts = {
       //fontFamily: "DMSans-Medium",
     }),
     regular: (
-      fontSize,
-      color,
+      fontSize: number,
+      color: string,
       {
         l,
         t,
@@ -130,7 +176,7 @@ const Fonts = {
         decStyle,
         secColor,
         textVer,
-      } = {}
+      }: FontOptions = {}
     ) => ({
       ...base(fontSize, color),
       ...margin(l, t, r, b, x, y),
@@ -139,9 +185,9 @@ const Fonts = {
       opacity: op,
     }),
     light: (
-      fontSize,
-      color,
-      { l, t, r, b, x, y, self, text, op, dec, decStyle, secColor } = {}
+      fontSize: number,
+      color: string,
+      { l, t, r, b, x, y, self, text, op, dec, decStyle, secColor }: FontOptions = {}
     ) => ({
       fontWeight: "300",
       ...base(fontSize, color),
