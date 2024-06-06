@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Image, Modal, TouchableOpacity } from 'react-native';
 import { useGlobal } from 'reactn';
 import { WebView } from 'react-native-webview';
@@ -8,15 +8,15 @@ import {
 } from 'react-native-responsive-dimensions';
 import { _rSize } from '../styles/SharedStyles';
 import { icons } from '../assets';
-
-export default function WebViewProvider({ children }) {
-  const [webviewURL, setWebviewURL] = useGlobal('_webviewURL');
-  const [config] = useGlobal('_config');
-
+interface WebViewProviderProps {
+  children: ReactNode;
+}
+export default function WebViewProvider({ children }: WebViewProviderProps) {
+  const [webviewURL, setWebviewURL] = useGlobal<string | null>('_webviewURL');
+  const [config] = useGlobal<{ colors: { background: string; primary: string } }>('_config');
   const {
     colors: { background, primary },
   } = config;
-
   return (
     <>
       {children}
