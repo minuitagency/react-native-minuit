@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useGlobal } from 'reactn';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Text,
   Modal,
@@ -9,17 +9,11 @@ import {
   Platform,
 } from "react-native";
 import moment from 'moment';
-
 import RNShake from '../../lib';
-
 import { uploadToCloud } from '../actions/userActions';
-
 import cloudInstance from '../config/cloud';
-
 import { SharedStyles, Fonts, Palette, gutters } from '../styles';
-
 import { LoadingProvider, TooltipProvider } from '../providers';
-
 import { icons } from '../assets/';
 import Button from '../components/Buttons/Button';
 import Input from '../components/Inputs/Input';
@@ -28,34 +22,36 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-
 const isHorizontal = responsiveHeight(100) < responsiveWidth(100);
-
-export default ({ projectID = null, enabled = false, children }) => {
+interface Step {
+  title: string;
+  showTitle: boolean;
+}
+interface Props {
+  projectID?: string | null;
+  enabled?: boolean;
+  children: React.ReactNode;
+}
+const ShakeComponent: React.FC<Props> = ({ projectID = null, enabled = false, children }) => {
   const [, setTooltip] = useGlobal('_tooltip');
   const [, setIsLoading] = useGlobal('_isLoading');
   const [consoleLogs] = useGlobal('_consoleLogs');
-
   const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState(0);
-
-  const [screenshotURI, setScreenshotURI] = useState(null);
-  const [tmpScreenshotURI, setTmpScreenshotURI] = useState(null);
+  const [screenshotURI, setScreenshotURI] = useState<string | null>(null);
+  const [tmpScreenshotURI, setTmpScreenshotURI] = useState<string | null>(null);
   const [description, setDescription] = useState(__DEV__ ? 'teeeeeeeest' : '');
-
-  const stepList = [
+  const stepList: Step[] = [
     { title: 'Envoyer un nouveau rapport', showTitle: !isHorizontal },
     { title: 'Description du problème', showTitle: true },
   ];
-
   useEffect(() => {
     if (tmpScreenshotURI && !screenshotURI) {
       setScreenshotURI(tmpScreenshotURI);
     }
   }, [tmpScreenshotURI]);
-
   useEffect(() => {
-    const subscription = RNShake.addListener((data) => {
+    const subscription = RNShake.addListener((data: string) => {
       if (enabled) {
         setTmpScreenshotURI(data);
         setShowModal(true);
@@ -63,12 +59,10 @@ export default ({ projectID = null, enabled = false, children }) => {
         console.log('Shake disabled');
       }
     });
-
     return () => {
       subscription?.remove?.();
     };
   }, [enabled]);
-
   useEffect(() => {
     if (showModal === false) {
       setTmpScreenshotURI(null);
@@ -77,29 +71,23 @@ export default ({ projectID = null, enabled = false, children }) => {
       setStep(0);
     }
   }, [showModal]);
-
   const submitShake = async () => {
     try {
       if (description.length < 5) {
         throw new Error('Description trop courte');
       }
-
       if (description.length > 500) {
         throw new Error('Description trop longue');
       }
-
       if (!screenshotURI && !__DEV__) {
         throw new Error("Aucune capture d'écran détectée...");
       }
-
       await setIsLoading(true);
       await setTooltip({ text: 'Publication en cours ...' });
-
       const { uri } = await uploadToCloud({
         path: `shakes/${projectID}/${moment().valueOf()}.jpg`,
         uri: screenshotURI,
       });
-
       await cloudInstance.functions().httpsCallable("shakes-submitNewShake")({
         screenshot: uri,
         description: description.trim(),
@@ -107,7 +95,6 @@ export default ({ projectID = null, enabled = false, children }) => {
         consoleLogs,
         platform: Platform.OS === "ios" ? "IOS" : "ANDROID",
       });
-
       await setTooltip({ text: 'Publication effectuée !' });
       setShowModal(false);
     } catch (e) {
@@ -117,7 +104,6 @@ export default ({ projectID = null, enabled = false, children }) => {
       await setIsLoading(false);
     }
   };
-
   const Header = useCallback(() => {
     return (
       <SafeAreaView style={[{ backgroundColor: Palette.darkPurple }]}>
@@ -137,25 +123,20 @@ export default ({ projectID = null, enabled = false, children }) => {
               style={{ height: 20, width: 20, tintColor: Palette.mainWhite }}
             />
           </Pressable>
-
           <Image
             resizeMode="contain"
             source={require('../assets/images/logoFull.png')}
             style={{ height: 20, width: 100 }}
           />
-
           <View style={{ width: 30 }} />
         </View>
       </SafeAreaView>
     );
   }, [step]);
-
   const currentStep = stepList[step];
-
   return (
     <>
       <View style={{ flex: 1 }}>{children}</View>
-
       <Modal
         animationType="slide"
         visible={showModal}
@@ -168,7 +149,6 @@ export default ({ projectID = null, enabled = false, children }) => {
           <TooltipProvider>
             <DismissKeyboard>
               <Header />
-
               <SafeAreaView
                 style={{
                   flex: 1,
@@ -186,7 +166,6 @@ export default ({ projectID = null, enabled = false, children }) => {
                       {currentStep?.title || ''}
                     </Text>
                   )}
-
                   {!step ? (
                     <View
                       style={{
@@ -216,7 +195,6 @@ export default ({ projectID = null, enabled = false, children }) => {
                       isTextarea
                     />
                   )}
-
                   <Button
                     text={
                       step === stepList.length - 1 ? 'Envoyer' : 'Continuer'
@@ -256,3 +234,4 @@ export default ({ projectID = null, enabled = false, children }) => {
     </>
   );
 };
+export default ShakeComponent;
