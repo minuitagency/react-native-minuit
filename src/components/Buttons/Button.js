@@ -4,30 +4,33 @@ import {responsiveHeight} from 'react-native-responsive-dimensions';
 import {Motion} from '@legendapp/motion';
 import {Fonts, gutters, Palette, SharedStyles} from '../../styles';
 import {getGlobal} from 'reactn';
-
-const Button = ({
+interface ButtonProps {
+  beforeText?: () => React.ReactNode;
+  containerStyle?: object;
+  style?: object;
+  text: string;
+  onPress: () => void;
+  primary?: boolean;
+  textStyle?: object;
+  textColor?: string;
+  isAbsoluteBottom?: boolean;
+}
+const Button: React.FC<ButtonProps> = ({
   beforeText = null,
-
   containerStyle = {},
   style = {},
-
   text,
   onPress,
-
   primary,
-
   textStyle,
   textColor,
-
   isAbsoluteBottom = false,
 }) => {
   const {
     _config: {colors = {}},
   } = getGlobal();
-
   const bgColor = primary ? colors.primary : Palette.tran;
   const textColorButton = primary ? Palette.mainWhite : textColor;
-
   return (
     <Motion.Pressable
       onPress={onPress}
@@ -69,5 +72,4 @@ const Button = ({
     </Motion.Pressable>
   );
 };
-
 export default Button;
