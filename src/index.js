@@ -1,4 +1,4 @@
-import React, { useState, setGlobal } from 'reactn';
+import React, { useState, useEffect, ReactNode } from 'reactn';
 import {
   TooltipProvider,
   LoadingProvider,
@@ -6,26 +6,32 @@ import {
   ConsoleLogProvider,
 } from './providers';
 import cloudInstance from './config/cloud';
-
-import { useEffect } from 'react';
-
-const defaultThemeColor = {
+interface ThemeColors {
+  primary?: string;
+  secondary?: string;
+  background?: string;
+  destructive?: string;
+}
+const defaultThemeColor: ThemeColors = {
   primary: 'rgba(0,187,255,0.57)',
   secondary: 'rgba(34,119,183,0.57)',
   background: 'black',
   destructive: 'red',
 };
-
-const MinuitProvider = ({
+interface MinuitProviderProps {
+  projectID?: string | null;
+  projectId?: string | null;
+  children: ReactNode;
+  themeColors?: ThemeColors;
+}
+const MinuitProvider: React.FC<MinuitProviderProps> = ({
   projectID = null,
   projectId = null,
   children,
   themeColors = {},
 }) => {
-  const [isShakeEnabled, setIsShakeEnabled] = useState(false);
-
+  const [isShakeEnabled, setIsShakeEnabled] = useState<boolean>(false);
   let _projectID = projectID || projectId || null;
-
   setGlobal({
     _isLoading: false,
     _tooltip: null,
@@ -39,13 +45,11 @@ const MinuitProvider = ({
     _zoomPicture: null,
     _consoleLogs: [],
   });
-
   useEffect(() => {
     if (!__DEV__ && _projectID) {
       checkIfShakeIsEnabled();
     }
   }, [_projectID]);
-
   const checkIfShakeIsEnabled = async () => {
     try {
       const { data } = await cloudInstance
@@ -53,15 +57,12 @@ const MinuitProvider = ({
         .httpsCallable('shakes-isShakeEnabled')({
         projectID: _projectID,
       });
-
       console.log('Shake enabled: ', data);
-
       setIsShakeEnabled(data);
     } catch (e) {
       console.log(e);
     }
   };
-
   return (
     <ConsoleLogProvider>
       <ShakeProvider projectID={_projectID} enabled={isShakeEnabled || false}>
@@ -79,5 +80,4 @@ const MinuitProvider = ({
     </ConsoleLogProvider>
   );
 };
-
 export { MinuitProvider };
