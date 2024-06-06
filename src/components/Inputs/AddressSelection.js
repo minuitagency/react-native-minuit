@@ -14,16 +14,28 @@ import {
 
 import { apiKeyGooglePlaces } from '../config/config';
 
+interface AddressSelectionProps {
+  visible: boolean;
+  setIsVisible: (visible: boolean) => void;
+  coordinates: Coordinates | null;
+  setCoordinates: (coordinates: Coordinates) => void;
+}
+
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+  address?: string;
+}
+
 export default function AddressSelection({
   visible = false,
   setIsVisible = () => null,
-
   coordinates = null,
   setCoordinates,
-}) {
-  const [newCoordinates, setNewCoordinates] = useState(coordinates || null);
+}: AddressSelectionProps) {
+  const [newCoordinates, setNewCoordinates] = useState<Coordinates | null>(coordinates || null);
 
-  const mapRef = useRef();
+  const mapRef = useRef<MapView>(null);
 
   return (
     <Modal
@@ -53,8 +65,8 @@ export default function AddressSelection({
           {newCoordinates && (
             <Marker
               coordinate={{
-                latitude: newCoordinates?.coordinates?.latitude || 0,
-                longitude: newCoordinates?.coordinates?.longitude || 0,
+                latitude: newCoordinates?.latitude || 0,
+                longitude: newCoordinates?.longitude || 0,
               }}
             />
           )}
