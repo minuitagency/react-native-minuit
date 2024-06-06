@@ -5,8 +5,17 @@ import { Motion } from '@legendapp/motion';
 
 import { Fonts, Palette, SharedStyles } from '../styles';
 
-function TooltipProvider({ children }) {
-  const [tooltip, setTooltip] = useGlobal('_tooltip');
+interface Tooltip {
+  type: 'error' | 'info' | 'success';
+  text: string;
+}
+
+interface TooltipProviderProps {
+  children: React.ReactNode;
+}
+
+function TooltipProvider({ children }: TooltipProviderProps) {
+  const [tooltip, setTooltip] = useGlobal<Tooltip | null>('_tooltip');
   const { _config: { colors } = {} } = getGlobal();
 
   useEffect(() => {
