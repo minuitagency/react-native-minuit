@@ -1,14 +1,21 @@
 import React from "react";
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Pressable, StyleSheet, Text, View, ViewStyle, TextStyle } from "react-native";
+
+type SegmentedControlProps = {
+  options: string[];
+  selected: boolean;
+  setSelected: (selected: boolean) => void;
+  style?: ViewStyle;
+  itemStyle?: TextStyle;
+};
 
 export default function SegmentedControl({
   options = [],
   selected = options[0],
   setSelected,
-
   style = {},
   itemStyle = {},
-}) {
+}: SegmentedControlProps) {
   const [animatedValue] = React.useState(new Animated.Value(0));
 
   const buttonInterpolation = animatedValue.interpolate({
