@@ -8,19 +8,27 @@ import { Fonts, Palette, Style } from 'styles';
 
 import { icons } from 'assets';
 
-export default ({
+type Props = {
+  size?: number;
+  style?: object;
+  isCreator?: boolean;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  profilePicture?: string | null;
+  profilePictureBlurhash?: string | null;
+  status?: 'CONFIRMED' | 'PENDING' | null;
+};
+
+const ProfileComponent: React.FC<Props> = ({
   size = 60,
   style = {},
-
   isCreator = false,
-
   firstName,
   lastName,
   phoneNumber,
-
   profilePicture = null,
   profilePictureBlurhash = null,
-
   status = null,
 }) => {
   const [showBlurhash, setShowBlurhash] = useState(true);
@@ -34,7 +42,7 @@ export default ({
 
   const statusIconSize = (25 * size) / 60;
 
-  const randomIntFromInterval = (min, max) => {
+  const randomIntFromInterval = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
@@ -127,3 +135,5 @@ export default ({
     </Motion.View>
   );
 };
+
+export default ProfileComponent;
