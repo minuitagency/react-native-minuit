@@ -26,34 +26,70 @@ import edit from "./icons/edit.png";
 import burger from "./icons/burger.png";
 import showHide from "./icons/showHide.png";
 
-export const icons = {
-  home,
-  edit,
-  back,
-  close,
-  addPhoto,
-  settings,
-  notify,
-  calendar,
-  back2,
-  search,
-  tick,
-  joined,
-  waiting,
-  add,
-  iconLock,
-  iconUser,
-  iconShare,
-  iconShareToFriend,
-  iconNext,
-  deleteKeyboard,
-  backKeyboard,
-  arrowThin,
-  trash,
-  burger,
-  showHide,
+export enum IconType {
+  Home = "home",
+  Edit = "edit",
+  Back = "back",
+  Close = "close",
+  AddPhoto = "addPhoto",
+  Settings = "settings",
+  Notify = "notify",
+  Calendar = "calendar",
+  Back2 = "back2",
+  Search = "search",
+  Tick = "tick",
+  Joined = "joined",
+  Waiting = "waiting",
+  Add = "add",
+  IconLock = "iconLock",
+  IconUser = "iconUser",
+  IconShare = "iconShare",
+  IconShareToFriend = "iconShareToFriend",
+  IconNext = "iconNext",
+  DeleteKeyboard = "deleteKeyboard",
+  BackKeyboard = "backKeyboard",
+  ArrowThin = "arrowThin",
+  Trash = "trash",
+  Burger = "burger",
+  ShowHide = "showHide",
+}
+
+export type Icons = {
+  [key in IconType]: string;
 };
 
-export const images = {
+export const icons: Icons = {
+  [IconType.Home]: home,
+  [IconType.Edit]: edit,
+  [IconType.Back]: back,
+  [IconType.Close]: close,
+  [IconType.AddPhoto]: addPhoto,
+  [IconType.Settings]: settings,
+  [IconType.Notify]: notify,
+  [IconType.Calendar]: calendar,
+  [IconType.Back2]: back2,
+  [IconType.Search]: search,
+  [IconType.Tick]: tick,
+  [IconType.Joined]: joined,
+  [IconType.Waiting]: waiting,
+  [IconType.Add]: add,
+  [IconType.IconLock]: iconLock,
+  [IconType.IconUser]: iconUser,
+  [IconType.IconShare]: iconShare,
+  [IconType.IconShareToFriend]: iconShareToFriend,
+  [IconType.IconNext]: iconNext,
+  [IconType.DeleteKeyboard]: deleteKeyboard,
+  [IconType.BackKeyboard]: backKeyboard,
+  [IconType.ArrowThin]: arrowThin,
+  [IconType.Trash]: trash,
+  [IconType.Burger]: burger,
+  [IconType.ShowHide]: showHide,
+};
+
+export type Images = {
+  logoFull: string;
+};
+
+export const images: Images = {
   logoFull,
 };
