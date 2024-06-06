@@ -1,3 +1,10 @@
 {
-  "name": "config"
+  "name": "config",
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "@types/node": "^14.0.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
 }
