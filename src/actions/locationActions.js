@@ -1,9 +1,30 @@
 import { Linking, Platform } from 'react-native';
 import { setGlobal } from 'reactn';
 
+type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
+
+type MapRef = {
+  current: {
+    animateToRegion: (region: Region, duration: number) => void;
+  };
+};
+
+type Region = {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+};
+
 export const animateToCoordinates = ({
   coordinates: { latitude, longitude },
   mapRef,
+}: {
+  coordinates: Coordinates;
+  mapRef: MapRef;
 }) => {
   mapRef.current.animateToRegion(
     {
@@ -16,7 +37,7 @@ export const animateToCoordinates = ({
   );
 };
 
-export function getDistance(point1, point2) {
+export function getDistance(point1: Coordinates, point2: Coordinates): string | null {
   if (!point1?.latitude || !point2?.latitude) {
     return null;
   }
@@ -45,13 +66,18 @@ export async function openInMap({
   latitude,
   longitude,
   errorMsg = "Impossible d'ouvrir la carte",
-}) {
+}: {
+  name: string;
+  latitude: number;
+  longitude: number;
+  errorMsg?: string;
+}): Promise<void> {
   try {
     await Linking.openURL(
       Platform.select({
         ios: `maps:${latitude},${longitude}?q=${name}`,
         android: `geo:${latitude},${longitude}?q=(${name})`,
-      })
+      }) || ''
     );
   } catch (e) {
     console.log(e);
