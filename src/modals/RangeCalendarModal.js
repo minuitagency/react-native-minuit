@@ -74,9 +74,26 @@ const MinuitTheme = {
   dayTextSize: 16,
 };
 
+type RangeCalendarModalProps = {
+  isOpen?: boolean;
+  selectionType?: 'single' | 'range' | 'both';
+  maxDate?: string | null;
+  minDate?: string | null;
+  initialRange?: string[];
+  onRangeSelected?: (days: string[] | Date) => void;
+  insets?: { bottom: number; top: number };
+  theme?: typeof MinuitTheme;
+  arrowSize?: number;
+  modalStyle?: object;
+  calendarStyle?: object;
+  dayContainerStyle?: object;
+  dayTextStyle?: object;
+  buttonStyle?: object;
+};
+
 export default function RangeCalendarModal({
   isOpen = false,
-  selectionType = 'both', // single Pour une date, range Pour une période, both Pour les deux
+  selectionType = 'both',
   maxDate = null,
   minDate = null,
   initialRange = [],
@@ -94,9 +111,9 @@ export default function RangeCalendarModal({
   dayContainerStyle = {},
   dayTextStyle = {},
   buttonStyle = {},
-}) {
-  const [markedDays, setMarkedDays] = useState({});
-  const [days, setDays] = useState([]);
+}: RangeCalendarModalProps) {
+  const [markedDays, setMarkedDays] = useState<Record<string, any>>({});
+  const [days, setDays] = useState<string[]>([]);
 
   const _theme = useMemo(() => ({ ...MinuitTheme, ...theme }), [theme]);
 
@@ -109,7 +126,7 @@ export default function RangeCalendarModal({
     }
   }, [initialRange]);
 
-  function period(day) {
+  function period(day: string) {
     if (selectionType === 'single') {
       setDays([day]);
     } else {
@@ -124,7 +141,7 @@ export default function RangeCalendarModal({
   }
 
   useEffect(() => {
-    let tmp = {};
+    let tmp: Record<string, any> = {};
     if (days.length === 1) {
       tmp[days[0]] = {
         startingDay: true,
