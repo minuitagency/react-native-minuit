@@ -1,5 +1,33 @@
 import { useEffect, useState } from 'react';
 
+interface UserLocation {
+  latitude: number;
+  longitude: number;
+}
+
+interface Place {
+  place_id: string;
+  [key: string]: any;
+}
+
+interface PlaceDetails extends Place {
+  formatted_address?: string;
+  geometry?: any;
+  name?: string;
+  address_components?: any[];
+}
+
+interface UsePlacesApiProps {
+  queryFields?: string;
+  queryCountries?: string[];
+  language?: string;
+  minChars?: number;
+  query?: string;
+  apiKey?: string;
+  userLoc?: UserLocation | null;
+  radius?: number;
+}
+
 export default function usePlacesApi({
   queryFields = 'formatted_address,geometry,name,address_components',
   queryCountries = ['fr'],
@@ -9,14 +37,14 @@ export default function usePlacesApi({
   apiKey = '',
   userLoc = null,
   radius = 10000,
-}) {
-  const [places, setPlaces] = useState([]);
-  const [placeDetails, setPlaceDetails] = useState(null);
+}: UsePlacesApiProps) {
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [placeDetails, setPlaceDetails] = useState<PlaceDetails | null>(null);
   const [loadingPlaces, setLoadingPlaces] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
 
   useEffect(() => {
-    if (query < minChars) {
+    if (query.length < minChars) {
       setPlaces([]);
       setPlaceDetails(null);
     }
@@ -25,7 +53,7 @@ export default function usePlacesApi({
     }
   }, [query]);
 
-  function buildCountryQuery() {
+  function buildCountryQuery(): string {
     if (!queryCountries) {
       return '';
     }
@@ -36,13 +64,13 @@ export default function usePlacesApi({
       .join('|')}`;
   }
 
-  function buildLocationQuery() {
+  function buildLocationQuery(): string {
     return userLoc
       ? `&location=${userLoc.latitude},${userLoc.longitude}&radius=${radius}`
       : '';
   }
 
-  async function search() {
+  async function search(): Promise<void> {
     try {
       setLoadingPlaces(true);
       const _places = await fetch(
@@ -56,7 +84,7 @@ export default function usePlacesApi({
     }
   }
 
-  async function getPlaceData(place) {
+  async function getPlaceData(place: Place): Promise<void> {
     try {
       if (loadingDetails) {
         return;
@@ -73,7 +101,7 @@ export default function usePlacesApi({
     }
   }
 
-  function clearSearch() {
+  function clearSearch(): void {
     setPlaces([]);
     setPlaceDetails(null);
   }
