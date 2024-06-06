@@ -1,17 +1,17 @@
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
-
-export function useForm({ initialUserData = {}, formState = {} }) {
+interface FormProps {
+  initialUserData?: Record<string, any>;
+  formState?: Record<string, any>;
+}
+export function useForm({ initialUserData = {}, formState = {} }: FormProps) {
   const [userData, setUser] = useState(formState);
-
   const initialData = useMemo(() => {
     return _.pick(initialUserData, Object.keys(formState));
   }, [initialUserData]);
-
-  const onChangeInput = (name, value) => {
+  const onChangeInput = (name: string, value: any) => {
     setUser({ ...userData, [name]: value });
   };
-
   const updatedData = useMemo(() => {
     if (_.isEmpty(initialData)) {
       return {};
@@ -20,7 +20,6 @@ export function useForm({ initialUserData = {}, formState = {} }) {
       return !_.isEqual(value, initialData[key]);
     });
   }, [userData]);
-
   return {
     userData,
     onChangeInput,
