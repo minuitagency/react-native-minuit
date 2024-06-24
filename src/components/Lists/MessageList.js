@@ -11,8 +11,10 @@ export default function MessageList({
   loadingComponent = null,
   style,
   contentContainerStyle,
+
+  ListHeaderComponent = null,
 }) {
-  const [uid] = useGlobal('uid');
+  const [uid] = useGlobal("uid");
   const flatListRef = useRef();
 
   const [lastMessageId, setLastMessageId] = useState(messages[0]?.id);
@@ -32,7 +34,12 @@ export default function MessageList({
       onLayout={() =>
         setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
       }
-      ListFooterComponent={() => loadingComponent && loadingComponent()}
+      ListFooterComponent={() => (
+        <>
+          {ListHeaderComponent && <ListHeaderComponent />}
+          {loadingComponent && loadingComponent()}
+        </>
+      )}
       onEndReached={() => loadMoreMsg()}
       onEndReachedThreshold={0.5}
       style={style}
@@ -40,7 +47,7 @@ export default function MessageList({
         paddingBottom: responsiveHeight(2),
         paddingHorizontal: gutters,
         flexGrow: 1,
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
         ...contentContainerStyle,
       }}
       keyExtractor={(item, index) => index.toString()}
