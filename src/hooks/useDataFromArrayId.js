@@ -4,6 +4,7 @@ export default function useDataFromArrayDocId({
   ref,
   format = null,
   arrayId = [],
+  refreshArray = [],
   condition = true,
   pagination = false,
   batchSize = 20,
@@ -64,7 +65,7 @@ export default function useDataFromArrayDocId({
         setData([]);
       }
     }
-  }, [ref, arrayId?.length, condition]);
+  }, [ref, arrayId?.length, condition, ...refreshArray]);
 
   async function loadMore() {
     if (ref && arrayId?.length > 0 && !!condition && !loading) {
