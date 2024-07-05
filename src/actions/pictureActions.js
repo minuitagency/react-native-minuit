@@ -1,4 +1,4 @@
-export function base64ToArrayBuffer(base64) {
+export function base64ToArrayBuffer(base64: string): ArrayBuffer {
   const binary_string = atob(base64);
   const len = binary_string.length;
   const bytes = new Uint8Array(len);
@@ -8,8 +8,8 @@ export function base64ToArrayBuffer(base64) {
   return bytes.buffer;
 }
 
-export function uint8ToBase64(u8Arr) {
-  const CHUNK_SIZE = 0x8000; //arbitrary number
+export function uint8ToBase64(u8Arr: Uint8Array): string {
+  const CHUNK_SIZE = 0x8000; // arbitrary number
   let index = 0;
   const length = u8Arr.length;
   let result = '';
