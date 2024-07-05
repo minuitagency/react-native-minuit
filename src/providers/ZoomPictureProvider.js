@@ -1,4 +1,4 @@
-import React, { createRef, useRef, useState } from 'react';
+import React, { createRef, useRef, useState, ReactNode } from 'react';
 import {
   Animated,
   TouchableWithoutFeedback,
@@ -14,6 +14,9 @@ import {
   PanGestureHandler,
   PinchGestureHandler,
   State,
+  PanGestureHandlerGestureEvent,
+  PinchGestureHandlerGestureEvent,
+  HandlerStateChangeEvent,
 } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Motion } from '@legendapp/motion';
@@ -21,9 +24,13 @@ import { gutters } from '../styles';
 import { _rSize, _size } from '../styles/SharedStyles';
 import { icons } from '../assets';
 
-export default function ZoomPictureProvider({ children }) {
-  const [zoomPicture, setZoomPicture] = useGlobal('zoomPicture');
-  const [config] = useGlobal('_config');
+interface ZoomPictureProviderProps {
+  children: ReactNode;
+}
+
+export default function ZoomPictureProvider({ children }: ZoomPictureProviderProps) {
+  const [zoomPicture, setZoomPicture] = useGlobal<string | null>('zoomPicture');
+  const [config] = useGlobal<any>('_config');
 
   const {
     colors: { background, primary },
@@ -36,10 +43,10 @@ export default function ZoomPictureProvider({ children }) {
   const translateX = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(0)).current;
 
-  const pinchRef = createRef();
-  const panRef = createRef();
+  const pinchRef = createRef<PinchGestureHandler>();
+  const panRef = createRef<PanGestureHandler>();
 
-  const onPinchEvent = Animated.event(
+  const onPinchEvent = Animated.event<PinchGestureHandlerGestureEvent>(
     [
       {
         nativeEvent: { scale },
@@ -48,7 +55,7 @@ export default function ZoomPictureProvider({ children }) {
     { useNativeDriver: true }
   );
 
-  const onPanEvent = Animated.event(
+  const onPanEvent = Animated.event<PanGestureHandlerGestureEvent>(
     [
       {
         nativeEvent: {
@@ -60,7 +67,7 @@ export default function ZoomPictureProvider({ children }) {
     { useNativeDriver: true }
   );
 
-  const handlePinchStateChange = ({ nativeEvent }) => {
+  const handlePinchStateChange = ({ nativeEvent }: HandlerStateChangeEvent<PinchGestureHandlerGestureEvent>) => {
     // enabled pan only after pinch-zoom
     if (nativeEvent.state === State.ACTIVE) {
       setPanEnabled(true);
@@ -118,7 +125,7 @@ export default function ZoomPictureProvider({ children }) {
             duration: 250,
           }}
         >
-          <TouchableWithoutFeedback onPress={() => setZoomPicture(false)}>
+          <TouchableWithoutFeedback onPress={() => setZoomPicture(null)}>
             <View
               style={{
                 flex: 1,
@@ -141,7 +148,7 @@ export default function ZoomPictureProvider({ children }) {
                       onHandlerStateChange={handlePinchStateChange}
                     >
                       <Animated.Image
-                        source={{ uri: zoomPicture }}
+                        source={{ uri: zoomPicture || '' }}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -159,7 +166,7 @@ export default function ZoomPictureProvider({ children }) {
                 </PanGestureHandler>
               </GestureHandlerRootView>
               <TouchableOpacity
-                onPress={() => setZoomPicture(false)}
+                onPress={() => setZoomPicture(null)}
                 style={{
                   ..._rSize(8),
                   borderRadius: 24,
