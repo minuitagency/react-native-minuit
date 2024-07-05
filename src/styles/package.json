@@ -1,3 +1,20 @@
 {
-  "name": "styles"
+  "name": "styles",
+  "version": "1.0.0",
+  "description": "A package for styles",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
