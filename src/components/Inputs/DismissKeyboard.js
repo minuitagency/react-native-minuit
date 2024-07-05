@@ -1,4 +1,4 @@
-import React from 'reactn';
+import React, { ReactNode } from 'react';
 import {
   View,
   Keyboard,
@@ -6,7 +6,11 @@ import {
   Platform,
 } from "react-native";
 
-export default function DismissKeyboard({ children }) {
+interface DismissKeyboardProps {
+  children: ReactNode;
+}
+
+export default function DismissKeyboard({ children }: DismissKeyboardProps) {
   if (Platform.OS === "web") {
     return <View style={{ flex: 1 }}>{children}</View>;
   }
