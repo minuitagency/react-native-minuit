@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, TouchableOpacity, Image, TextInputProps, KeyboardTypeOptions, StyleProp, ViewStyle, TextStyle } from 'react-native';
 
 import { Fonts, Palette, SharedStyles } from '../../styles';
 import { icons } from '../../assets';
 
-const Input = ({
+interface InputProps {
+  placeholder?: string;
+  style?: StyleProp<ViewStyle>;
+  value?: string;
+  onChange?: (text: string) => void;
+  keyboardType?: KeyboardTypeOptions;
+  inputStyle?: StyleProp<TextStyle>;
+  textInputProps?: TextInputProps;
+  isPassword?: boolean;
+  isTextarea?: boolean;
+}
+
+const Input: React.FC<InputProps> = ({
   placeholder,
   style,
-
   value,
   onChange,
-
   keyboardType,
   inputStyle,
-
   textInputProps = {},
-
   isPassword = false,
   isTextarea = false,
 }) => {
