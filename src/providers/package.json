@@ -1,3 +1,31 @@
 {
-  "name": "providers"
+  "name": "providers",
+  "version": "1.0.0",
+  "description": "A project to manage providers",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "typescript": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.0",
+    "ts-jest": "^26.0.0",
+    "jest": "^26.0.0"
+  },
+  "tsconfig.json": {
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "commonjs",
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "strict": true,
+      "esModuleInterop": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.test.ts"]
+  }
 }
