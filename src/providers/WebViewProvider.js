@@ -1,5 +1,5 @@
-import React from 'react';
-import { Image, Modal, TouchableOpacity } from 'react-native';
+import React, { ReactNode } from 'react';
+import { Image, Modal, TouchableOpacity, ViewStyle, ImageStyle } from 'react-native';
 import { useGlobal } from 'reactn';
 import { WebView } from 'react-native-webview';
 import {
@@ -9,13 +9,41 @@ import {
 import { _rSize } from '../styles/SharedStyles';
 import { icons } from '../assets';
 
-export default function WebViewProvider({ children }) {
-  const [webviewURL, setWebviewURL] = useGlobal('_webviewURL');
-  const [config] = useGlobal('_config');
+interface WebViewProviderProps {
+  children: ReactNode;
+}
+
+interface Config {
+  colors: {
+    background: string;
+    primary: string;
+  };
+}
+
+const WebViewProvider: React.FC<WebViewProviderProps> = ({ children }) => {
+  const [webviewURL, setWebviewURL] = useGlobal<string | null>('_webviewURL');
+  const [config] = useGlobal<Config>('_config');
 
   const {
     colors: { background, primary },
   } = config;
+
+  const closeButtonStyle: ViewStyle = {
+    ..._rSize(8),
+    position: 'absolute',
+    top: responsiveHeight(2),
+    left: responsiveWidth(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    backgroundColor: background,
+    borderWidth: 1,
+  };
+
+  const closeButtonImageStyle: ImageStyle = {
+    ..._rSize(6),
+    tintColor: primary,
+  };
 
   return (
     <>
@@ -30,25 +58,17 @@ export default function WebViewProvider({ children }) {
         <WebView source={{ uri: webviewURL }} style={{ flex: 1 }} />
         <TouchableOpacity
           onPress={async () => await setWebviewURL(null)}
-          style={{
-            ..._rSize(8),
-            position: 'absolute',
-            top: responsiveHeight(2),
-            left: responsiveWidth(4),
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 5,
-            backgroundColor: background,
-            borderWidth: 1,
-          }}
+          style={closeButtonStyle}
         >
           <Image
             resizeMode={'contain'}
             source={icons.close}
-            style={{ ..._rSize(6), tintColor: primary }}
+            style={closeButtonImageStyle}
           />
         </TouchableOpacity>
       </Modal>
     </>
   );
-}
+};
+
+export default WebViewProvider;
