@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'reactn';
 import { Image, StyleSheet, Modal } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
 import PlacesInput from 'react-native-places-input';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, MapViewProps } from 'react-native-maps';
 
 import { Fonts, Palette, Style } from 'styles';
 import { Button, DismissKeyboard } from 'components';
@@ -14,16 +14,28 @@ import {
 
 import { apiKeyGooglePlaces } from '../config/config';
 
-export default function AddressSelection({
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+  address?: string;
+}
+
+interface AddressSelectionProps {
+  visible?: boolean;
+  setIsVisible: (visible: boolean) => void;
+  coordinates?: Coordinates | null;
+  setCoordinates: (coordinates: Coordinates) => void;
+}
+
+const AddressSelection: React.FC<AddressSelectionProps> = ({
   visible = false,
   setIsVisible = () => null,
-
   coordinates = null,
   setCoordinates,
-}) {
-  const [newCoordinates, setNewCoordinates] = useState(coordinates || null);
+}) => {
+  const [newCoordinates, setNewCoordinates] = useState<Coordinates | null>(coordinates || null);
 
-  const mapRef = useRef();
+  const mapRef = useRef<MapView>(null);
 
   return (
     <Modal
@@ -53,8 +65,8 @@ export default function AddressSelection({
           {newCoordinates && (
             <Marker
               coordinate={{
-                latitude: newCoordinates?.coordinates?.latitude || 0,
-                longitude: newCoordinates?.coordinates?.longitude || 0,
+                latitude: newCoordinates?.latitude || 0,
+                longitude: newCoordinates?.longitude || 0,
               }}
             />
           )}
@@ -90,7 +102,7 @@ export default function AddressSelection({
           }}
           googleApiKey={apiKeyGooglePlaces}
           queryFields={'formatted_address,geometry,name,address_components'}
-          onSelect={(inputData) => {
+          onSelect={(inputData: any) => {
             const {
               geometry: {
                 location: { lat: latitude, lng: longitude },
@@ -145,3 +157,5 @@ export default function AddressSelection({
     </Modal>
   );
 }
+
+export default AddressSelection;
