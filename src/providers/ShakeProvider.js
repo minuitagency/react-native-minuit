@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useGlobal } from 'reactn';
+import React, { useState, useCallback, useEffect } from 'reactn';
 import {
   Text,
   Modal,
@@ -31,22 +31,33 @@ import {
 
 const isHorizontal = responsiveHeight(100) < responsiveWidth(100);
 
-export default ({ projectID = null, enabled = false, children }) => {
+interface Props {
+  projectID?: string | null;
+  enabled?: boolean;
+  children: React.ReactNode;
+}
+
+interface Step {
+  title: string;
+  showTitle: boolean;
+}
+
+const stepList: Step[] = [
+  { title: 'Envoyer un nouveau rapport', showTitle: !isHorizontal },
+  { title: 'Description du problème', showTitle: true },
+];
+
+const MyComponent: React.FC<Props> = ({ projectID = null, enabled = false, children }) => {
   const [, setTooltip] = useGlobal('_tooltip');
   const [, setIsLoading] = useGlobal('_isLoading');
   const [consoleLogs] = useGlobal('_consoleLogs');
 
-  const [showModal, setShowModal] = useState(false);
-  const [step, setStep] = useState(0);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(0);
 
-  const [screenshotURI, setScreenshotURI] = useState(null);
-  const [tmpScreenshotURI, setTmpScreenshotURI] = useState(null);
-  const [description, setDescription] = useState(__DEV__ ? 'teeeeeeeest' : '');
-
-  const stepList = [
-    { title: 'Envoyer un nouveau rapport', showTitle: !isHorizontal },
-    { title: 'Description du problème', showTitle: true },
-  ];
+  const [screenshotURI, setScreenshotURI] = useState<string | null>(null);
+  const [tmpScreenshotURI, setTmpScreenshotURI] = useState<string | null>(null);
+  const [description, setDescription] = useState<string>(__DEV__ ? 'teeeeeeeest' : '');
 
   useEffect(() => {
     if (tmpScreenshotURI && !screenshotURI) {
@@ -55,7 +66,7 @@ export default ({ projectID = null, enabled = false, children }) => {
   }, [tmpScreenshotURI]);
 
   useEffect(() => {
-    const subscription = RNShake.addListener((data) => {
+    const subscription = RNShake.addListener((data: string) => {
       if (enabled) {
         setTmpScreenshotURI(data);
         setShowModal(true);
@@ -110,7 +121,7 @@ export default ({ projectID = null, enabled = false, children }) => {
 
       await setTooltip({ text: 'Publication effectuée !' });
       setShowModal(false);
-    } catch (e) {
+    } catch (e: any) {
       console.log(e.message);
       await setTooltip({ text: e.message });
     } finally {
@@ -256,3 +267,5 @@ export default ({ projectID = null, enabled = false, children }) => {
     </>
   );
 };
+
+export default MyComponent;
