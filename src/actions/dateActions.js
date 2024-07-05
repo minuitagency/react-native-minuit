@@ -1,6 +1,8 @@
 import moment from 'moment';
 
-export const validateDate = (date = null) => {
+type DateInput = string | number | moment.Moment | { toDate: () => Date } | null;
+
+export const validateDate = (date: DateInput = null): Date | string | null => {
   if (!date) {
     return null;
   }
@@ -10,12 +12,12 @@ export const validateDate = (date = null) => {
   if (moment(date).isValid()) {
     return date;
   }
-  if (typeof date?.toDate === 'function') {
-    return date?.toDate();
+  if (typeof (date as { toDate: () => Date })?.toDate === 'function') {
+    return (date as { toDate: () => Date })?.toDate();
   }
   return null;
 };
 
-export function getAge(birthDate) {
+export function getAge(birthDate: { toDate: () => Date }): number {
   return moment().diff(birthDate.toDate(), 'years', false);
 }
