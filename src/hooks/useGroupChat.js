@@ -2,12 +2,55 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import useDataFromRef from './useDataFromRef';
 import _ from 'lodash';
+import { firestore } from 'firebase';
 
-function sortUsers(users) {
+type FirestoreInstance = typeof firestore;
+type FirestoreTimestamp = firestore.Timestamp;
+type FirestoreFieldValue = firestore.FieldValue;
+
+interface SenderData {
+  name?: string;
+  picture?: string;
+  [key: string]: any;
+}
+
+interface InitialConvData {
+  [key: string]: any;
+}
+
+interface UseGroupChatProps {
+  firestore: FirestoreInstance;
+  usersToChat?: string[];
+  conversationId?: string | null;
+  conversationRef: firestore.CollectionReference;
+  formatConversation?: (data: any) => any;
+  formatMessages?: (data: any) => any;
+  messagesPerBatch?: number;
+  senderData?: SenderData;
+  initialConvData?: InitialConvData;
+}
+
+interface MessageData {
+  content: string;
+  type: string;
+  time: FirestoreTimestamp;
+  sender: string;
+  senderData: SenderData;
+  [key: string]: any;
+}
+
+interface ConversationData {
+  lastMessage?: MessageData;
+  unreadMsg?: { userId: string; count: number }[];
+  readBy?: string[];
+  [key: string]: any;
+}
+
+function sortUsers(users: string[]): string[] {
   return users.sort((a, b) => a.localeCompare(b));
 }
 
-function snapShotToData(snap) {
+function snapShotToData(snap: firestore.DocumentSnapshot): any {
   return {
     id: snap.id,
     ...snap.data(),
@@ -15,24 +58,24 @@ function snapShotToData(snap) {
 }
 
 export default function useGroupChat({
-  firestore, // firestore instance for arrayUninon and firestoreTimestamp
-  usersToChat = [], // require if chat not exists
-  conversationId = null, // require
-  conversationRef, // require
+  firestore,
+  usersToChat = [],
+  conversationId = null,
+  conversationRef,
   formatConversation = (data) => data,
   formatMessages = (data) => data,
   messagesPerBatch = 20,
-  senderData = {}, // use this for name or picture
+  senderData = {},
   initialConvData = {},
-}) {
+}: UseGroupChatProps) {
   const DEFAULT_MSG_TYPE = 'MESSAGE';
-  const [uid] = useGlobal('uid'); // required for sending messages
-  const [, setGlobalLoading] = useGlobal('_isLoading');
-  const [convId, setConvId] = useState(conversationId);
-  const [newDocSnap, setNewDocSnap] = useState(null);
-  const [changeDocSnap, setChangeDocSnap] = useState(null);
-  const [refresh, setRefresh] = useState(false);
-  const [pendingMsg, setPendingMsg] = useState(null);
+  const [uid] = useGlobal<string>('uid'); // required for sending messages
+  const [, setGlobalLoading] = useGlobal<boolean>('_isLoading');
+  const [convId, setConvId] = useState<string | null>(conversationId);
+  const [newDocSnap, setNewDocSnap] = useState<firestore.DocumentSnapshot | null>(null);
+  const [changeDocSnap, setChangeDocSnap] = useState<firestore.DocumentSnapshot | null>(null);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [pendingMsg, setPendingMsg] = useState<MessageData | null>(null);
 
   const messageRef = useMemo(
     () => (convId ? conversationRef.doc(convId).collection('messages') : null),
@@ -50,7 +93,7 @@ export default function useGroupChat({
     initialState: null,
     simpleRef: true,
     listener: true,
-    onUpdate: (data) => onNewMessageReceived(data),
+    onUpdate: (data: any) => onNewMessageReceived(data),
     condition: !!convId,
     format: formatConversation,
   });
@@ -73,7 +116,7 @@ export default function useGroupChat({
   });
 
   useEffect(() => {
-    let messageSub = null;
+    let messageSub: (() => void) | null = null;
     if (messageRef) {
       messageSub = messageRef
         .orderBy('lastUpdate', 'desc')
@@ -94,9 +137,9 @@ export default function useGroupChat({
     };
   }, [messageRef]);
 
-  async function onNewMessageReceived(data) {
+  async function onNewMessageReceived(data: ConversationData) {
     const { lastMessage, unreadMsg = [] } = data;
-    const newConvData = {};
+    const newConvData: Partial<ConversationData> = {};
     const userFind = unreadMsg.find((u) => u.userId === uid);
     if (userFind && userFind.count > 0) {
       for (let i = 0; i < unreadMsg.length; i++) {
@@ -110,7 +153,7 @@ export default function useGroupChat({
       newConvData.readBy = firestore.FieldValue.arrayUnion(uid);
     }
     if (_.size(newConvData) > 0) {
-      await conversationRef.doc(convId).update(newConvData);
+      await conversationRef.doc(convId!).update(newConvData);
     }
   }
 
@@ -161,7 +204,7 @@ export default function useGroupChat({
   }, []);
 
   useEffect(() => {
-    let msgSubscriber = null;
+    let msgSubscriber: (() => void) | null = null;
     if (convId) {
       msgSubscriber = messageRef
         .orderBy('time', 'desc')
@@ -181,7 +224,7 @@ export default function useGroupChat({
     };
   }, [convId, refresh]);
 
-  async function sendMsg({ message, type = DEFAULT_MSG_TYPE, moreData = {} }) {
+  async function sendMsg({ message, type = DEFAULT_MSG_TYPE, moreData = {} }: MessageData) {
     try {
       await messageRef.add({
         content: message,
@@ -203,7 +246,7 @@ export default function useGroupChat({
     message,
     type = DEFAULT_MSG_TYPE,
     moreData = {},
-  }) {
+  }: MessageData) {
     try {
       const { id } = await conversationRef.add({
         createdBy: uid,
@@ -229,7 +272,7 @@ export default function useGroupChat({
     message,
     type = DEFAULT_MSG_TYPE,
     moreData = {},
-  }) {
+  }: MessageData) {
     try {
       if (!convId) {
         if (usersToChat?.length === 0) {
@@ -244,7 +287,7 @@ export default function useGroupChat({
     }
   }
 
-  async function updateMessage(messageId, data) {
+  async function updateMessage(messageId: string, data: Partial<MessageData>) {
     try {
       await messageRef.doc(messageId).update(data);
       const updatedMsg = await messageRef.doc(messageId).get();
@@ -257,7 +300,7 @@ export default function useGroupChat({
     }
   }
 
-  async function deleteMessage(messageId) {
+  async function deleteMessage(messageId: string) {
     try {
       await messageRef.doc(messageId).delete();
       setMessages((prev) => prev.filter((msg) => msg.id !== messageId));
