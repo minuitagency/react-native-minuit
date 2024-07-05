@@ -26,7 +26,40 @@ import edit from "./icons/edit.png";
 import burger from "./icons/burger.png";
 import showHide from "./icons/showHide.png";
 
-export const icons = {
+// Define types for icons and images
+type IconType = {
+  home: string;
+  edit: string;
+  back: string;
+  close: string;
+  addPhoto: string;
+  settings: string;
+  notify: string;
+  calendar: string;
+  back2: string;
+  search: string;
+  tick: string;
+  joined: string;
+  waiting: string;
+  add: string;
+  iconLock: string;
+  iconUser: string;
+  iconShare: string;
+  iconShareToFriend: string;
+  iconNext: string;
+  deleteKeyboard: string;
+  backKeyboard: string;
+  arrowThin: string;
+  trash: string;
+  burger: string;
+  showHide: string;
+};
+
+type ImageType = {
+  logoFull: string;
+};
+
+export const icons: IconType = {
   home,
   edit,
   back,
@@ -54,6 +87,6 @@ export const icons = {
   showHide,
 };
 
-export const images = {
+export const images: ImageType = {
   logoFull,
 };
