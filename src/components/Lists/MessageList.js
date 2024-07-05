@@ -1,8 +1,25 @@
-import React, { useRef, useState } from 'react';
-import { FlatList } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { FlatList, FlatListProps, StyleProp, ViewStyle } from 'react-native';
 import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { useEffect, useGlobal } from 'reactn';
+import { useGlobal } from 'reactn';
 import { gutters } from '../../styles';
+
+interface Message {
+  id: string;
+  sender: string;
+  type: string;
+  [key: string]: any;
+}
+
+interface MessageListProps {
+  messages: Message[];
+  loadMoreMsg: () => void;
+  MessagesConfig: { type: string; component: React.ComponentType<any> }[];
+  loadingComponent?: React.ComponentType | null;
+  style?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  ListHeaderComponent?: React.ComponentType | null;
+}
 
 export default function MessageList({
   messages,
@@ -11,13 +28,12 @@ export default function MessageList({
   loadingComponent = null,
   style,
   contentContainerStyle,
-
   ListHeaderComponent = null,
-}) {
+}: MessageListProps) {
   const [uid] = useGlobal("uid");
-  const flatListRef = useRef();
+  const flatListRef = useRef<FlatList<Message>>(null);
 
-  const [lastMessageId, setLastMessageId] = useState(messages[0]?.id);
+  const [lastMessageId, setLastMessageId] = useState<string | undefined>(messages[0]?.id);
 
   useEffect(() => {
     const currentLastMessageId = messages[0]?.id;
