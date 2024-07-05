@@ -1,33 +1,48 @@
 import { useState, setGlobal } from 'reactn';
 import { useEffect } from 'react';
 
-const log = (d) => console.log(`\x1b[35m ${d}\x1b[0m`);
+const log = (d: string) => console.log(`\x1b[35m ${d}\x1b[0m`);
+
+interface UseDataFromRefProps {
+  ref: any;
+  documentID?: string;
+  listener?: boolean;
+  condition?: boolean;
+  simpleRef?: boolean;
+  initialState?: any;
+  refreshArray?: any[];
+  usePagination?: boolean;
+  updateGlobalState?: string | null;
+  batchSize?: number;
+  format?: ((data: any) => any) | null;
+  onUpdate?: (data: any) => void;
+}
+
+interface DataState {
+  data: any;
+  setData: React.Dispatch<React.SetStateAction<any>>;
+  loading: boolean;
+  loadMore: () => void;
+}
 
 export default function useDataFromRef({
   ref,
-
   documentID = 'id',
   listener = false,
-
   condition = true,
   simpleRef = false,
-
   initialState = simpleRef ? null : [],
   refreshArray = [],
-
   usePagination = false,
-
   updateGlobalState = null,
-
   batchSize = 4,
-
   format = null,
   onUpdate = () => null,
-}) {
-  const [loading, setLoading] = useState(true);
-  const [endReached, setEndReached] = useState(false);
-  const [data, setData] = useState(initialState);
-  const [lastVisible, setLastVisible] = useState(null);
+}: UseDataFromRefProps): DataState {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [endReached, setEndReached] = useState<boolean>(false);
+  const [data, setData] = useState<any>(initialState);
+  const [lastVisible, setLastVisible] = useState<any>(null);
 
   useEffect(() => {
     if (condition) {
@@ -57,7 +72,7 @@ export default function useDataFromRef({
     }
   }
 
-  async function getData({ currData = null, startAfter = null } = {}) {
+  async function getData({ currData = null, startAfter = null }: { currData?: any; startAfter?: any } = {}) {
     try {
       setLoading(true);
 
@@ -85,19 +100,19 @@ export default function useDataFromRef({
 
   function getListenerData() {
     return ref?.onSnapshot(
-      async (dataSnap) => {
+      async (dataSnap: any) => {
         const newData = snapshotToData(dataSnap);
         await updateData(newData, lastVisible);
         setLoading(false);
       },
-      async (e) => {
+      async (e: any) => {
         setLoading(false);
         await handleError(e);
       }
     );
   }
 
-  function snapshotToData(snapshot) {
+  function snapshotToData(snapshot: any) {
     if (usePagination) {
       if (batchSize !== snapshot.docs.length) {
         log('End reached');
@@ -108,13 +123,13 @@ export default function useDataFromRef({
     if (simpleRef) {
       return { ...snapshot.data(), [documentID]: snapshot.id };
     } else {
-      return snapshot.docs.map((item) => {
+      return snapshot.docs.map((item: any) => {
         return { ...item.data(), [documentID]: item.id };
       });
     }
   }
 
-  async function updateData(newData, currData = null) {
+  async function updateData(newData: any, currData: any = null) {
     const formatData = format ? await format(newData) : newData;
     const _data = currData ? [...currData, ...formatData] : formatData;
     setData(_data);
@@ -125,7 +140,7 @@ export default function useDataFromRef({
     }
   }
 
-  async function handleError(e) {
+  async function handleError(e: any) {
     if (e.code === 'firestore/permission-denied') {
       console.warn(
         'Permission denied for ref: ',
