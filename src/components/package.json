@@ -1,3 +1,25 @@
 {
-  "name": "components"
+  "name": "components",
+  "version": "1.0.0",
+  "description": "A package for reusable components",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.3",
+    "jest": "^27.0.6",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9"
+  },
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts"
 }
