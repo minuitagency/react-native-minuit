@@ -4,16 +4,35 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
-export const gutters = responsiveWidth(5.33);
-export const _size = (size) => ({ width: size, height: size });
-export const _rSize = (size) => ({
+export const gutters: number = responsiveWidth(5.33);
+
+export const _size = (size: number): { width: number; height: number } => ({
+  width: size,
+  height: size,
+});
+
+export const _rSize = (size: number): { width: number; height: number } => ({
   width: responsiveWidth(size),
   height: responsiveWidth(size),
 });
-export const mainBorderRadius = 10;
+
+export const mainBorderRadius: number = 10;
+
+type ShadowStyle = {
+  shadowColor: string;
+  shadowOffset: { width: number; height: number };
+  shadowOpacity: number;
+  shadowRadius: number;
+  elevation: number;
+};
 
 const SharedStyle = StyleSheet.create({
-  shadows: (color = 'rgba(0, 0, 0, 0.07)', width, height, radius) => ({
+  shadows: (
+    color: string = 'rgba(0, 0, 0, 0.07)',
+    width: number,
+    height: number,
+    radius: number
+  ): ShadowStyle => ({
     shadowColor: color,
     shadowOffset: {
       width: width,
@@ -26,7 +45,7 @@ const SharedStyle = StyleSheet.create({
 
   containerRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center' as const,
   },
 
   containerMain: {
@@ -42,19 +61,19 @@ const SharedStyle = StyleSheet.create({
   },
 
   containerRowSpaceBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
   },
 
   containerColumnSpaceBetween: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    flexDirection: 'column' as const,
+    justifyContent: 'space-between' as const,
   },
 
   containerCenter: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
   },
 
   separatorHorizontal: {
