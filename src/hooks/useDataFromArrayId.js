@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from 'react';
 
+interface UseDataFromArrayDocIdProps {
+  ref: any; // SECOND AGENT: [MISSING CONTEXT] - Define the type for ref based on your data fetching library (e.g., Firestore)
+  format?: (data: any[]) => Promise<any[]> | any[];
+  arrayId: string[];
+  refreshArray?: any[];
+  condition?: boolean;
+  pagination?: boolean;
+  batchSize?: number;
+}
+
+interface DocumentData {
+  id: string;
+  [key: string]: any;
+}
+
 export default function useDataFromArrayDocId({
   ref,
   format = null,
@@ -8,16 +23,16 @@ export default function useDataFromArrayDocId({
   condition = true,
   pagination = false,
   batchSize = 20,
-}) {
-  const [data, setData] = useState([]);
+}: UseDataFromArrayDocIdProps) {
+  const [data, setData] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
 
-  async function getAllDocs(arrayToGet) {
+  async function getAllDocs(arrayToGet: string[]) {
     try {
       setLoading(true);
       const promises = arrayToGet.map(async (id) => {
-        return new Promise(async (resolve) => {
+        return new Promise<DocumentData | null>(async (resolve) => {
           const doc = await ref.doc(id).get();
           if (doc.exists) {
             resolve({ ...doc.data(), id: doc.id });
@@ -27,7 +42,7 @@ export default function useDataFromArrayDocId({
         });
       });
       await Promise.all(promises).then(async (values) => {
-        const validData = values.filter((value) => value !== null);
+        const validData = values.filter((value) => value !== null) as DocumentData[];
         const newData = format ? await format(validData) : validData;
         if (currentPage > 0) {
           setData((prev) => [...prev, ...newData]);
@@ -45,7 +60,7 @@ export default function useDataFromArrayDocId({
     }
   }
 
-  function getNewArrayToGet(currPage = 0) {
+  function getNewArrayToGet(currPage = 0): string[] {
     const start = currPage * batchSize;
     const end = (currPage + 1) * batchSize;
     const newArray = arrayId.slice(start, end);
@@ -61,7 +76,7 @@ export default function useDataFromArrayDocId({
         getAllDocs(arrayId);
       }
     } else {
-      if (data !== []) {
+      if (data.length > 0) {
         setData([]);
       }
     }
