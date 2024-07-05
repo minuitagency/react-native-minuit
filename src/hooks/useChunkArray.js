@@ -1,4 +1,24 @@
 import { useEffect, useState } from 'react';
+import { Firestore, QuerySnapshot, DocumentData } from '@firebase/firestore-types';
+
+interface UseChunkArrayProps {
+  ref: Firestore;
+  keyName?: string;
+  operator?: string;
+  arrayToChunk?: any[];
+  chunkSize?: number;
+  condition?: boolean;
+  listener?: boolean;
+  refreshArray?: any[];
+  initialValue?: any[];
+  format?: ((data: any[]) => any[]) | null;
+}
+
+interface UseChunkArrayReturn {
+  data: any[];
+  setData: React.Dispatch<React.SetStateAction<any[]>>;
+  loading: boolean;
+}
 
 export default function useChunkArray({
   ref,
@@ -11,29 +31,29 @@ export default function useChunkArray({
   refreshArray = [],
   initialValue = [],
   format = null,
-}) {
-  const [data, setData] = useState(initialValue);
-  const [allListener, setAllListener] = useState([]);
+}: UseChunkArrayProps): UseChunkArrayReturn {
+  const [data, setData] = useState<any[]>(initialValue);
+  const [allListener, setAllListener] = useState<(() => void)[]>([]);
   const [loading, setLoading] = useState(true);
 
-  function getChunkArray() {
-    const chunkedArray = [];
+  function getChunkArray(): any[][] {
+    const chunkedArray: any[][] = [];
     for (let i = 0; i < arrayToChunk.length; i += chunkSize) {
       chunkedArray.push(arrayToChunk.slice(i, i + chunkSize));
     }
     return chunkedArray;
   }
 
-  async function makeAllRequests(chunkedArray) {
+  async function makeAllRequests(chunkedArray: any[][]): Promise<void> {
     try {
       setLoading(true);
-      const snapCollection = [];
+      const snapCollection: QuerySnapshot<DocumentData>[] = [];
       for await (const snap of chunkedArray.map(
         async (chunk) => await ref.where(keyName, operator, chunk).get()
       )) {
         snapCollection.push(snap);
       }
-      const results = [];
+      const results: any[] = [];
       (await Promise.all(snapCollection)).map(({ docs = [] }) => {
         docs.map((snap) => {
           results.push({ ...snap.data(), id: snap.id });
@@ -58,7 +78,7 @@ export default function useChunkArray({
         chunkedArray.map((chunk) => {
           const listener = ref.where(keyName, operator, chunk).onSnapshot(
             (snap) => {
-              const results = [];
+              const results: any[] = [];
               snap?.docs.map((snap) => {
                 results.push({ ...snap.data(), id: snap.id });
               });
