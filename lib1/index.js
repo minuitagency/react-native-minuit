@@ -1,19 +1,16 @@
-// @flow
-import React, { Component } from "react";
-import { View, NativeModules, Platform, findNodeHandle } from "react-native";
+import React, { Component, ReactNode, RefObject } from "react";
+import { View, NativeModules, Platform, findNodeHandle, ViewStyle } from "react-native";
 const { RNViewShot } = NativeModules;
-import type { ViewStyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
-import type { LayoutEvent } from "react-native/Libraries/Types/CoreEventTypes";
 
 const neverEndingPromise = new Promise(() => {});
 
 type Options = {
-  width?: number,
-  height?: number,
-  format: "png" | "jpg" | "webm" | "raw",
-  quality: number,
-  result: "tmpfile" | "base64" | "data-uri" | "zip-base64",
-  snapshotContentContainer: boolean
+  width?: number;
+  height?: number;
+  format: "png" | "jpg" | "webm" | "raw";
+  quality: number;
+  result: "tmpfile" | "base64" | "data-uri" | "zip-base64";
+  snapshotContentContainer: boolean;
 };
 
 if (!RNViewShot) {
@@ -30,7 +27,7 @@ const acceptedResults = ["tmpfile", "base64", "data-uri"].concat(
   Platform.OS === "android" ? ["zip-base64"] : []
 );
 
-const defaultOptions = {
+const defaultOptions: Options = {
   format: "png",
   quality: 1,
   result: "tmpfile",
@@ -39,13 +36,13 @@ const defaultOptions = {
 
 // validate and coerce options
 function validateOptions(
-  input: ?$Shape<Options>
-): { options: Options, errors: Array<string> } {
+  input?: Partial<Options>
+): { options: Options; errors: Array<string> } {
   const options: Options = {
     ...defaultOptions,
     ...input
   };
-  const errors = [];
+  const errors: Array<string> = [];
   if (
     "width" in options &&
     (typeof options.width !== "number" || options.width <= 0)
@@ -100,19 +97,17 @@ export function ensureModuleIsLoaded() {
   }
 }
 
-export function captureRef<T: React$ElementType>(
-  view: number | ?View | React$Ref<T>,
-  optionsObject?: Object
+export function captureRef<T>(
+  view: number | View | RefObject<T>,
+  optionsObject?: Partial<Options>
 ): Promise<string> {
   ensureModuleIsLoaded();
   if (
     view &&
     typeof view === "object" &&
     "current" in view &&
-    // $FlowFixMe view is a ref
     view.current
   ) {
-    // $FlowFixMe view is a ref
     view = view.current;
     if (!view) {
       return Promise.reject(new Error("ref.current is null"));
@@ -147,7 +142,7 @@ export function releaseCapture(uri: string): void {
   }
 }
 
-export function captureScreen(optionsObject?: Options): Promise<string> {
+export function captureScreen(optionsObject?: Partial<Options>): Promise<string> {
   ensureModuleIsLoaded();
   const { options, errors } = validateOptions(optionsObject);
   if (__DEV__ && errors.length > 0) {
@@ -160,13 +155,13 @@ export function captureScreen(optionsObject?: Options): Promise<string> {
 }
 
 type Props = {
-  options?: Object,
-  captureMode?: "mount" | "continuous" | "update",
-  children: React$Node,
-  onLayout?: (e: *) => void,
-  onCapture?: (uri: string) => void,
-  onCaptureFailure?: (e: Error) => void,
-  style?: ViewStyleProp
+  options?: Partial<Options>;
+  captureMode?: "mount" | "continuous" | "update";
+  children: ReactNode;
+  onLayout?: (e: any) => void;
+  onCapture?: (uri: string) => void;
+  onCaptureFailure?: (e: Error) => void;
+  style?: ViewStyle;
 };
 
 function checkCompatibleProps(props: Props) {
@@ -193,12 +188,12 @@ export default class ViewShot extends Component<Props> {
   static captureRef = captureRef;
   static releaseCapture = releaseCapture;
 
-  root: ?View;
+  root: View | null = null;
 
-  _raf: *;
-  lastCapturedURI: ?string;
+  _raf: number | null = null;
+  lastCapturedURI: string | null = null;
 
-  resolveFirstLayout: (layout: Object) => void;
+  resolveFirstLayout!: (layout: Object) => void;
   firstLayoutPromise: Promise<Object> = new Promise(resolve => {
     this.resolveFirstLayout = resolve;
   });
@@ -238,8 +233,10 @@ export default class ViewShot extends Component<Props> {
     if (onCaptureFailure) onCaptureFailure(e);
   };
 
-  syncCaptureLoop = (captureMode: ?string) => {
-    cancelAnimationFrame(this._raf);
+  syncCaptureLoop = (captureMode?: string) => {
+    if (this._raf !== null) {
+      cancelAnimationFrame(this._raf);
+    }
     if (captureMode === "continuous") {
       let previousCaptureURI = "-"; // needs to capture at least once at first, so we use "-" arbitrary string
       const loop = () => {
@@ -252,11 +249,11 @@ export default class ViewShot extends Component<Props> {
     }
   };
 
-  onRef = (ref: React$ElementRef<*>) => {
+  onRef = (ref: View | null) => {
     this.root = ref;
   };
 
-  onLayout = (e: LayoutEvent) => {
+  onLayout = (e: any) => {
     const { onLayout } = this.props;
     this.resolveFirstLayout(e.nativeEvent.layout);
     if (onLayout) onLayout(e);
@@ -283,7 +280,7 @@ export default class ViewShot extends Component<Props> {
   }
 
   componentWillUnmount() {
-    this.syncCaptureLoop(null);
+    this.syncCaptureLoop(undefined);
   }
 
   render() {
