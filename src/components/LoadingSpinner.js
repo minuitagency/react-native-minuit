@@ -1,7 +1,12 @@
 import React, { useEffect, useRef } from "reactn";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, ImageStyle } from "react-native";
 
-export default ({ size = 50, color = "white" }) => {
+interface SpinnerProps {
+  size?: number;
+  color?: string;
+}
+
+const Spinner: React.FC<SpinnerProps> = ({ size = 50, color = "white" }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -30,17 +35,21 @@ export default ({ size = 50, color = "white" }) => {
     outputRange: ["0deg", "360deg"],
   });
 
+  const imageStyle: ImageStyle = {
+    width: size,
+    height: size,
+    transform: [{ rotate: angle }],
+    tintColor: color,
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
   return (
     <Animated.Image
-      style={{
-        width: size,
-        height: size,
-        transform: [{ rotate: angle }],
-        tintColor: color,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      style={imageStyle}
       source={require("../assets/icons/loadingspinner.png")}
     />
   );
 };
+
+export default Spinner;
