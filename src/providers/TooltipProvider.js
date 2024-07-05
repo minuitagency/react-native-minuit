@@ -5,9 +5,25 @@ import { Motion } from '@legendapp/motion';
 
 import { Fonts, Palette, SharedStyles } from '../styles';
 
-function TooltipProvider({ children }) {
-  const [tooltip, setTooltip] = useGlobal('_tooltip');
-  const { _config: { colors } = {} } = getGlobal();
+interface Tooltip {
+  type: 'error' | 'info' | 'success';
+  text: string;
+}
+
+interface GlobalConfig {
+  colors: {
+    primary: string;
+    destructive: string;
+  };
+}
+
+interface TooltipProviderProps {
+  children: React.ReactNode;
+}
+
+function TooltipProvider({ children }: TooltipProviderProps) {
+  const [tooltip, setTooltip] = useGlobal<Tooltip | null>('_tooltip');
+  const { _config: { colors } = {} } = getGlobal<GlobalConfig>();
 
   useEffect(() => {
     const resetTimeout = setTimeout(async () => {
@@ -17,7 +33,7 @@ function TooltipProvider({ children }) {
     return () => clearTimeout(resetTimeout);
   }, [tooltip]);
 
-  function getBackgroundColor() {
+  function getBackgroundColor(): string {
     if (tooltip?.type === 'error') {
       return colors.destructive;
     }
