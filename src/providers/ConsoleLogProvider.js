@@ -1,10 +1,18 @@
-import React, { useGlobal } from "reactn";
+import React, { ReactNode } from "reactn";
 
-export default ({ children }) => {
-  const [consoleLogs, setConsoleLogs] = useGlobal("_consoleLogs");
+// Define a type for the props
+interface Props {
+  children: ReactNode;
+}
 
-  /* console.log = (function (old_function) {
-    return function (...args) {
+// Define a type for the console logs
+type ConsoleLog = string | number | boolean | object;
+
+const ConsoleLogger: React.FC<Props> = ({ children }) => {
+  const [consoleLogs, setConsoleLogs] = useGlobal<ConsoleLog[]>("_consoleLogs");
+
+  console.log = (function (old_function) {
+    return function (...args: ConsoleLog[]) {
       let newLogs = [...consoleLogs, ...args];
 
       if (newLogs.length > 200) {
@@ -15,7 +23,9 @@ export default ({ children }) => {
 
       old_function.apply(this, args);
     };
-  })(console.log); */
+  })(console.log);
 
-  return children;
+  return <>{children}</>;
 };
+
+export default ConsoleLogger;
