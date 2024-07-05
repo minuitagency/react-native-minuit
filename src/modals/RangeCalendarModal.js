@@ -74,6 +74,26 @@ const MinuitTheme = {
   dayTextSize: 16,
 };
 
+type RangeCalendarModalProps = {
+  isOpen?: boolean;
+  selectionType?: 'single' | 'range' | 'both';
+  maxDate?: string | null;
+  minDate?: string | null;
+  initialRange?: string[];
+  onRangeSelected?: (days: string[] | Date) => void;
+  insets?: {
+    bottom: number;
+    top: number;
+  };
+  theme?: typeof MinuitTheme;
+  arrowSize?: number;
+  modalStyle?: object;
+  calendarStyle?: object;
+  dayContainerStyle?: object;
+  dayTextStyle?: object;
+  buttonStyle?: object;
+};
+
 export default function RangeCalendarModal({
   isOpen = false,
   selectionType = 'both', // single Pour une date, range Pour une période, both Pour les deux
@@ -94,9 +114,9 @@ export default function RangeCalendarModal({
   dayContainerStyle = {},
   dayTextStyle = {},
   buttonStyle = {},
-}) {
-  const [markedDays, setMarkedDays] = useState({});
-  const [days, setDays] = useState([]);
+}: RangeCalendarModalProps) {
+  const [markedDays, setMarkedDays] = useState<Record<string, any>>({});
+  const [days, setDays] = useState<string[]>([]);
 
   const _theme = useMemo(() => ({ ...MinuitTheme, ...theme }), [theme]);
 
@@ -109,7 +129,7 @@ export default function RangeCalendarModal({
     }
   }, [initialRange]);
 
-  function period(day) {
+  function period(day: string) {
     if (selectionType === 'single') {
       setDays([day]);
     } else {
@@ -119,12 +139,12 @@ export default function RangeCalendarModal({
       } else {
         _days = [day];
       }
-      setDays(_days.sort((a, b) => moment(b).isBefore(a)));
+      setDays(_days.sort((a, b) => moment(b).isBefore(a) ? 1 : -1));
     }
   }
 
   useEffect(() => {
-    let tmp = {};
+    let tmp: Record<string, any> = {};
     if (days.length === 1) {
       tmp[days[0]] = {
         startingDay: true,
@@ -132,7 +152,7 @@ export default function RangeCalendarModal({
         color: _theme.primary,
       };
     } else if (days.length === 2) {
-      days.sort((a, b) => a > b);
+      days.sort((a, b) => a > b ? 1 : -1);
       const selectedDates = moment.range(days[0], days[1]);
       const arrayDates = Array.from(selectedDates.by('day'));
       tmp[days[0]] = { startingDay: true, color: _theme.primary };
