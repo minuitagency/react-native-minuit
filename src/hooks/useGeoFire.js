@@ -1,9 +1,22 @@
 import { useState, useEffect } from 'react';
 import * as geofirex from 'geofirex';
 
+interface GeoFireProps {
+  ref: any;
+  geo: any; // require
+  center: { latitude: number; longitude: number } | null;
+  formatFunction?: ((hits: any[]) => any[]) | null;
+  condition?: boolean;
+  listener?: boolean;
+  radius?: number;
+  parameter?: string;
+  refreshArray?: any[];
+  logs?: boolean;
+}
+
 const useGeoFire = ({
   ref,
-  geo, // require
+  geo,
   center,
   formatFunction = null,
   condition = true,
@@ -12,9 +25,9 @@ const useGeoFire = ({
   parameter = 'point',
   refreshArray = [],
   logs = false,
-}) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+}: GeoFireProps) => {
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (center?.latitude && center?.longitude && condition) {
@@ -29,7 +42,7 @@ const useGeoFire = ({
     }
   }, [...refreshArray, center, radius, condition]);
 
-  function formatHits(hits) {
+  function formatHits(hits: any[]) {
     if (formatFunction) {
       setData(formatFunction(hits));
     } else {
@@ -37,19 +50,19 @@ const useGeoFire = ({
     }
   }
 
-  const fetchQuery = async ({ customLocation = null } = {}) => {
+  const fetchQuery = async ({ customLocation = null }: { customLocation?: { latitude: number; longitude: number } | null } = {}) => {
     try {
       setLoading(true);
       const geoQuery = geo
         .query(ref)
         .within(
-          geo.point(center.latitude, center.longitude),
+          geo.point(center!.latitude, center!.longitude),
           radius,
           parameter
         );
 
       if (listener) {
-        geoQuery.subscribe((hits) => formatHits(hits));
+        geoQuery.subscribe((hits: any[]) => formatHits(hits));
       } else {
         const hits = await geofirex.get(geoQuery);
         formatHits(hits);
