@@ -1,4 +1,37 @@
-const Palette = {
+type Color = string;
+
+interface Palette {
+  primary: Color;
+  transparentPink: Color;
+
+  mainWhite: Color;
+  transparentWhite: Color;
+
+  mainBlack: Color;
+  overlayBlack: Color;
+
+  mainPurple: Color;
+  alternatePurple: Color;
+  darkPurple: Color;
+  darkPurpleTransparent: Color;
+  lightPurple: Color;
+  fluoPurple: Color;
+
+  mainOrange: Color;
+
+  mainGrey: Color;
+  lightGrey: Color;
+  darkGrey: Color;
+
+  lightYellow: Color;
+
+  mainGreen: Color;
+  lightGreen: Color;
+
+  mainRed: Color;
+}
+
+const Palette: Palette = {
   primary: '#fb68a8',
   transparentPink: 'rgba(251, 104, 168, 0.1)',
 
