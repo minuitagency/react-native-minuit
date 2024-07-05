@@ -1,12 +1,22 @@
-import React, { useEffect, useGlobal } from 'reactn';
+import React, { useEffect, useGlobal, ReactNode } from 'reactn';
 import { Animated, StyleSheet } from 'react-native';
-
 import { useRef, useState } from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
-export default ({ children }) => {
-  const [isGlobalLoading] = useGlobal('_isLoading');
-  const [config] = useGlobal('_config');
+interface Config {
+  colors?: {
+    loader?: string;
+    primary?: string;
+  };
+}
+
+interface Props {
+  children: ReactNode;
+}
+
+const LoadingOverlay: React.FC<Props> = ({ children }) => {
+  const [isGlobalLoading] = useGlobal<boolean>('_isLoading');
+  const [config] = useGlobal<Config>('_config');
 
   const { colors = {} } = config;
 
@@ -33,7 +43,7 @@ export default ({ children }) => {
       }
     });
 
-    return anim.stop;
+    return () => anim.stop();
   }, [isGlobalLoading]);
 
   return (
@@ -56,3 +66,5 @@ export default ({ children }) => {
     </>
   );
 };
+
+export default LoadingOverlay;
