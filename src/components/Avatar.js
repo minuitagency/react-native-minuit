@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageSourcePropType } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Motion } from '@legendapp/motion';
 import { Blurhash } from 'react-native-blurhash';
@@ -8,24 +8,34 @@ import { Fonts, Palette, Style } from 'styles';
 
 import { icons } from 'assets';
 
-export default ({
+type Status = 'CONFIRMED' | 'PENDING' | null;
+
+interface ProfileProps {
+  size?: number;
+  style?: object;
+  isCreator?: boolean;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  profilePicture?: string | null;
+  profilePictureBlurhash?: string | null;
+  status?: Status;
+}
+
+const Profile: React.FC<ProfileProps> = ({
   size = 60,
   style = {},
-
   isCreator = false,
-
   firstName,
   lastName,
   phoneNumber,
-
   profilePicture = null,
   profilePictureBlurhash = null,
-
   status = null,
 }) => {
   const [showBlurhash, setShowBlurhash] = useState(true);
 
-  const statusIcon =
+  const statusIcon: ImageSourcePropType | null =
     status === 'CONFIRMED'
       ? icons.joined
       : status === 'PENDING'
@@ -34,7 +44,7 @@ export default ({
 
   const statusIconSize = (25 * size) / 60;
 
-  const randomIntFromInterval = (min, max) => {
+  const randomIntFromInterval = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
@@ -127,3 +137,5 @@ export default ({
     </Motion.View>
   );
 };
+
+export default Profile;
