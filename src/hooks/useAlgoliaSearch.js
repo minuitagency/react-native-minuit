@@ -1,24 +1,60 @@
 import { useEffect, useMemo, useState } from "react";
-import algoliasearch from "algoliasearch/lite";
+import algoliasearch, { SearchIndex } from "algoliasearch/lite";
 import _ from "lodash";
 
-export default ({
+interface AlgoliaObject {
+  index: string | null;
+  projectID: string;
+  publicKey: string;
+}
+
+interface SearchParams {
+  filters?: string;
+  aroundLatLng?: string;
+  aroundRadius?: number;
+  [key: string]: any;
+}
+
+interface AlgoliaParams {
+  [key: string]: any;
+}
+
+interface SearchResult {
+  hits: any[];
+  loading: boolean;
+  currPage: number;
+  totalPage: number;
+  totalHits: number;
+  loadMore: () => Promise<void>;
+}
+
+interface Props {
+  query?: string;
+  algoliaObject: AlgoliaObject;
+  algoliaParams?: AlgoliaParams;
+  searchParams?: SearchParams;
+  format?: (rst: any[]) => Promise<any[]>;
+  batch?: number;
+  condition?: boolean;
+}
+
+const useAlgoliaSearch = ({
   query = "",
   algoliaObject: { index = null, projectID, publicKey },
   algoliaParams = {},
   searchParams = {},
-  format = (rst) => rst,
+  format = (rst) => Promise.resolve(rst),
   batch = 20,
   condition = true,
-}) => {
-  const [result, setResult] = useState([]);
+}: Props): SearchResult => {
+  const [result, setResult] = useState<any[]>([]);
   const [currPage, setCurrPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [nbHits, setNbHits] = useState(0);
 
-  const indexAlgolia = useMemo(
-    () => algoliasearch(projectID, publicKey, algoliaParams).initIndex(index),
+  const indexAlgolia: SearchIndex = useMemo(
+    () => algoliasearch(projectID, publicKey, algoliaParams).initIndex(index!),
     [index]
   );
 
@@ -59,7 +95,7 @@ export default ({
           hitsPerPage: batch,
           ...searchParams,
         });
-        const unformattedHit = hits.map((itemHit) => ({
+        const unformattedHit = hits.map((itemHit: any) => ({
           ...itemHit,
           id: itemHit.objectID,
         }));
@@ -101,3 +137,5 @@ export default ({
     loadMore,
   };
 };
+
+export default useAlgoliaSearch;
