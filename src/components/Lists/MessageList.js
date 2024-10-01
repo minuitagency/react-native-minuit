@@ -22,9 +22,9 @@ export default function MessageList({
 
   const getLastMessageId = () => {
     if (isWeb) {
-      return messages[0]?.id;
+      return data[data.length - 1]?.id;
     } else {
-      return messages[messages.length - 1]?.id;
+      return data[0]?.id;
     }
   };
 
