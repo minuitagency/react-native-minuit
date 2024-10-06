@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
-import { FlatList } from 'react-native';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
-import { useGlobal } from 'reactn';
-import { gutters } from '../../styles';
+import React, { useRef, useState } from "react";
+import { FlatList, Platform } from "react-native";
+import { responsiveHeight } from "react-native-responsive-dimensions";
+import { useEffect, useGlobal } from "reactn";
+import { gutters } from "../../styles";
 
 export default function MessageList({
   messages,
@@ -11,40 +11,74 @@ export default function MessageList({
   loadingComponent = null,
   style,
   contentContainerStyle,
+  ListHeaderComponent = null,
+  scrollIndicator = true,
+  FlatListProps = {},
 }) {
-  const [uid] = useGlobal('uid');
+  const [uid] = useGlobal("uid");
+  const isWeb = Platform.OS === "web";
+  const data = isWeb ? [...messages].reverse() : messages;
   const flatListRef = useRef();
+
+  const getLastMessageId = () => {
+    if (isWeb) {
+      return data[data.length - 1]?.id;
+    } else {
+      return data[0]?.id;
+    }
+  };
+
+  const [lastMessageId, setLastMessageId] = useState(getLastMessageId());
+
+  useEffect(() => {
+    const currentLastMessageId = getLastMessageId();
+    if (currentLastMessageId !== lastMessageId) {
+      setLastMessageId(currentLastMessageId);
+      flatListRef.current?.scrollToOffset({ y: 0 }, 200);
+    }
+  }, [messages, lastMessageId]);
 
   return (
     <FlatList
       ref={flatListRef}
-      inverted={true}
-      onLayout={() =>
-        setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300)
-      }
-      ListFooterComponent={() => loadingComponent && loadingComponent()}
+      inverted={!isWeb}
+      onLayout={() => {
+        setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300);
+      }}
+      showsVerticalScrollIndicator={scrollIndicator}
+      ListFooterComponent={() => (
+        <>
+          {ListHeaderComponent && <ListHeaderComponent />}
+          {loadingComponent && loadingComponent()}
+        </>
+      )}
       onEndReached={() => loadMoreMsg()}
       onEndReachedThreshold={0.5}
       style={style}
-      contentContainerStyle={{
-        paddingBottom: responsiveHeight(2),
-        paddingHorizontal: gutters,
-        flexGrow: 1,
-        justifyContent: 'flex-end',
-        ...contentContainerStyle,
-      }}
+      contentContainerStyle={[
+        Platform.select({
+          ios: { justifyContent: "flex-end" },
+          android: { justifyContent: "flex-end" },
+        }),
+        {
+          paddingBottom: responsiveHeight(2),
+          paddingHorizontal: gutters,
+          flexGrow: 1,
+          ...contentContainerStyle,
+        },
+      ]}
       keyExtractor={(item, index) => index.toString()}
-      data={messages}
+      data={data}
       renderItem={({ item, index }) => {
         const { sender, type } = item;
         const prevSenderIsSame =
-          messages[index - 1]?.sender === messages[index]?.sender;
+          data[index - 1]?.sender === data[index]?.sender;
         const nextSenderIsSame =
-          messages[index + 1]?.sender === messages[index]?.sender;
+          data[index + 1]?.sender === data[index]?.sender;
         const MessageComponent =
           MessagesConfig?.find((conf) => conf?.type === type)?.component ||
           null;
-        const prevMsg = messages[index - 1] || null;
+        const prevMsg = data[index - 1] || null;
         if (!MessageComponent) {
           console.log(`Message type ${type} not found in config array`);
           return null;
@@ -61,6 +95,7 @@ export default function MessageList({
         }
       }}
       extraData={messages}
+      {...FlatListProps}
     />
   );
 }

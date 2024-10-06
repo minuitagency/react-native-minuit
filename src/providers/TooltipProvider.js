@@ -29,7 +29,10 @@ function TooltipProvider({ children }) {
       {children}
 
       <Motion.View
-        animate={{ top: tooltip ? responsiveHeight(6) : -50 }}
+        animate={{
+          top: tooltip ? responsiveHeight(6) : -50,
+          opacity: tooltip ? 1 : 0,
+        }}
         transition={{
           type: 'spring',
           damping: 20,

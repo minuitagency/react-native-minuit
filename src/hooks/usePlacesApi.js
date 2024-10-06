@@ -7,7 +7,8 @@ export default function usePlacesApi({
   minChars = 2,
   query = '',
   apiKey = '',
-  cityOnly = false,
+  userLoc = null,
+  radius = 10000,
 }) {
   const [places, setPlaces] = useState([]);
   const [placeDetails, setPlaceDetails] = useState(null);
@@ -35,18 +36,17 @@ export default function usePlacesApi({
       .join('|')}`;
   }
 
-  function buildCityQuery() {
-    if (!cityOnly) {
-      return '';
-    }
-    return `&types=%28cities%29`;
+  function buildLocationQuery() {
+    return userLoc
+      ? `&location=${userLoc.latitude},${userLoc.longitude}&radius=${radius}`
+      : '';
   }
 
   async function search() {
     try {
       setLoadingPlaces(true);
       const _places = await fetch(
-        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&inputtype=textquery&language=${language}&fields=${queryFields}${buildCityQuery()}${buildCountryQuery()}`
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&inputtype=textquery&language=${language}&fields=${queryFields}${buildCountryQuery()}${buildLocationQuery()}`
       ).then((response) => response.json());
       setPlaces(_places?.predictions);
     } catch (e) {

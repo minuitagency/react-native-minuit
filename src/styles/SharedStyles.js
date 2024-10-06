@@ -5,6 +5,11 @@ import {
 } from 'react-native-responsive-dimensions';
 
 export const gutters = responsiveWidth(5.33);
+export const _size = (size) => ({ width: size, height: size });
+export const _rSize = (size) => ({
+  width: responsiveWidth(size),
+  height: responsiveWidth(size),
+});
 export const mainBorderRadius = 10;
 
 const SharedStyle = StyleSheet.create({
