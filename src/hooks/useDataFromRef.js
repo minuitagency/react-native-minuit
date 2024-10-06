@@ -1,12 +1,12 @@
-import { useState, setGlobal } from 'reactn';
-import { useEffect } from 'react';
+import { useState, setGlobal } from "reactn";
+import { useEffect } from "react";
 
 const log = (d) => console.log(`\x1b[35m ${d}\x1b[0m`);
 
 export default function useDataFromRef({
   ref,
 
-  documentID = 'id',
+  documentID = "id",
   listener = false,
 
   condition = true,
@@ -43,15 +43,17 @@ export default function useDataFromRef({
       } else {
         getData();
       }
+    } else {
+      setLoading(false);
     }
   }, [...refreshArray, condition, usePagination]);
 
   function loadMore() {
     if (!loading && !endReached) {
       if (listener) {
-        log('Cannot use loadMore with listener');
+        log("Cannot use loadMore with listener");
       } else {
-        log('Loading more');
+        log("Loading more");
         getData({ currData: data, startAfter: lastVisible });
       }
     }
@@ -74,7 +76,7 @@ export default function useDataFromRef({
       if (newData) {
         await updateData(newData, currData);
       } else {
-        log('No data');
+        log("No data");
       }
     } catch (e) {
       await handleError(e);
@@ -100,7 +102,7 @@ export default function useDataFromRef({
   function snapshotToData(snapshot) {
     if (usePagination) {
       if (batchSize !== snapshot.docs.length) {
-        log('End reached');
+        log("End reached");
         setEndReached(true);
       }
       setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
@@ -126,9 +128,9 @@ export default function useDataFromRef({
   }
 
   async function handleError(e) {
-    if (e.code === 'firestore/permission-denied') {
+    if (e.code === "firestore/permission-denied") {
       console.warn(
-        'Permission denied for ref: ',
+        "Permission denied for ref: ",
         ref?._collectionPath?.relativeName
       );
     } else {
