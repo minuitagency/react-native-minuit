@@ -9,6 +9,7 @@ export default function usePlacesApi({
   apiKey = '',
   userLoc = null,
   radius = 10000,
+  baseUrl = 'https://maps.googleapis.com',
 }) {
   const [places, setPlaces] = useState([]);
   const [placeDetails, setPlaceDetails] = useState(null);
@@ -46,7 +47,7 @@ export default function usePlacesApi({
     try {
       setLoadingPlaces(true);
       const _places = await fetch(
-        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&inputtype=textquery&language=${language}&fields=${queryFields}${buildCountryQuery()}${buildLocationQuery()}`
+        `${baseUrl}/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&inputtype=textquery&language=${language}&fields=${queryFields}${buildCountryQuery()}${buildLocationQuery()}`
       ).then((response) => response.json());
       setPlaces(_places?.predictions);
     } catch (e) {
@@ -63,7 +64,7 @@ export default function usePlacesApi({
       }
       setLoadingDetails(true);
       const placeDetails = await fetch(
-        `https://maps.googleapis.com/maps/api/place/details/json?placeid=${place.place_id}&key=${apiKey}&fields=${queryFields}&language=${language}`
+        `${baseUrl}/maps/api/place/details/json?placeid=${place.place_id}&key=${apiKey}&fields=${queryFields}&language=${language}`
       ).then((response) => response.json());
       setPlaceDetails({ ...placeDetails?.result, ...place });
     } catch (e) {
