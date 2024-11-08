@@ -21,11 +21,16 @@ export function useForm({ initialUserData = {}, formState = {} }) {
     });
   }, [userData]);
 
+  function reset() {
+    setUser(initialData);
+  }
+
   return {
     userData,
     onChangeInput,
     initialData,
     updatedData,
     contentChange: !_.isEqual(userData, initialData),
+    reset,
   };
 }

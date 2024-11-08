@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import algoliasearch from "algoliasearch/lite";
-import _ from "lodash";
+import { useEffect, useMemo, useState } from 'react';
+import algoliasearch from 'algoliasearch/lite';
+import _ from 'lodash';
 
 export default ({
-  query = "",
+  query = '',
   algoliaObject: { index = null, projectID, publicKey },
   algoliaParams = {},
   searchParams = {},
@@ -75,7 +75,7 @@ export default ({
       }
     } catch (e) {
       setResult([]);
-      console.log("Algolia", e);
+      console.log('Algolia', e);
     } finally {
       setLoading(false);
     }
@@ -94,6 +94,7 @@ export default ({
 
   return {
     hits: result,
+    setHits: setResult,
     loading,
     currPage: currPage === 0 ? 0 : currPage - 1,
     totalPage,
