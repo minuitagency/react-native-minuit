@@ -9,6 +9,7 @@ export default function usePlacesApi({
   apiKey = '',
   userLoc = null,
   radius = 10000,
+  departmentOnly = false,
   baseUrl = 'https://maps.googleapis.com',
 }) {
   const [places, setPlaces] = useState([]);
@@ -47,7 +48,9 @@ export default function usePlacesApi({
     try {
       setLoadingPlaces(true);
       const _places = await fetch(
-        `${baseUrl}/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&inputtype=textquery&language=${language}&fields=${queryFields}${buildCountryQuery()}${buildLocationQuery()}`
+        `${baseUrl}/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&inputtype=textquery&language=${language}&fields=${queryFields}${buildCountryQuery()}${buildLocationQuery()}${
+          departmentOnly && '&types=administrative_area_level_2'
+        }`
       ).then((response) => response.json());
       setPlaces(_places?.predictions);
     } catch (e) {
