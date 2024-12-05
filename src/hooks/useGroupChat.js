@@ -15,7 +15,7 @@ function snapShotToData(snap) {
 }
 
 export default function useGroupChat({
-  firestore, // firestore instance for arrayUninon and firestoreTimestamp
+  arrayUnion = null, // BREAKING CHANGE: REQUIRED for read last msg instead of fierebase instance
   usersToChat = [], // require if chat not exists
   conversationId = null, // require
   conversationRef, // require
@@ -106,8 +106,10 @@ export default function useGroupChat({
       }
       newConvData.unreadMsg = unreadMsg;
     }
-    if (!lastMessage?.readBy?.includes(uid)) {
-      newConvData.readBy = firestore.FieldValue.arrayUnion(uid);
+    if (arrayUnion) {
+      if (!lastMessage?.readBy?.includes(uid)) {
+        newConvData.readBy = arrayUnion(uid);
+      }
     }
     if (_.size(newConvData) > 0) {
       await conversationRef.doc(convId).update(newConvData);
@@ -186,7 +188,7 @@ export default function useGroupChat({
       await messageRef.add({
         content: message,
         type,
-        time: firestore.Timestamp.now(),
+        time: new Date(),
         sender: uid,
         senderData,
         ...moreData,
@@ -207,8 +209,8 @@ export default function useGroupChat({
     try {
       const { id } = await conversationRef.add({
         createdBy: uid,
-        createdAt: firestore.Timestamp.now(),
-        lastUpdate: firestore.Timestamp.now(),
+        createdAt: new Date(),
+        lastUpdate: new Date(),
         users: sortUsers([...usersToChat, uid]),
         readBy: [uid],
         ...initialConvData,
