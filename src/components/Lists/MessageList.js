@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
-import { FlatList, Platform } from "react-native";
-import { responsiveHeight } from "react-native-responsive-dimensions";
-import { useEffect, useGlobal } from "reactn";
-import { gutters } from "../../styles";
+import React, { useRef, useState } from 'react';
+import { FlatList, Platform } from 'react-native';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
+import { useEffect, useGlobal } from 'reactn';
+import { gutters } from '../../styles';
 
 export default function MessageList({
   messages,
@@ -15,8 +15,8 @@ export default function MessageList({
   scrollIndicator = true,
   FlatListProps = {},
 }) {
-  const [uid] = useGlobal("uid");
-  const isWeb = Platform.OS === "web";
+  const [uid] = useGlobal('uid');
+  const isWeb = Platform.OS === 'web';
   const data = isWeb ? [...messages].reverse() : messages;
   const flatListRef = useRef();
 
@@ -46,9 +46,12 @@ export default function MessageList({
         setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300);
       }}
       showsVerticalScrollIndicator={scrollIndicator}
+      ListHeaderComponent={() =>
+        ListHeaderComponent && !isWeb && <ListHeaderComponent />
+      }
       ListFooterComponent={() => (
         <>
-          {ListHeaderComponent && <ListHeaderComponent />}
+          {ListHeaderComponent && isWeb && <ListHeaderComponent />}
           {loadingComponent && loadingComponent()}
         </>
       )}
@@ -57,8 +60,8 @@ export default function MessageList({
       style={style}
       contentContainerStyle={[
         Platform.select({
-          ios: { justifyContent: "flex-end" },
-          android: { justifyContent: "flex-end" },
+          ios: { justifyContent: 'flex-end' },
+          android: { justifyContent: 'flex-end' },
         }),
         {
           paddingBottom: responsiveHeight(2),
