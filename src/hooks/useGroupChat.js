@@ -34,6 +34,12 @@ export default function useGroupChat({
   const [refresh, setRefresh] = useState(false);
   const [pendingMsg, setPendingMsg] = useState(null);
 
+  useEffect(() => {
+    if (conversationId !== convId && !!conversationId) {
+      setConvId(conversationId);
+    }
+  }, [conversationId]);
+
   const messageRef = useMemo(
     () => (convId ? conversationRef.doc(convId).collection('messages') : null),
     [convId]
@@ -50,6 +56,7 @@ export default function useGroupChat({
     initialState: null,
     simpleRef: true,
     listener: true,
+    refreshArray: [convId],
     onUpdate: (data) => onNewMessageReceived(data),
     condition: !!convId,
     format: formatConversation,
@@ -68,7 +75,7 @@ export default function useGroupChat({
     usePagination: true,
     batchSize: messagesPerBatch,
     condition: !!messageRef,
-    refreshArray: [refresh],
+    refreshArray: [refresh, messageRef],
     format: formatMessages,
   });
 
