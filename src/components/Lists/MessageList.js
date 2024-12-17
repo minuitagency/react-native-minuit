@@ -4,6 +4,35 @@ import { responsiveHeight } from 'react-native-responsive-dimensions';
 import { useEffect, useGlobal } from 'reactn';
 import { gutters } from '../../styles';
 
+const RenderMessageItem = React.memo(
+  function RenderMessageItem({ item, index, data, MessagesConfig, uid }) {
+    const { sender, type } = item;
+    const prevSenderIsSame = data[index - 1]?.sender === item.sender;
+    const nextSenderIsSame = data[index + 1]?.sender === item.sender;
+    const MessageComponent =
+      MessagesConfig?.find((conf) => conf?.type === type)?.component || null;
+    const prevMsg = data[index - 1] || null;
+
+    if (!MessageComponent) {
+      console.warn(`RN_MINUIT: Message type ${type} not found in config array`);
+      return null;
+    } else {
+      return (
+        <MessageComponent
+          prevSenderIsSame={prevSenderIsSame}
+          nextSenderIsSame={nextSenderIsSame}
+          isMyMessage={sender === uid}
+          prevMsg={prevMsg}
+          {...item}
+        />
+      );
+    }
+  },
+  (prevProps, nextProps) => {
+    return prevProps.item === nextProps.item;
+  }
+);
+
 export default function MessageList({
   messages,
   loadMoreMsg,
@@ -20,6 +49,14 @@ export default function MessageList({
   const data = isWeb ? [...messages].reverse() : messages;
   const flatListRef = useRef();
 
+  function scrollToEnd() {
+    if (isWeb) {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    } else {
+      flatListRef.current?.scrollToOffset({ y: 0 }, 200);
+    }
+  }
+
   const getLastMessageId = () => {
     if (isWeb) {
       return data[data.length - 1]?.id;
@@ -34,7 +71,7 @@ export default function MessageList({
     const currentLastMessageId = getLastMessageId();
     if (currentLastMessageId !== lastMessageId) {
       setLastMessageId(currentLastMessageId);
-      flatListRef.current?.scrollToOffset({ y: 0 }, 200);
+      scrollToEnd();
     }
   }, [messages, lastMessageId]);
 
@@ -43,7 +80,7 @@ export default function MessageList({
       ref={flatListRef}
       inverted={!isWeb}
       onLayout={() => {
-        setTimeout(() => flatListRef.current?.scrollToOffset({ y: 0 }), 300);
+        setTimeout(() => scrollToEnd(), 300);
       }}
       showsVerticalScrollIndicator={scrollIndicator}
       ListHeaderComponent={() =>
@@ -70,34 +107,17 @@ export default function MessageList({
           ...contentContainerStyle,
         },
       ]}
-      keyExtractor={(item, index) => index.toString()}
+      keyExtractor={(item, index) => item?.id || index.toString()}
       data={data}
-      renderItem={({ item, index }) => {
-        const { sender, type } = item;
-        const prevSenderIsSame =
-          data[index - 1]?.sender === data[index]?.sender;
-        const nextSenderIsSame =
-          data[index + 1]?.sender === data[index]?.sender;
-        const MessageComponent =
-          MessagesConfig?.find((conf) => conf?.type === type)?.component ||
-          null;
-        const prevMsg = data[index - 1] || null;
-        if (!MessageComponent) {
-          console.log(`Message type ${type} not found in config array`);
-          return null;
-        } else {
-          return (
-            <MessageComponent
-              prevSenderIsSame={prevSenderIsSame}
-              nextSenderIsSame={nextSenderIsSame}
-              isMyMessage={sender === uid}
-              prevMsg={prevMsg}
-              {...item}
-            />
-          );
-        }
-      }}
-      extraData={messages}
+      renderItem={({ item, index }) => (
+        <RenderMessageItem
+          item={item}
+          index={index}
+          data={data}
+          MessagesConfig={MessagesConfig}
+          uid={uid}
+        />
+      )}
       {...FlatListProps}
     />
   );
