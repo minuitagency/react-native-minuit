@@ -43,9 +43,10 @@ export default function MessageList({
   ListHeaderComponent = null,
   scrollIndicator = true,
   FlatListProps = {},
+  useWebFix = false,
 }) {
   const [uid] = useGlobal('uid');
-  const isWeb = Platform.OS === 'web';
+  const isWeb = useWebFix && Platform.OS === 'web';
   const data = isWeb ? [...messages].reverse() : messages;
   const flatListRef = useRef();
 
