@@ -24,6 +24,7 @@ export default function useDataFromRef({
   format = null,
   onUpdate = () => null,
 }) {
+  const [hasCompletedInitialLoad, setHasCompletedInitialLoad] = useState(false);
   const [loading, setLoading] = useState(true);
   const [endReached, setEndReached] = useState(false);
   const [data, setData] = useState(initialState);
@@ -125,6 +126,8 @@ export default function useDataFromRef({
     if (updateGlobalState) {
       await setGlobal({ [updateGlobalState]: _data });
     }
+
+    setHasCompletedInitialLoad(true);
   }
 
   async function handleError(e) {
@@ -139,5 +142,5 @@ export default function useDataFromRef({
     await updateData([]);
   }
 
-  return { data, setData, loading, loadMore };
+  return { hasCompletedInitialLoad, data, setData, loading, loadMore };
 }
