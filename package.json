@@ -1,6 +1,6 @@
 {
   "name": "react-native-minuit",
-  "version": "1.3.71",
+  "version": "1.3.72",
   "description": "Internal library for all minuit products",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

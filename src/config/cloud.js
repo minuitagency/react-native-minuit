@@ -14,11 +14,25 @@ export const credentials = {
 
 let cloudInstance = firebase;
 
+// Initialize Firebase only if it hasn't been initialized yet
 if (!firebase.apps.filter(({ name_ }) => name_ === "CLOUD").length) {
-  cloudInstance = firebase.initializeApp(credentials, "CLOUD");
+  try {
+    cloudInstance = firebase.initializeApp(credentials, "CLOUD");
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+  }
 }
 
-export const projectsRef = cloudInstance.firestore().collection("projects");
-export const settingsRef = cloudInstance.firestore().collection("settings");
+// Check if Firestore is enabled before creating references
+let projectsRef, settingsRef;
+try {
+  const firestoreInstance = cloudInstance.firestore();
+  projectsRef = firestoreInstance.collection("projects");
+  settingsRef = firestoreInstance.collection("settings");
+} catch (error) {
+  console.error("Firestore service error:", error);
+  // You might want to handle this error appropriately in your application
+}
 
+export { projectsRef, settingsRef };
 export default cloudInstance;
