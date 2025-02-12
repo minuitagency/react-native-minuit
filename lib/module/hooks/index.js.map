@@ -1,1 +1,0 @@
-{"version":3,"names":["useDataFromRef"],"sources":["index.js"],"sourcesContent":["import useDataFromRef from \"./useDataFromRef\";\n\nexport { useDataFromRef };\n"],"mappings":"AAAA,OAAOA,cAAP,MAA2B,kBAA3B;AAEA,SAASA,cAAT"}

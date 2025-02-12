@@ -1,1 +1,0 @@
-{"version":3,"names":["getRandomInt","max","Math","floor","random"],"sources":["devActions.js"],"sourcesContent":["export const getRandomInt = (max) => {\n  return Math.floor(Math.random() * max); // Entre 0 et max -1\n};\n"],"mappings":";;;;;;;AAAO,MAAMA,YAAY,GAAIC,GAAD,IAAS;EACnC,OAAOC,IAAI,CAACC,KAAL,CAAWD,IAAI,CAACE,MAAL,KAAgBH,GAA3B,CAAP,CADmC,CACK;AACzC,CAFM"}

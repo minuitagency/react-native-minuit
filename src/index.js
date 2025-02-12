@@ -2,7 +2,6 @@ import React, { useState, setGlobal } from 'reactn';
 import {
   TooltipProvider,
   LoadingProvider,
-  ShakeProvider,
   ConsoleLogProvider,
 } from './providers';
 import cloudInstance from './config/cloud';
@@ -64,18 +63,9 @@ const MinuitProvider = ({
 
   return (
     <ConsoleLogProvider>
-      <ShakeProvider projectID={_projectID} enabled={isShakeEnabled || false}>
-        <LoadingProvider>
-          <TooltipProvider>
-            {/*NATIVE MODULE NOT WORK*/}
-            {/*<WebViewProvider>*/}
-            {/*  <ZoomPictureProvider>*/}
-            {children}
-            {/*</ZoomPictureProvider>*/}
-            {/*</WebViewProvider>*/}
-          </TooltipProvider>
-        </LoadingProvider>
-      </ShakeProvider>
+      <LoadingProvider>
+        <TooltipProvider>{children}</TooltipProvider>
+      </LoadingProvider>
     </ConsoleLogProvider>
   );
 };
