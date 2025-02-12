@@ -1,6 +1,5 @@
-import TooltipProvider from "./TooltipProvider";
-import LoadingProvider from "./LoadingProvider";
-import ShakeProvider from "./ShakeProvider";
-import ConsoleLogProvider from "./ConsoleLogProvider";
+import TooltipProvider from './TooltipProvider';
+import LoadingProvider from './LoadingProvider';
+import ConsoleLogProvider from './ConsoleLogProvider';
 
-export { TooltipProvider, LoadingProvider, ShakeProvider, ConsoleLogProvider };
+export { TooltipProvider, LoadingProvider, ConsoleLogProvider };
